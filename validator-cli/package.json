@@ -1,0 +1,38 @@
+{
+  "name": "hydra-validator",
+  "version": "0.0.0",
+  "description": "CLI tool to run checks against a Hydra API",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hypermedia-app/hydra-validator.git"
+  },
+  "keywords": [
+    "hydra",
+    "hypermedia",
+    "validator"
+  ],
+  "author": "Tomasz Pluskiewicz <tomasz@t-code.pl>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/hypermedia-app/hydra-validator/issues"
+  },
+  "homepage": "https://github.com/hypermedia-app/hydra-validator#readme",
+  "devDependencies": {
+    "@types/jest": "^24.0.12",
+    "@types/node": "^11.13.9",
+    "@types/node-fetch": "^2.3.3",
+    "jest": "^24.7.1",
+    "ts-jest": "^24.0.2",
+    "tsmonad": "^0.8.0",
+    "typescript": "^3.4.5"
+  },
+  "dependencies": {
+    "commander": "^2.20.0",
+    "node-fetch": "^2.5.0"
+  }
+}
