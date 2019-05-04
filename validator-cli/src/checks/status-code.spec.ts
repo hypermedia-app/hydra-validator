@@ -1,15 +1,18 @@
 import check from './status-code'
+import {Maybe} from 'tsmonad';
 
 test('should pass when status is successful', () => {
     // given
     const response = {
-        ok: true
+        ok: true,
+        text: () => {}
     } as any
 
     // when
-    const result = check(response, true)
+    const result = check(Maybe.just(response))
         .caseOf({
-            writer: (story, value) => value
+            left: () => true,
+            right: () => false
         })
 
 
@@ -24,11 +27,12 @@ test('should fail when status is not successful', () => {
     } as any
 
     // when
-    const result = check(response, true)
+    const result = check(Maybe.just(response))
         .caseOf({
-            writer: (story, value) => value
+            left: () => true,
+            right: () => false
         })
 
     // then
-    expect(result).toBeTruthy()
+    expect(result).toBeFalsy()
 })
