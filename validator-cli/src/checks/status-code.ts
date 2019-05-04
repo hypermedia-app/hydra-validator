@@ -1,13 +1,18 @@
-import {Either, Maybe, Writer} from 'tsmonad'
+import {Either} from 'tsmonad'
 import {Response} from 'node-fetch';
+import abstractCheck from './check'
 
-export default (response: Response, result: boolean): Writer<string, boolean> => {
-    const story = []
-    if(!response.ok) {
-        story.push('Invalid response')
-    } else {
-        story.push('Success')
-    }
-
-    return Writer.writer(story, result && response.ok)
-}
+export default abstractCheck<Response, string>(
+    'Status code must be 1xx or 2xx',
+    response => {
+        if (response.ok) {
+            return Either.left({
+                value: response.text(),
+            })
+        } else {
+            return Either.right({
+                kind: 'failed',
+                reason: `Response failed with status ${response.status}`
+            })
+        }
+    })
