@@ -9,7 +9,6 @@ test('should pass when status is successful', async () => {
     // when
     const [result] = await check(response)()
 
-
     // then
     expect(result.status).toEqual('success')
 })

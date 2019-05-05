@@ -1,17 +1,20 @@
-import { LitElement, html } from 'lit-element';
+import {LitElement, html, css} from 'lit-element'
+import './validator-shell'
 
 class HydraValidatorUi extends LitElement {
-	static get properties() {
-		return {
-			heading: { type: String },
-		};
-	}
+    static get styles() {
+        return css`
+validator-shell {
+  max-width: 750px;
+  margin: 0 auto;
+}`
+    }
 
-	render() {
-		return html`
-			<h1>${this.heading}</h1>
-		`;
-	}
+    render () {
+        return html`
+            <validator-shell use-hash-urls></validator-shell>
+        `
+    }
 }
 
-customElements.define('hydra-validator-ui', HydraValidatorUi);
+customElements.define('hydra-validator-ui', HydraValidatorUi)
