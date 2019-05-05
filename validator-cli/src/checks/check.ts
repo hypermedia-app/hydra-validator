@@ -1,56 +1,30 @@
-import {Either, Maybe} from 'tsmonad';
-
-export interface Result {
-    name: string
+export class Result {
+    description: string
     success: boolean
+
+    protected constructor(descrition: string, success: boolean) {
+        this.description = descrition
+        this.success = success
+    }
+
+    static Success(description: string = '') {
+        return new Result(description, true)
+    }
+
+    static Failure<T>(reason: string, details?: string | Error) {
+        return new Failure<T>('failed', reason, details)
+    }
 }
 
-export interface Success<T> extends Result {
-    value: Promise<T>
-}
+type FailureKind = 'failed' | 'inconclusive'
 
-export interface Failure extends Result  {
-    kind: 'failed' | 'inconclusive'
-    reason: string
-}
+class Failure<T extends any> extends Result {
+    kind: FailureKind
+    details: string | Error
 
-type FailureInit = {
-    kind: 'failed' | 'inconclusive'
-    reason: string
-}
-
-type SuccessInit<T> = {
-    value: Promise<T>
-}
-
-type CheckFunc<P, T> = (previous: P) => Either<SuccessInit<T>, FailureInit>
-
-export default function<P, T> (name: string, runCheck: CheckFunc<P, T>) {
-    return (previous: Maybe<P>): Either<Either<Success<T>, Failure>, Failure> => {
-        return previous
-            .caseOf({
-                nothing: () => Either.right({
-                    name,
-                    success: false,
-                    kind: 'inconclusive',
-                    reason: 'Test skipped because dependency did not succeed'
-                }),
-                just: p => {
-                    return runCheck(p).caseOf({
-                        left: l => Either.left<Either<Success<T>, Failure>, Failure>(Either.left({
-                            value: l.value,
-                            name,
-                            success: true
-                        } as Success<T>)),
-                        right: r => {
-                            return Either.right<Either<Success<T>, Failure>, Failure>({
-                                ...r,
-                                name,
-                                success: false,
-                            })
-                        }
-                    })
-                }
-            });
+    public constructor(kind: FailureKind, description: string, details: string | Error = '') {
+        super(description, false)
+        this.kind = kind
+        this.details = details
     }
 }

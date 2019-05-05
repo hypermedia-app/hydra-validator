@@ -1,18 +1,17 @@
-import {Either} from 'tsmonad'
-import {Response} from 'node-fetch';
-import abstractCheck from './check'
+import {Response} from 'node-fetch'
+import {Result} from './check';
+import {checkChain} from './url-resolvable';
 
-export default abstractCheck<Response, string>(
-    'Status code must be 1xx or 2xx',
-    response => {
-        if (response.ok) {
-            return Either.left({
-                value: response.text(),
-            })
+export default function(response: Response): checkChain {
+    return () => {
+        if(response.ok) {
+            return [
+                Result.Success(`Response status ${response.status}`), []
+            ]
         } else {
-            return Either.right({
-                kind: 'failed',
-                reason: `Response failed with status ${response.status}`
-            })
+            return [
+                Result.Failure('Request failed', `Status code was ${status}`), []
+            ]
         }
-    })
+    }
+}
