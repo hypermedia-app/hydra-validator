@@ -1,8 +1,8 @@
 // @ts-ignore
 import * as fetch from 'rdf-fetch'
 import {checkChain, Result} from '../check';
-import statusCheck from './status-code'
-import apiDocLink from './api-doc-link'
+import statusCheck from './response/status-code'
+import apiDocLink from './response/api-doc-link'
 import analyseRepresentation from './analyseRepresentation'
 
 export default function<T, R> (url: string, fetchOnly = false): checkChain {
