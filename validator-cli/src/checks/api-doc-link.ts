@@ -1,5 +1,4 @@
-import {checkChain, Result} from './check';
-import {Response} from 'node-fetch';
+import {checkChain, Result} from '../check'
 // @ts-ignore
 import * as parse from 'parse-link-header'
 import {Hydra} from '../namespace'
@@ -32,7 +31,7 @@ export default function(response: Response): checkChain {
         }
 
         return [
-            Result.Success('Checked resource is Api Documentation'),
+            Result.Success('Resource is Api Documentation'),
             []
         ]
     }

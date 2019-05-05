@@ -1,30 +1,34 @@
+type ResultKind = 'success' | 'failure' | 'informational'
+
 export class Result {
     description: string
-    success: boolean
+    status: ResultKind
 
-    protected constructor(descrition: string, success: boolean) {
+    protected constructor(descrition: string, status: ResultKind) {
         this.description = descrition
-        this.success = success
+        this.status = status
     }
 
     static Success(description: string = '') {
-        return new Result(description, true)
+        return new Result(description, 'success')
     }
 
     static Failure(reason: string, details?: string | Error) {
         return new Failure('failed', reason, details)
+    }
+
+    static Informational(description: string) {
+        return new Result(description, 'informational')
     }
 }
 
 type FailureKind = 'failed' | 'inconclusive'
 
 class Failure extends Result {
-    kind: FailureKind
     details: string | Error
 
     public constructor(kind: FailureKind, description: string, details: string | Error = '') {
-        super(description, false)
-        this.kind = kind
+        super(description, 'failure')
         this.details = details
     }
 }

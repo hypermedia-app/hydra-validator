@@ -1,7 +1,17 @@
-import {checkChain} from './checks/check';
+import {checkChain, Result} from './check';
 
 async function* runChecks(firstCheck: checkChain) {
-    const [result, moreChecks] = await firstCheck()
+    let result, moreChecks
+
+    try {
+        [result, moreChecks] = await firstCheck()
+    } catch (e) {
+        yield {
+            level: 0,
+            result: Result.Failure('Unexpected error', e)
+        }
+        return
+    }
 
     yield {
         result,
@@ -14,18 +24,27 @@ async function* runChecks(firstCheck: checkChain) {
     }))
 
     while (checksLeveled.length > 0) {
+        let result, moreMoreChecks
         const nextCheck = checksLeveled.splice(0 ,1)[0]
-        let [result, moreMoreChecks] = await nextCheck.check()
+        try {
+            [result, moreMoreChecks] = await nextCheck.check()
+        } catch (e) {
+            yield {
+                level: nextCheck.level,
+                result: Result.Failure('Unexpected error', e)
+            }
+            break;
+        }
 
         yield {
             result,
             level: nextCheck.level
         }
 
-        checksLeveled = checksLeveled.concat(moreMoreChecks.map(check => ({
+        checksLeveled = moreMoreChecks.map(check => ({
             check,
             level: nextCheck.level + 1
-        })))
+        })).concat(checksLeveled)
     }
 }
 
