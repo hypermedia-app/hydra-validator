@@ -1,4 +1,4 @@
-type ResultKind = 'success' | 'failure' | 'informational'
+type ResultKind = 'success' | 'failure' | 'informational' | 'warning'
 
 export class Result {
     description: string
@@ -13,8 +13,12 @@ export class Result {
         return new Result(description, 'success')
     }
 
-    static Failure(reason: string, details?: string | Error) {
+    static Failure(reason: string, details?: string | Error): Result {
         return new Failure('failed', reason, details)
+    }
+
+    static Warning(description: string) {
+        return new Result(description, 'warning')
     }
 
     static Informational(description: string) {
