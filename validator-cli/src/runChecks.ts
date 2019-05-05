@@ -1,16 +1,31 @@
-import firstCheck from './checks/url-resolvable'
+import {checkChain} from './checks/check';
 
-async function* runChecks(url: string) {
-    let [result, moreChecks] = await firstCheck(url)
+async function* runChecks(firstCheck: checkChain) {
+    const [result, moreChecks] = await firstCheck()
 
-    yield result
+    yield {
+        result,
+        level: 0
+    }
 
-    while (moreChecks.length > 0) {
-        const nextCheck = moreChecks.splice(0 ,1)[0]
-        let [result, moreMoreChecks] = await nextCheck()
+    let checksLeveled = moreChecks.map(check => ({
+        level: 1,
+        check
+    }))
 
-        yield result
-        moreChecks = moreChecks.concat(moreMoreChecks)
+    while (checksLeveled.length > 0) {
+        const nextCheck = checksLeveled.splice(0 ,1)[0]
+        let [result, moreMoreChecks] = await nextCheck.check()
+
+        yield {
+            result,
+            level: nextCheck.level
+        }
+
+        checksLeveled = checksLeveled.concat(moreMoreChecks.map(check => ({
+            check,
+            level: nextCheck.level + 1
+        })))
     }
 }
 

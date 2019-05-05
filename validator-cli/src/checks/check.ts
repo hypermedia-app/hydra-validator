@@ -11,14 +11,14 @@ export class Result {
         return new Result(description, true)
     }
 
-    static Failure<T>(reason: string, details?: string | Error) {
-        return new Failure<T>('failed', reason, details)
+    static Failure(reason: string, details?: string | Error) {
+        return new Failure('failed', reason, details)
     }
 }
 
 type FailureKind = 'failed' | 'inconclusive'
 
-class Failure<T extends any> extends Result {
+class Failure extends Result {
     kind: FailureKind
     details: string | Error
 
@@ -28,3 +28,5 @@ class Failure<T extends any> extends Result {
         this.details = details
     }
 }
+
+export type checkChain = () => Promise<[ Result, Array<checkChain> ]> | [ Result, Array<checkChain> ]

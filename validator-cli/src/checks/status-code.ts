@@ -1,6 +1,5 @@
 import {Response} from 'node-fetch'
-import {Result} from './check';
-import {checkChain} from './url-resolvable';
+import {checkChain, Result} from './check';
 
 export default function(response: Response): checkChain {
     return () => {

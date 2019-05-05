@@ -1,5 +1,4 @@
-import {Result} from './check';
-import {checkChain} from './url-resolvable';
+import {checkChain, Result} from './check';
 import {Response} from 'node-fetch';
 // import parse from 'parse-link-header'
 
