@@ -1,0 +1,22 @@
+{
+  "name": "hydra-validator-ui",
+  "license": "MIT",
+  "scripts": {
+    "start": "owc-dev-server --open",
+    "build": "rimraf dist && rollup -c rollup.config.js",
+    "start:build": "http-server dist -o -c-1",
+    "watch:build": "rimraf dist && rollup --watch -c rollup.config.js & http-server dist -o -c-1"
+  },
+  "dependencies": {
+    "lit-html": "^1.0.0",
+    "lit-element": "^2.0.1"
+  },
+  "devDependencies": {
+    "owc-dev-server": "^0.3.0",
+    "@open-wc/building-rollup": "^0.3.0",
+    "http-server": "^0.11.1",
+    "rimraf": "^2.6.3",
+    "rollup": "^1.6.0"
+  },
+  "private": true
+}
