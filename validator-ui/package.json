@@ -19,8 +19,7 @@
     "rollup": "^1.6.0",
     "eslint": "^5.16.0",
     "@typescript-eslint/parser": "^1.7.0",
-    "@typescript-eslint/eslint-plugin": "^1.7.0",
-    "eslint-plugin-jest": "^22.5.1"
+    "@typescript-eslint/eslint-plugin": "^1.7.0"
   },
   "private": true
 }

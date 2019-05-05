@@ -1,4 +1,3 @@
-import {Response} from 'node-fetch'
 import {checkChain, Result} from '../../check';
 
 export default function(response: Response): checkChain {

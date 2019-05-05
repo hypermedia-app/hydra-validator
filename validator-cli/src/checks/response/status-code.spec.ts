@@ -2,10 +2,9 @@ import check from './status-code'
 
 test('should pass when status is successful', async () => {
     // given
-    const response = {
-        ok: true,
-        text: () => {}
-    } as any
+    const response = new Response(null, {
+        status: 200
+    })
 
     // when
     const [result] = await check(response)()
@@ -17,9 +16,9 @@ test('should pass when status is successful', async () => {
 
 test('should fail when status is not successful', async () => {
     // given
-    const response = {
-        ok: false
-    } as any
+    const response = new Response(null, {
+        status: 404
+    })
 
     // when
     const [result] = await check(response)()
