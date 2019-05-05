@@ -9,7 +9,7 @@ export default function(response: Response): checkChain {
             ]
         } else {
             return [
-                Result.Failure('Request failed', `Status code was ${status}`), []
+                Result.Failure('Request failed', `Status code was ${response.status}`), []
             ]
         }
     }
