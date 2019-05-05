@@ -1,3 +1,4 @@
+import 'isomorphic-fetch'
 import check from './status-code'
 
 test('should pass when status is successful', async () => {
