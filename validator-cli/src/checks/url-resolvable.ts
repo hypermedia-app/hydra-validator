@@ -14,7 +14,7 @@ export default function<T, R> (url: string): checkChain {
             ]
         } catch (e) {
             return [
-                Result.Failure('Fetch failed', e), []
+                Result.Failure(`Could not fetch ${url}`, e), []
             ]
         }
     }

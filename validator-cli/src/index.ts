@@ -17,7 +17,8 @@ program
                     if (check.result.success) {
                         console.log(`${prefix}${check.result.description}`)
                     } else {
-                        console.error(`${prefix}${check.result.description}`)
+                        // @ts-ignore
+                        console.error(`${prefix}${check.result.description} ${check.result.details}`)
                     }
                 }
             })

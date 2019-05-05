@@ -31,6 +31,8 @@
     "typescript": "^3.4.5"
   },
   "dependencies": {
+    "@rdfjs/formats-common": "^2.0.0",
+    "@rdfjs/namespace": "^1.0.0",
     "commander": "^2.20.0",
     "node-fetch": "^2.5.0",
     "parse-link-header": "^1.0.1"
