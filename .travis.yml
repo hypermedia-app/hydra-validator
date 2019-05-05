@@ -1,0 +1,24 @@
+language: node_js
+node_js:
+- 11
+
+before_install:
+- export CXX="g++-4.9" CC="gcc-4.9"
+
+before_deploy:
+- npm install -g firebase-tools
+- lerna bootstrap
+- lerna run build
+
+deploy:
+  provider: firebase
+  skip_cleanup: true
+  token:
+    secure: O3h9SM/Jdr5MGQYoPIu9hzDGF39lKUiK7l4HedA0lvFbwNbi/bUzaEnl8lW//gsrGGR4BkTEZ5ZtAjtEFYoUrH3LkDwAB+P9EbtNkAKuc1JVND4yzcf3EBJlun9JZHBPkLQF2rulDYxnEy34LR50HIxX36+FT+b9Ji76UuEDcxnE4MyYfgDD200s5AL5PPE7wntB4i1tiOkaLJtxa2y9W9SUS1fUN/lqPFphvazm6ONsIgPzxGlKbCZS3RFEZhbZoiOtNJeU6ixtTDp6jy+6SXv5qeKU7JkVb1QRPr9rTll49q4dijyNuOgZmYpnelWJJ5y9PpipeoyWNMkcb+dGP3sLhKrEJj6YSgAkfTr1pLhy2LUJl3AC73XNq8YZ48w9CiwYHvyltgRytFPrPa8E7Xp7FY/J5bK/pmbeDONBhrhwLkyrGWbwIFc82zeOMY1rnwGMm3/89wcljWn0Zo95TLAWrVt3097iT7CSaplHSGPDusZCwXOzAgwd/i4CjUF65v3bhpf+rkhTlUibGfBCEuVg2L2xaH1TG2U75shiVeQHofnbO5E9flbn4rnF0uLNMYhxvxchOGDeIKKeioJeBvm4QisjYoDKR7GVity4Ft62c23GM4gilBZ/g55J7ytaAPESnTR/Qoe+0YjIEk9IcF59sPtqTHzh35AZGiblUbc=
+
+addons:
+  apt:
+    sources:
+    - ubuntu-toolchain-r-test
+    packages:
+    - g++-4.9
