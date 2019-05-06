@@ -12,7 +12,8 @@
   "scripts": {
     "pretest": "eslint --ext *.ts .",
     "build": "tsc",
-    "test": "jest"
+    "test": "jest",
+    "prepare": "rimraf dist"
   },
   "repository": {
     "type": "git",
@@ -41,7 +42,8 @@
     "@typescript-eslint/eslint-plugin": "^1.7.0",
     "eslint-plugin-jest": "^22.5.1",
     "standard": "^12.0.1",
-    "isomorphic-fetch": "^2.2.1"
+    "isomorphic-fetch": "^2.2.1",
+    "rimraf": "^2.6.3"
   },
   "dependencies": {
     "@rdfjs/namespace": "^1.0.0",
