@@ -3,6 +3,9 @@
   "version": "0.0.0",
   "description": "CLI tool to run checks against a Hydra API",
   "main": "dist/index.js",
+  "bin": {
+    "hydra-validator": "dist/index.js"
+  },
   "files": [
     "dist/*.js"
   ],
