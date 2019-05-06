@@ -3,6 +3,7 @@ import '@hydrofoil/hydrofoil-paper-shell/hydrofoil-address-bar'
 import '@polymer/paper-input/paper-input'
 import '@polymer/iron-icon/iron-icon'
 import '@polymer/iron-icons/iron-icons'
+import '@polymer/paper-icon-button/paper-icon-button'
 import '@polymer/app-layout/app-toolbar/app-toolbar'
 import '@polymer/app-layout/app-header/app-header'
 import '@polymer/app-layout/app-header-layout/app-header-layout'
@@ -29,11 +30,17 @@ export default class ValidatorShell extends HydrofoilShell {
         }`
   }
 
+  home() {
+    this.url = ''
+    this.state = 'ready'
+  }
+
   renderTop () {
     return html`
 <app-header-layout>
     <app-header slot="header" fixed condenses effects="waterfall">
         <app-toolbar>
+            <paper-icon-button icon="home" @click="${this.home}"></paper-icon-button>
             <hydrofoil-address-bar
                 main-title
                 url="${this.url}"
@@ -47,7 +54,7 @@ export default class ValidatorShell extends HydrofoilShell {
 
   renderMain () {
     if (this.state === 'ready') {
-      return this.renderTop()
+      return html`${this.renderTop()}<slot></slot>`
     }
 
     if (this.state === 'error') {

@@ -1,6 +1,11 @@
 import {checkChain, Result} from './check';
 
 async function* runChecks(firstCheck: checkChain) {
+    yield {
+        level: 0,
+        result: Result.Informational('Analysis started...')
+    }
+
     let result, moreChecks
 
     try {
