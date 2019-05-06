@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import * as program from 'commander'
 import runChecks from './runChecks'
 import urlResolvableCheck from './checks/url-resolvable'
