@@ -1,6 +1,6 @@
 {
   "name": "hydra-validator",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "CLI tool to run checks against a Hydra API",
   "main": "dist/index.js",
   "bin": {
