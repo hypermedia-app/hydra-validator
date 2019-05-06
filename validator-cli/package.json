@@ -13,7 +13,7 @@
     "pretest": "eslint --ext *.ts .",
     "build": "tsc",
     "test": "jest",
-    "prepare": "rimraf dist"
+    "prepublishOnly": "rimraf dist; npm run build"
   },
   "repository": {
     "type": "git",
