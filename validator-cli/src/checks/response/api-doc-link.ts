@@ -17,7 +17,7 @@ export default function(response: Response): checkChain {
 
         if (!links[Hydra.apiDocumentation.value]) {
             return [
-                Result.Failure(`rel=<${Hydra.apiDocumentation.value}> link not found in the response`), []
+                Result.Failure(`rel=<${Hydra.apiDocumentation.value}> link not found in the response`)
             ]
         }
 
@@ -37,8 +37,7 @@ export default function(response: Response): checkChain {
         }
 
         return [
-            Result.Informational('Resource is Api Documentation'),
-            []
+            Result.Informational('Resource is Api Documentation')
         ]
     }
 }

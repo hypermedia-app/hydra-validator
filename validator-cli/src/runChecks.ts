@@ -5,6 +5,7 @@ async function* runChecks(firstCheck: checkChain) {
 
     try {
         [result, moreChecks] = await firstCheck()
+        moreChecks = moreChecks || []
     } catch (e) {
         yield {
             level: 0,
@@ -28,6 +29,7 @@ async function* runChecks(firstCheck: checkChain) {
         const nextCheck = checksLeveled.splice(0 ,1)[0]
         try {
             [result, moreMoreChecks] = await nextCheck.check()
+            moreMoreChecks = moreMoreChecks || []
         } catch (e) {
             yield {
                 level: nextCheck.level,

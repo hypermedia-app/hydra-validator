@@ -4,11 +4,11 @@ export default function(response: Response): checkChain {
     return () => {
         if(response.ok) {
             return [
-                Result.Success(`Response status ${response.status}`), []
+                Result.Success(`Response status ${response.status}`)
             ]
         } else {
             return [
-                Result.Failure('Request failed', `Status code was ${response.status}`), []
+                Result.Failure('Request failed', `Status code was ${response.status}`)
             ]
         }
     }

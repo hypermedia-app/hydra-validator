@@ -37,4 +37,6 @@ class Failure extends Result {
     }
 }
 
-export type checkChain = () => Promise<[ Result, Array<checkChain> ]> | [ Result, Array<checkChain> ]
+export type CheckResult = [ Result, Array<checkChain> ] | [ Result ]
+
+export type checkChain = () => Promise<CheckResult> | CheckResult

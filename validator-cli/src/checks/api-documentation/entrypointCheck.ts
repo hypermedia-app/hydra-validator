@@ -9,13 +9,13 @@ export default function (apiDoc: any): checkChain {
 
         if (entrypoint.values.length === 0) {
             return [
-                Result.Warning('Entrypoint not found in api documentation'), []
+                Result.Warning('Entrypoint not found in api documentation')
             ]
         }
 
         if (entrypoint.term.termType === 'Literal') {
             return [
-                Result.Failure(`hydra:entrypoint property found but the value was a literal`), []
+                Result.Failure(`hydra:entrypoint property found but the value was a literal`)
             ]
         }
 

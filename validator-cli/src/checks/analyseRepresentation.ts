@@ -13,12 +13,16 @@ export default function (response: Response & any): checkChain {
         const graph = clownface(dataset)
 
         const apiDocs = graph.has(rdf.type, Hydra.ApiDocumentation)
+        const moreChecks = []
+
+        if (apiDocs.values.length === 0)
+        {
+            moreChecks.push(...apiDocsChecks(apiDocs))
+        }
 
         return [
             Result.Success(`Successfully parsed ${dataset.length} triples`),
-            apiDocs.values.length === 0 ?
-                [] :
-                apiDocsChecks(apiDocs)
+            moreChecks
         ]
     }
 }
