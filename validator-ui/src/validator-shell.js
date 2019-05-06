@@ -24,7 +24,8 @@ export default class ValidatorShell extends HydrofoilShell {
   static get styles () {
     return css`
         app-toolbar, ::slotted(app-toolbar) {
-          background: var(--paper-indigo-400)
+          background: var(--paper-indigo-400);
+          color: white;
         }`
   }
 
