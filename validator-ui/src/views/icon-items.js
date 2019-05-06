@@ -1,6 +1,6 @@
-import {html} from 'lit-html';
+import { html } from 'lit-html'
 
-function item({ icon, color, description }) {
+function item ({ icon, color, description }) {
     import('@polymer/paper-item/paper-icon-item')
     import('@polymer/iron-icon/iron-icon')
     import('@polymer/iron-icons/iron-icons')
@@ -12,15 +12,15 @@ function item({ icon, color, description }) {
 </paper-icon-item>`
 }
 
-export function warning(description) {
-    return item({
-        description,
-        color: 'orange',
-        icon: 'report-problem'
-    })
+export function warning (description) {
+  return item({
+    description,
+    color: 'orange',
+    icon: 'report-problem'
+  })
 }
 
-export function failure(description, details) {
+export function failure (description, details) {
     import('@polymer/paper-item/paper-icon-item')
     import('@polymer/paper-item/paper-item-body')
     import('@polymer/iron-icon/iron-icon')
@@ -36,18 +36,18 @@ export function failure(description, details) {
 </paper-icon-item>`
 }
 
-export function success(description) {
-    return item({
-        description,
-        icon: 'check',
-        color: 'darkgreen'
-    })
+export function success (description) {
+  return item({
+    description,
+    icon: 'check',
+    color: 'darkgreen'
+  })
 }
 
-export function information(description) {
-    return item({
-        description,
-        icon: 'lightbulb-outline',
-        color: 'darkblue'
-    })
+export function information (description) {
+  return item({
+    description,
+    icon: 'lightbulb-outline',
+    color: 'darkblue'
+  })
 }

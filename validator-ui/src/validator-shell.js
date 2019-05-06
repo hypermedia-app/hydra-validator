@@ -30,7 +30,7 @@ export default class ValidatorShell extends HydrofoilShell {
         }`
   }
 
-  home() {
+  home () {
     this.url = ''
     this.state = 'ready'
   }

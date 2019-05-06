@@ -16,19 +16,19 @@ ViewTemplates.default.when
   .scopeMatches('result')
   .valueMatches(v => v.result && v.result.status !== 'failure')
   .renders(check => {
-        switch (check.result.status) {
-          case 'informational':
-            return item.information(check.result.description)
-          case 'success':
-            return item.success(check.result.description)
-          default:
-            return item.warning(check.result.description)
-        }
+    switch (check.result.status) {
+      case 'informational':
+        return item.information(check.result.description)
+      case 'success':
+        return item.success(check.result.description)
+      default:
+        return item.warning(check.result.description)
+    }
   })
 
 ViewTemplates.default.when
   .scopeMatches('result')
   .valueMatches(v => v.result && v.result.status === 'failure')
   .renders(check => {
-        return item.failure(check.result.description, check.result.details)
+    return item.failure(check.result.description, check.result.details)
   })
