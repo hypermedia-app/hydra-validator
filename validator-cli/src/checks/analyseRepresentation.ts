@@ -15,7 +15,7 @@ export default function (response: Response & any): checkChain {
         const apiDocs = graph.has(rdf.type, Hydra.ApiDocumentation)
         const moreChecks = []
 
-        if (apiDocs.values.length === 0)
+        if (apiDocs.values.length !== 0)
         {
             moreChecks.push(...apiDocsChecks(apiDocs))
         }
