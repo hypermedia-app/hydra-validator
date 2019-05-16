@@ -6,9 +6,17 @@ function wrapCheck(check: checkChain, ctx: Context, level: number) {
 
         const nextContext = context ? { ...ctx, ...context } : ctx
 
+        const outMessages = []
+        if (message) {
+            outMessages.push(message)
+        }
+        if (Array.isArray(messages)) {
+           outMessages.push(...messages)
+        }
+
         return {
             level,
-            messages: messages || [message],
+            messages: outMessages,
             context: nextContext,
             nextChecks: nextChecks || []
         }
