@@ -8,8 +8,8 @@ test('Fails when there is no link', async () => {
     })
 
     // when
-    const { message } = await check(response).call({})
+    const { result } = await check(response).call({})
 
     // then
-    expect(message!.status).toEqual('failure')
+    expect(result!.status).toEqual('failure')
 })

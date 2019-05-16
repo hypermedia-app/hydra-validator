@@ -1,51 +1,60 @@
 type ResultKind = 'success' | 'failure' | 'informational' | 'warning'
 
-export class Result {
-    description: string
-    status: ResultKind
+// eslint-disable-next-line @typescript-eslint/interface-name-prefix
+interface IResult {
+    description: string;
+    status: ResultKind;
+}
 
-    protected constructor(descrition: string, status: ResultKind) {
+class Failure implements IResult {
+    public details: string | Error
+    public description: string;
+    public status: ResultKind;
+
+    public constructor (kind: FailureKind, description: string, details: string | Error = '') {
+        this.description = description
+        this.status = 'failure'
+        this.details = details
+    }
+}
+
+export class Result implements IResult {
+    public description: string
+    public status: ResultKind
+
+    protected constructor (descrition: string, status: ResultKind) {
         this.description = descrition
         this.status = status
     }
 
-    static Success(description: string = '') {
+    public static Success (description: string = '') {
         return new Result(description, 'success')
     }
 
-    static Failure(reason: string, details?: string | Error): Result {
+    public static Failure (reason: string, details?: string | Error) {
         return new Failure('failed', reason, details)
     }
 
-    static Warning(description: string) {
+    public static Warning (description: string) {
         return new Result(description, 'warning')
     }
 
-    static Informational(description: string) {
+    public static Informational (description: string) {
         return new Result(description, 'informational')
     }
 }
 
 type FailureKind = 'failed' | 'inconclusive'
 
-class Failure extends Result {
-    details: string | Error
-
-    public constructor(kind: FailureKind, description: string, details: string | Error = '') {
-        super(description, 'failure')
-        this.details = details
-    }
+export interface Context {
+    [s: string]: any;
 }
 
-export type Context =  {
-    [s: string]: any
-}
-
-export type CheckResult = {
-    message?: Result,
-    messages?: Result[],
-    nextChecks?: checkChain[],
-    context?: Context
+export interface CheckResult {
+    result?: IResult;
+    results?: IResult[];
+    nextChecks?: checkChain[];
+    context?: Context;
 }
 
 export type checkChain = (this: Context) => Promise<CheckResult> | CheckResult

@@ -1,18 +1,18 @@
-import {Hydra} from '../../namespace';
-import {checkChain, Result} from '../../check';
+import { Hydra } from '../../namespace'
+import { checkChain, Result } from '../../check'
 
 export default function (apiDoc: any): checkChain {
-    return function supportedClasses() {
+    return function supportedClasses () {
         const classes = apiDoc.out(Hydra.supportedClass)
 
         if (classes.values.length === 0) {
             return {
-                message: Result.Warning('No SupportedClasses found')
+                result: Result.Warning('No SupportedClasses found')
             }
         }
 
         return {
-            message: Result.Success(`Found ${classes.values.length} Supported Classes`)
+            result: Result.Success(`Found ${classes.values.length} Supported Classes`)
         }
     }
 }

@@ -10,7 +10,7 @@
     "dist/**/*.js"
   ],
   "scripts": {
-    "pretest": "eslint --ext *.ts .",
+    "pretest": "eslint --ext ts . --quiet",
     "build": "tsc",
     "test": "jest",
     "prepublishOnly": "rimraf dist; npm run build"

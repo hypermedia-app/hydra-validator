@@ -1,11 +1,11 @@
 // @ts-ignore
 import * as clownface from 'clownface'
-import {checkChain, Result} from '../check'
-import {Hydra, rdf} from '../namespace'
+import { checkChain, Result } from '../check'
+import { Hydra, rdf } from '../namespace'
 import apiDocsChecks from './api-documentation'
 
 export default function (response: Response & any): checkChain {
-    return async function representation() {
+    return async function representation () {
         const dataset = await response.dataset()
 
         const graph = clownface(dataset)
@@ -13,13 +13,12 @@ export default function (response: Response & any): checkChain {
         const apiDocs = graph.has(rdf.type, Hydra.ApiDocumentation)
         const nextChecks = []
 
-        if (apiDocs.values.length !== 0)
-        {
+        if (apiDocs.values.length !== 0) {
             nextChecks.push(...apiDocsChecks(apiDocs))
         }
 
         return {
-            message: Result.Success(`Successfully parsed ${dataset.length} triples`),
+            result: Result.Success(`Successfully parsed ${dataset.length} triples`),
             nextChecks
         }
     }

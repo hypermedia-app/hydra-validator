@@ -1,14 +1,14 @@
-import {checkChain, Result} from '../../check'
+import { checkChain, Result } from '../../check'
 // @ts-ignore
 import * as parse from 'parse-link-header'
-import {Hydra} from '../../namespace'
+import { Hydra } from '../../namespace'
 import urlResolveCheck from '../url-resolvable'
 
 export default function (response: Response & any): checkChain {
-    return async function apiDocLink() {
+    return async function apiDocLink () {
         if (!response.headers.has('link')) {
             return {
-                message: Result.Failure('Link header missing')
+                result: Result.Failure('Link header missing')
             }
         }
 
@@ -17,7 +17,7 @@ export default function (response: Response & any): checkChain {
 
         if (!links[Hydra.apiDocumentation.value]) {
             return {
-                message: Result.Failure(`rel=<${Hydra.apiDocumentation.value}> link not found in the response`)
+                result: Result.Failure(`rel=<${Hydra.apiDocumentation.value}> link not found in the response`)
             }
         }
 
@@ -26,19 +26,19 @@ export default function (response: Response & any): checkChain {
         const responseUrl = new URL(response.url).toString()
 
         if (responseUrl !== apiDocUrl) {
-            let messages = [ Result.Success('Api Documentation link found') ]
+            let results = [ Result.Success('Api Documentation link found') ]
             if (apiDocUrl !== linkUrl) {
-                messages.push(Result.Warning('Relative Api Documentation link may not be supported by clients'))
+                results.push(Result.Warning('Relative Api Documentation link may not be supported by clients'))
             }
 
             return {
-                messages,
+                results,
                 nextChecks: [urlResolveCheck(apiDocUrl)]
             }
         }
 
         return {
-            message: Result.Informational('Resource is Api Documentation'),
+            result: Result.Informational('Resource is Api Documentation')
         }
     }
 }
