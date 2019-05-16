@@ -1,11 +1,8 @@
 import entrypointPresent from './entrypointCheck'
 import hasSupportedClasses from './hasSupportedClasses'
 import { checkChain, Result } from '../../check'
-import { Hydra, rdf } from '../../namespace'
 
-export default function (graph: any): checkChain[] {
-    const apiDoc = graph.has(rdf.type, Hydra.ApiDocumentation)
-
+export default function (apiDoc: any): checkChain[] {
     if (apiDoc.values.length > 1) {
         return [
             () => ({
