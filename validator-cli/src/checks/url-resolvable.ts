@@ -18,7 +18,7 @@ export default function (url: string, {fetchOnly = false} = {}) {
         }
 
         return {
-            messages: Result.Success(`Successfully fetched ${url}`),
+            message: Result.Success(`Successfully fetched ${url}`),
             nextChecks
         }
     }

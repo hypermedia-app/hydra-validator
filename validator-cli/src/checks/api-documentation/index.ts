@@ -9,7 +9,7 @@ export default function (graph: any): checkChain[] {
     if (apiDoc.values.length > 1) {
         return [
             () => ({
-                messages: Result.Failure('Multiple ApiDocumentation resources found in representation')
+                message: Result.Failure('Multiple ApiDocumentation resources found in representation')
             })
         ]
     }
@@ -17,7 +17,7 @@ export default function (graph: any): checkChain[] {
     if (apiDoc.values.length === 0) {
         return [
             () => ({
-                messages: Result.Failure('ApiDocumentation resource not found in the representation')
+                message: Result.Failure('ApiDocumentation resource not found in the representation')
             })
         ]
     }

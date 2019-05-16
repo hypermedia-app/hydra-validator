@@ -8,10 +8,10 @@ test('should pass when status is successful', async () => {
     })
 
     // when
-    const [result] = await check(response)()
+    const {message} = await check(response).call({})
 
     // then
-    expect(result.status).toEqual('success')
+    expect(message!.status).toEqual('success')
 })
 
 test('should fail when status is not successful', async () => {
@@ -21,8 +21,8 @@ test('should fail when status is not successful', async () => {
     })
 
     // when
-    const [result] = await check(response)()
+    const {message} = await check(response).call({})
 
     // then
-    expect(result.status).toEqual('failure')
+    expect(message!.status).toEqual('failure')
 })

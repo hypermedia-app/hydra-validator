@@ -19,7 +19,7 @@ export default function (response: Response & any): checkChain {
         }
 
         return {
-            messages: Result.Success(`Successfully parsed ${dataset.length} triples`),
+            message: Result.Success(`Successfully parsed ${dataset.length} triples`),
             nextChecks
         }
     }

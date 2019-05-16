@@ -2,13 +2,13 @@ import {checkChain, Context, Result} from './check';
 
 function wrapCheck(check: checkChain, ctx: Context, level: number) {
     return async function () {
-        const {messages, context, nextChecks} = await check.call(ctx)
+        const {message, messages, context, nextChecks} = await check.call(ctx)
 
         const nextContext = context ? { ...ctx, ...context } : ctx
 
         return {
             level,
-            messages: Array.isArray(messages) ? messages : [messages],
+            messages: messages || [message],
             context: nextContext,
             nextChecks: nextChecks || []
         }

@@ -42,7 +42,8 @@ export type Context =  {
 }
 
 export type CheckResult = {
-    messages: Result | Result[],
+    message?: Result,
+    messages?: Result[],
     nextChecks?: checkChain[],
     context?: Context
 }
