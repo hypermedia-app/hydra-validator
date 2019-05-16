@@ -1,57 +1,48 @@
-import {checkChain, Result} from './check';
+import {checkChain, Context, Result} from './check';
+
+function wrapCheck(check: checkChain, ctx: Context) {
+    return async function () {
+        const {messages, context, nextChecks} = await check.call(ctx)
+
+        return {
+            messages,
+            context: context || ctx,
+            nextChecks
+        }
+    }
+}
 
 async function* runChecks(firstCheck: checkChain) {
+    const checkQueue = [ wrapCheck(firstCheck, { level: 0 }) ]
+
     yield {
         level: 0,
-        result: Result.Informational('Analysis started...')
+        message: Result.Informational('Analysis started...')
     }
 
-    let result, moreChecks
+    while (checkQueue.length > 0) {
+        const currentCheck = checkQueue.splice(0, 1)[0]
+        const {messages, context, nextChecks} = await currentCheck()
 
-    try {
-        [result, moreChecks] = await firstCheck()
-        moreChecks = moreChecks || []
-    } catch (e) {
-        yield {
-            level: 0,
-            result: Result.Failure('Unexpected error', e)
-        }
-        return
-    }
-
-    yield {
-        result,
-        level: 0
-    }
-
-    let checksLeveled = moreChecks.map(check => ({
-        level: 1,
-        check
-    }))
-
-    while (checksLeveled.length > 0) {
-        let result, moreMoreChecks
-        const nextCheck = checksLeveled.splice(0 ,1)[0]
-        try {
-            [result, moreMoreChecks] = await nextCheck.check()
-            moreMoreChecks = moreMoreChecks || []
-        } catch (e) {
+        const messagesArray = Array.isArray(messages) ? messages : [messages]
+        for (let message of messagesArray) {
             yield {
-                level: nextCheck.level,
-                result: Result.Failure('Unexpected error', e)
+                message,
+                level: context.level
             }
-            break;
         }
 
-        yield {
-            result,
-            level: nextCheck.level
-        }
+        if (nextChecks && nextChecks.length > 0) {
+            const wrapped = nextChecks.map(check => {
+                const newCtx = {
+                    ...context,
+                    level: context.level + 1
+                }
+                return wrapCheck(check, newCtx)
+            })
 
-        checksLeveled = moreMoreChecks.map(check => ({
-            check,
-            level: nextCheck.level + 1
-        })).concat(checksLeveled)
+            checkQueue.unshift(...wrapped)
+        }
     }
 }
 

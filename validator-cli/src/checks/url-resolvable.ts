@@ -1,25 +1,25 @@
 // @ts-ignore
 import * as fetch from 'rdf-fetch'
-import {checkChain, Result} from '../check';
+import {Result} from '../check';
 import statusCheck from './response/status-code'
 import apiDocLink from './response/api-doc-link'
 import analyseRepresentation from './analyseRepresentation'
 
-export default function<T, R> (url: string, fetchOnly = false): checkChain {
-    return async function (): Promise<[ Result, Array<checkChain> ]> {
+export default function (url: string, {fetchOnly = false} = {}) {
+    return async function tryFetch() {
         const response = await fetch(url)
 
-        const checks = [
+        const nextChecks = [
             statusCheck(response)
         ]
 
         if (!fetchOnly) {
-           checks.push(apiDocLink(response), analyseRepresentation(response))
+            nextChecks.push(apiDocLink(response), analyseRepresentation(response))
         }
 
-        return [
-            Result.Success(`Successfully fetched ${url}`),
-            checks
-        ]
+        return {
+            messages: Result.Success(`Successfully fetched ${url}`),
+            nextChecks
+        }
     }
 }

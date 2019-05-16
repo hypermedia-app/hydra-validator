@@ -1,15 +1,16 @@
 import {checkChain, Result} from '../../check';
 
-export default function(response: Response): checkChain {
-    return () => {
+export default function (response: Response): checkChain {
+    return function statusCode() {
         if(response.ok) {
-            return [
-                Result.Success(`Response status ${response.status}`)
-            ]
+            return {
+                messages: Result.Success(`Response status ${response.status}`)
+            }
+
         } else {
-            return [
-                Result.Failure('Request failed', `Status code was ${response.status}`)
-            ]
+            return {
+                messages: Result.Failure('Request failed', `Status code was ${response.status}`)
+            }
         }
     }
 }

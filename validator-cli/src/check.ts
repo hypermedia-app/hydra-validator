@@ -37,6 +37,14 @@ class Failure extends Result {
     }
 }
 
-export type CheckResult = [ Result, Array<checkChain> ] | [ Result ]
+export type Context =  {
+    [s: string]: any
+}
 
-export type checkChain = () => Promise<CheckResult> | CheckResult
+export type CheckResult = {
+    messages: Result | Result[],
+    nextChecks?: checkChain[],
+    context?: Context
+}
+
+export type checkChain = (this: Context) => Promise<CheckResult> | CheckResult
