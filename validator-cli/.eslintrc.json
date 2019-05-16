@@ -19,5 +19,13 @@
   ],
   "rules": {
     "@typescript-eslint/explicit-function-return-type": 0
-  }
+  },
+  "overrides": [
+    {
+      "files": ["*.spec.ts"],
+      "rules": {
+        "@typescript-eslint/no-non-null-assertion": 0
+      }
+    }
+  ]
 }
