@@ -6,20 +6,24 @@ import apiDocLink from './response/api-doc-link'
 import analyseRepresentation from './analyseRepresentation'
 
 export default function (url: string, {fetchOnly = false} = {}) {
-    return async function tryFetch() {
-        const response = await fetch(url)
+    return function tryFetch() {
+        return fetch(url)
+            .then((response: Response) => {
+                const nextChecks = [
+                    statusCheck(response)
+                ]
 
-        const nextChecks = [
-            statusCheck(response)
-        ]
+                if (!fetchOnly) {
+                    nextChecks.push(apiDocLink(response), analyseRepresentation(response))
+                }
 
-        if (!fetchOnly) {
-            nextChecks.push(apiDocLink(response), analyseRepresentation(response))
-        }
-
-        return {
-            message: Result.Success(`Successfully fetched ${url}`),
-            nextChecks
-        }
+                return {
+                    message: Result.Success(`Successfully fetched ${url}`),
+                    nextChecks
+                }
+            })
+            .catch((e: Error) => ({
+                message: Result.Failure('Failed to fetch resource', e)
+            }))
     }
 }
