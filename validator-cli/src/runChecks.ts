@@ -1,19 +1,23 @@
 import {checkChain, Context, Result} from './check';
 
-function wrapCheck(check: checkChain, ctx: Context) {
+function wrapCheck(check: checkChain, ctx: Context, level: number) {
     return async function () {
         const {messages, context, nextChecks} = await check.call(ctx)
 
+        const nextContext = context ? { ...ctx, ...context } : ctx
+
         return {
-            messages,
-            context: context || ctx,
-            nextChecks
+            level,
+            messages: Array.isArray(messages) ? messages : [messages],
+            context: nextContext,
+            nextChecks: nextChecks || []
         }
     }
 }
 
 async function* runChecks(firstCheck: checkChain) {
-    const checkQueue = [ wrapCheck(firstCheck, { level: 0 }) ]
+    let context = {}
+    const checkQueue = [ wrapCheck(firstCheck, context, 0) ]
 
     yield {
         level: 0,
@@ -22,27 +26,20 @@ async function* runChecks(firstCheck: checkChain) {
 
     while (checkQueue.length > 0) {
         const currentCheck = checkQueue.splice(0, 1)[0]
-        const {messages, context, nextChecks} = await currentCheck()
+        const {messages, context, nextChecks, level} = await currentCheck()
 
-        const messagesArray = Array.isArray(messages) ? messages : [messages]
-        for (let message of messagesArray) {
+        for (let message of messages) {
             yield {
                 message,
-                level: context.level
+                level: level
             }
         }
 
-        if (nextChecks && nextChecks.length > 0) {
-            const wrapped = nextChecks.map(check => {
-                const newCtx = {
-                    ...context,
-                    level: context.level + 1
-                }
-                return wrapCheck(check, newCtx)
-            })
+        const wrapped = nextChecks.map(check => {
+            return wrapCheck(check, context, level + 1)
+        })
 
-            checkQueue.unshift(...wrapped)
-        }
+        checkQueue.unshift(...wrapped)
     }
 }
 
