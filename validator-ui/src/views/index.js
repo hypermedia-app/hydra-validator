@@ -14,21 +14,21 @@ ViewTemplates.default.when
 
 ViewTemplates.default.when
   .scopeMatches('result')
-  .valueMatches(v => v.result && v.result.status !== 'failure')
+  .valueMatches(v => v.message && v.message.status !== 'failure')
   .renders(check => {
-    switch (check.result.status) {
+    switch (check.message.status) {
       case 'informational':
-        return item.information(check.result.description)
+        return item.information(check.message.description)
       case 'success':
-        return item.success(check.result.description)
+        return item.success(check.message.description)
       default:
-        return item.warning(check.result.description)
+        return item.warning(check.message.description)
     }
   })
 
 ViewTemplates.default.when
   .scopeMatches('result')
-  .valueMatches(v => v.result && v.result.status === 'failure')
+  .valueMatches(v => v.message && v.message.status === 'failure')
   .renders(check => {
-    return item.failure(check.result.description, check.result.details)
+    return item.failure(check.message.description, check.message.details)
   })
