@@ -1,13 +1,21 @@
 import entrypointPresent from './entrypointCheck'
 import hasSupportedClasses from './hasSupportedClasses'
-import {checkChain, Result} from '../../check';
+import { checkChain, Result } from '../../check'
 
 export default function (apiDoc: any): checkChain[] {
     if (apiDoc.values.length > 1) {
         return [
-            () => [
-                Result.Failure('Multiple ApiDocumentation resources found in representation')
-            ]
+            () => ({
+                result: Result.Failure('Multiple ApiDocumentation resources found in representation')
+            })
+        ]
+    }
+
+    if (apiDoc.values.length === 0) {
+        return [
+            () => ({
+                result: Result.Failure('ApiDocumentation resource not found in the representation')
+            })
         ]
     }
 
