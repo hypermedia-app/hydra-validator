@@ -1,12 +1,25 @@
 // @ts-ignore
 import * as fetch from 'rdf-fetch'
-import { Result } from '../check'
+import { Context, Result } from '../check'
 import statusCheck from './response/status-code'
 import apiDocLink from './response/api-doc-link'
 import analyseRepresentation from './analyse-representation'
 
 export default function (url: string, { fetchOnly = false, isApiDoc = false } = {}) {
-    return function tryFetch () {
+    return function tryFetch (this: Context) {
+        const urlNormalised = new URL(url).toString()
+        const context = {
+            visitedUrls: [ ...this.visitedUrls ]
+        }
+
+        if (context.visitedUrls.includes(urlNormalised) !== false) {
+            return {
+                result: Result.Informational(`Skipping already visited resource <${url}>`),
+                context
+            }
+        }
+        context.visitedUrls.push(urlNormalised)
+
         return fetch(url)
             .then(async (response: Response) => {
                 const nextChecks = [
@@ -23,11 +36,13 @@ export default function (url: string, { fetchOnly = false, isApiDoc = false } = 
 
                 return {
                     result: Result.Success(`Successfully fetched ${url}`),
-                    nextChecks
+                    nextChecks,
+                    context
                 }
             })
             .catch((e: Error) => ({
-                result: Result.Failure('Failed to fetch resource', e)
+                result: Result.Failure('Failed to fetch resource', e),
+                context
             }))
     }
 }

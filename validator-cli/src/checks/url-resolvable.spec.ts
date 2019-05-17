@@ -8,29 +8,74 @@ import check from './url-resolvable'
 import apiLinkCheck from './response/api-doc-link'
 import representationCheck from './analyse-representation'
 
+function testContext (visitedUrls: string[] = []) {
+    return {
+        visitedUrls
+    }
+}
+
 describe('url-resolvable', () => {
-    test('fails when fetch fails', async () => {
-    // given
-        fetch.mockReturnValue(Promise.reject(new Error()))
-        const context = {}
+    test('does not append to visitedUrls when URL is already present', async () => {
+        // given
+        const response = {
+            dataset: jest.fn()
+        }
+        fetch.mockReturnValue(Promise.resolve(response))
+        const inputContext = testContext(['http://exmaple.com/'])
 
         // when
-        const { result } = await check('').call(context)
+        const { context } = await check('http://exmaple.com/').call(inputContext)
 
         // then
-        expect(result!.status).toEqual('failure')
+        expect(context!.visitedUrls.length).toEqual(1)
+    })
+
+    test('returns informational when URL has already been visited', async () => {
+        // given
+        const inputContext = testContext(['urn:already:seen'])
+
+        // when
+        const { result, nextChecks } = await check('urn:already:seen').call(inputContext)
+
+        // then
+        expect(result!.status).toEqual('informational')
+        expect(nextChecks).toBeUndefined()
+    })
+
+    describe('when fetch fails', () => {
+        test('returns failure', async () => {
+            // given
+            fetch.mockReturnValue(Promise.reject(new Error()))
+
+            // when
+            const { result } = await check('https://example.com').call(testContext())
+
+            // then
+            expect(result!.status).toEqual('failure')
+        })
+
+        test('appends url to visitedUrls', async () => {
+            // given
+            fetch.mockReturnValue(Promise.reject(new Error()))
+
+            // when
+            const { context } = await check('https://example.com').call(testContext())
+
+            // then
+            expect(context!.visitedUrls).toContain('https://example.com/')
+        })
     })
 
     describe('when request succeeds', () => {
         test('returns success', async () => {
             // given
             fetch.mockReturnValue(Promise.resolve({
-                dataset: () => {}
+                dataset: () => {
+                }
             }))
-            const context = {}
 
             // when
-            const { result } = await check('').call(context)
+            const { result } = await check('https://example.com').call(testContext())
 
             // then
             expect(result!.status).toEqual('success')
@@ -39,10 +84,9 @@ describe('url-resolvable', () => {
         test('does not queue contents check if fetchOnly is true', async () => {
             // given
             fetch.mockReturnValue(Promise.resolve(new Response()))
-            const context = {}
 
             // when
-            const { nextChecks } = await check('', { fetchOnly: true }).call(context)
+            const { nextChecks } = await check('https://example.com', { fetchOnly: true }).call(testContext())
 
             // then
             expect(nextChecks!.length).toEqual(1)
@@ -52,12 +96,13 @@ describe('url-resolvable', () => {
         test('does not queue up Link check if apiDoc param is true', async () => {
             // given
             fetch.mockReturnValue(Promise.resolve({
-                dataset: () => {}
+                url: 'https://example.com',
+                dataset: () => {
+                }
             }))
-            const context = {}
 
             // when
-            await check('', { isApiDoc: true }).call(context)
+            await check('https://example.com', { isApiDoc: true }).call(testContext())
 
             // then
             expect(apiLinkCheck).not.toHaveBeenCalled()
@@ -66,13 +111,13 @@ describe('url-resolvable', () => {
         test('queues up Link check if apiDoc param is false', async () => {
             // given
             const response = {
-                dataset: () => {}
+                dataset: () => {
+                }
             }
             fetch.mockReturnValue(Promise.resolve(response))
-            const context = {}
 
             // when
-            await check('', { isApiDoc: false }).call(context)
+            await check('https://example.com', { isApiDoc: false }).call(testContext())
 
             // then
             expect(apiLinkCheck).toHaveBeenCalledWith(response)
@@ -84,10 +129,9 @@ describe('url-resolvable', () => {
                 dataset: jest.fn()
             }
             fetch.mockReturnValue(Promise.resolve(response))
-            const context = {}
 
             // when
-            await check('').call(context)
+            await check('https://example.com').call(testContext())
 
             // then
             expect(representationCheck).toHaveBeenCalledWith(response, false)
@@ -99,13 +143,26 @@ describe('url-resolvable', () => {
                 dataset: jest.fn()
             }
             fetch.mockReturnValue(Promise.resolve(response))
-            const context = {}
 
             // when
-            await check('', { isApiDoc: true }).call(context)
+            await check('https://example.com', { isApiDoc: true }).call(testContext())
 
             // then
             expect(representationCheck).toHaveBeenCalledWith(response, true)
+        })
+
+        test('appends url to visitedUrls', async () => {
+            // given
+            const response = {
+                dataset: jest.fn()
+            }
+            fetch.mockReturnValue(Promise.resolve(response))
+
+            // when
+            const { context } = await check('https://example.com').call(testContext())
+
+            // then
+            expect(context!.visitedUrls).toContain('https://example.com/')
         })
 
         beforeEach(() => {

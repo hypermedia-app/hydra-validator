@@ -25,7 +25,9 @@ function wrapCheck (check: checkChain, ctx: Context, level: number) {
 }
 
 async function * runChecks (firstCheck: checkChain) {
-    let context = {}
+    let context = {
+        visitedUrls: []
+    }
     const checkQueue = [ wrapCheck(firstCheck, context, 0) ]
 
     yield {

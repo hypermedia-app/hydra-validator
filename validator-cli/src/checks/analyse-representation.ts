@@ -23,7 +23,7 @@ export default function (response: Response & any, isApiDoc: boolean): checkChai
             })
             .catch((e: Error) => {
                 return {
-                    result: Result.Failure('Failed to parse', e)
+                    result: Result.Failure(`Failed to parse ${response.url}`, e)
                 }
             })
     }

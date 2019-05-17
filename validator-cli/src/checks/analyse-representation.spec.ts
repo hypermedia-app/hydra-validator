@@ -11,6 +11,7 @@ describe('analyse-representation', () => {
 
         beforeEach(() => {
             response = {
+                url: 'https://example.com/',
                 dataset: jest.fn()
             }
 
@@ -53,6 +54,7 @@ describe('analyse-representation', () => {
         test('should fail', async () => {
             // given
             const response = {
+                url: 'https://example.com',
                 dataset: jest.fn()
             }
 
