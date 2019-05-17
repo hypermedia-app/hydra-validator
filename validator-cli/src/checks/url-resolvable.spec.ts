@@ -1,9 +1,9 @@
-jest.mock('rdf-fetch')
+jest.mock('@rdfjs/fetch-lite')
 jest.mock('./response/api-doc-link')
 jest.mock('./analyse-representation')
 
 // @ts-ignore
-import * as fetch from 'rdf-fetch'
+import * as fetch from '@rdfjs/fetch-lite'
 import check from './url-resolvable'
 import apiLinkCheck from './response/api-doc-link'
 import representationCheck from './analyse-representation'
