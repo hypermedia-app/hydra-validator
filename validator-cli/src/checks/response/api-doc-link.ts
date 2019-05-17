@@ -5,7 +5,7 @@ import { Hydra } from '../../namespace'
 import urlResolveCheck from '../url-resolvable'
 import analyseRepresentation from '../analyse-representation'
 
-export default function (response: Response & any): checkChain {
+export default function (response: Response): checkChain {
     return async function apiDocLink () {
         if (!response.headers.has('link')) {
             return {
@@ -40,7 +40,7 @@ export default function (response: Response & any): checkChain {
 
         return {
             result: Result.Informational('Resource is Api Documentation'),
-            nextChecks: [analyseRepresentation(await response.dataset(), true)]
+            nextChecks: [analyseRepresentation(response, true)]
         }
     }
 }
