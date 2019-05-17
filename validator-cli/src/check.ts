@@ -55,6 +55,7 @@ export interface CheckResult {
     results?: IResult[];
     nextChecks?: checkChain[];
     context?: Context;
+    sameLevel?: boolean;
 }
 
 export type checkChain = (this: Context) => Promise<CheckResult> | CheckResult

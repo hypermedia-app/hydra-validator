@@ -3,6 +3,7 @@ import { checkChain, Result } from '../../check'
 import * as parse from 'parse-link-header'
 import { Hydra } from '../../namespace'
 import urlResolveCheck from '../url-resolvable'
+import analyseRepresentation from '../analyse-representation'
 
 export default function (response: Response & any): checkChain {
     return async function apiDocLink () {
@@ -33,12 +34,13 @@ export default function (response: Response & any): checkChain {
 
             return {
                 results,
-                nextChecks: [urlResolveCheck(apiDocUrl)]
+                nextChecks: [urlResolveCheck(apiDocUrl, { isApiDoc: true })]
             }
         }
 
         return {
-            result: Result.Informational('Resource is Api Documentation')
+            result: Result.Informational('Resource is Api Documentation'),
+            nextChecks: [analyseRepresentation(await response.dataset(), true)]
         }
     }
 }

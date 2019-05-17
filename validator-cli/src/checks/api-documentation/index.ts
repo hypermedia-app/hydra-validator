@@ -1,26 +1,10 @@
-import entrypointPresent from './entrypointCheck'
-import hasSupportedClasses from './hasSupportedClasses'
-import { checkChain, Result } from '../../check'
+import ensureSingleNode from './ensure-single-resource'
+import { Hydra, rdf } from '../../namespace'
 
-export default function (apiDoc: any): checkChain[] {
-    if (apiDoc.values.length > 1) {
-        return [
-            () => ({
-                result: Result.Failure('Multiple ApiDocumentation resources found in representation')
-            })
-        ]
-    }
-
-    if (apiDoc.values.length === 0) {
-        return [
-            () => ({
-                result: Result.Failure('ApiDocumentation resource not found in the representation')
-            })
-        ]
-    }
+export default function (graph: any) {
+    const apiDocs = graph.has(rdf.type, Hydra.ApiDocumentation)
 
     return [
-        entrypointPresent(apiDoc),
-        hasSupportedClasses(apiDoc)
+        ensureSingleNode(apiDocs)
     ]
 }
