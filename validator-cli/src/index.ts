@@ -3,6 +3,8 @@
 import * as program from 'commander'
 import runChecks from './runChecks'
 import urlResolvableCheck from './checks/url-resolvable'
+// @ts-ignore
+import * as fetch from 'nodeify-fetch'
 
 program
     .command('analyze <url>')
@@ -11,7 +13,7 @@ program
             .then(async () => {
                 const firstCheck = urlResolvableCheck(url)
 
-                const checkGenerator = runChecks(firstCheck)
+                const checkGenerator = runChecks(firstCheck, fetch)
 
                 for await (let check of checkGenerator) {
                     const prefix = check.level === 0 ? '' : `${'-'.repeat(check.level * 2)} `
