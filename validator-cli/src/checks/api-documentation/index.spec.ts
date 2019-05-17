@@ -1,31 +1,24 @@
-import apiDocChecks from './index'
+jest.mock('./ensure-single-resource')
+
+// @ts-ignore
+import * as clownface from 'clownface'
+// @ts-ignore
+import * as $rdf from 'rdf-ext'
+import { Hydra, rdf } from '../../namespace'
+import check from './index'
+import ensureSingleNode from './ensure-single-resource'
 
 describe('api-documentation', () => {
-    test('should queue failure when no api doc nodes were found', async () => {
+    test('should pass ApiDocumentation node to subsequent check', () => {
         // given
-        const fakeClownface = {
-            values: []
-        }
+        const graph = clownface($rdf.dataset())
+        graph.node('urn:api:doc').addOut(rdf.type, Hydra.ApiDocumentation)
 
         // when
-        const checkQueued = apiDocChecks(fakeClownface)
+        check(graph)
 
         // then
-        expect(checkQueued.length).toEqual(1)
-        expect((await checkQueued[0]()).result!.status).toEqual('failure')
-    })
-
-    test('should queue failure when multiple api doc nodes were found', async () => {
-        // given
-        const fakeClownface = {
-            values: [1, 2, 3]
-        }
-
-        // when
-        const checkQueued = apiDocChecks(fakeClownface)
-
-        // then
-        expect(checkQueued.length).toEqual(1)
-        expect((await checkQueued[0]()).result!.status).toEqual('failure')
+        const callArg = (ensureSingleNode as any).mock.calls[0][0]
+        expect(callArg.value).toEqual('urn:api:doc')
     })
 })

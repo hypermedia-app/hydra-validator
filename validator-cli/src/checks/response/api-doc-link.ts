@@ -3,12 +3,13 @@ import { checkChain, Result } from '../../check'
 import * as parse from 'parse-link-header'
 import { Hydra } from '../../namespace'
 import urlResolveCheck from '../url-resolvable'
+import analyseRepresentation from '../analyse-representation'
 
-export default function (response: Response & any): checkChain {
+export default function (response: Response): checkChain {
     return async function apiDocLink () {
         if (!response.headers.has('link')) {
             return {
-                result: Result.Failure('Link header missing')
+                result: Result.Failure('Link header missing'),
             }
         }
 
@@ -17,7 +18,7 @@ export default function (response: Response & any): checkChain {
 
         if (!links[Hydra.apiDocumentation.value]) {
             return {
-                result: Result.Failure(`rel=<${Hydra.apiDocumentation.value}> link not found in the response`)
+                result: Result.Failure(`rel=<${Hydra.apiDocumentation.value}> link not found in the response`),
             }
         }
 
@@ -33,12 +34,18 @@ export default function (response: Response & any): checkChain {
 
             return {
                 results,
-                nextChecks: [urlResolveCheck(apiDocUrl)]
+                nextChecks: [
+                    urlResolveCheck(apiDocUrl, { isApiDoc: true }),
+                    analyseRepresentation(response, false),
+                ],
+                sameLevel: true,
             }
         }
 
         return {
-            result: Result.Informational('Resource is Api Documentation')
+            result: Result.Informational('Resource is Api Documentation'),
+            nextChecks: [analyseRepresentation(response, true)],
+            sameLevel: true,
         }
     }
 }

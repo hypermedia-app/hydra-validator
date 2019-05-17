@@ -8,19 +8,19 @@ export default function (apiDoc: any): checkChain {
 
         if (entrypoint.values.length === 0) {
             return {
-                result: Result.Warning('Entrypoint not found in api documentation')
+                result: Result.Warning('Entrypoint not found in api documentation'),
             }
         }
 
         if (entrypoint.term.termType === 'Literal') {
             return {
-                result: Result.Failure(`hydra:entrypoint property found but the value was a literal`)
+                result: Result.Failure(`hydra:entrypoint property found but the value was a literal`),
             }
         }
 
         return {
             result: Result.Success(`Entrypoint found: ${entrypoint.term.value}`),
-            nextChecks: [checkDereference(entrypoint.term.value, { fetchOnly: true })]
+            nextChecks: [checkDereference(entrypoint.term.value, { fetchOnly: true })],
         }
     }
 }
