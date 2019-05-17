@@ -40,7 +40,8 @@ export default function (response: Response): checkChain {
 
         return {
             result: Result.Informational('Resource is Api Documentation'),
-            nextChecks: [analyseRepresentation(response, true)]
+            nextChecks: [analyseRepresentation(response, true)],
+            sameLevel: true
         }
     }
 }

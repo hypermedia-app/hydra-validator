@@ -99,4 +99,20 @@ describe('api-doc-link', () => {
         // then
         expect(urlResolveCheck).toHaveBeenCalledWith('http://example.com/doc', { isApiDoc: true })
     })
+
+    test('should keep same level when resource is api doc already', async () => {
+        // given
+        const response: any = {
+            url: 'urn:doc:link',
+            headers: new Headers({
+                Link: '<urn:doc:link>; rel="http://www.w3.org/ns/hydra/core#apiDocumentation"'
+            })
+        }
+
+        // when
+        const { sameLevel } = await check(response).call({})
+
+        // then
+        expect(sameLevel).toBeTruthy()
+    })
 })
