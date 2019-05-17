@@ -22,7 +22,7 @@ program
                         console.warn(`${prefix}${check.result.description}`)
                     } else {
                         // @ts-ignore
-                        console.error(`${prefix}${check.result.description} ${check.result.details}`)
+                        console.error(`${prefix}${check.result.description} ${check.result.details || ''}`)
                     }
                 }
             })
