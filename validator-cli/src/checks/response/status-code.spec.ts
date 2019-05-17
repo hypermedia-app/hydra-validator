@@ -5,7 +5,7 @@ describe('status-code', () => {
     test('should pass when status is successful', async () => {
     // given
         const response = new Response(null, {
-            status: 200
+            status: 200,
         })
         const context = {}
 
@@ -19,7 +19,7 @@ describe('status-code', () => {
     test('should fail when status is not successful', async () => {
     // given
         const response = new Response(null, {
-            status: 404
+            status: 404,
         })
         const context = {}
 

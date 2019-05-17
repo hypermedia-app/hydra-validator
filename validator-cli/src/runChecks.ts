@@ -19,20 +19,20 @@ function wrapCheck (check: checkChain, ctx: Context, level: number) {
             results: outResults,
             context: nextContext,
             nextChecks: nextChecks || [],
-            bumpLevel: !sameLevel
+            bumpLevel: !sameLevel,
         }
     }
 }
 
 async function * runChecks (firstCheck: checkChain) {
     let context = {
-        visitedUrls: []
+        visitedUrls: [],
     }
     const checkQueue = [ wrapCheck(firstCheck, context, 0) ]
 
     yield {
         level: 0,
-        result: Result.Informational('Analysis started...')
+        result: Result.Informational('Analysis started...'),
     }
 
     while (checkQueue.length > 0) {
@@ -42,7 +42,7 @@ async function * runChecks (firstCheck: checkChain) {
         for (let result of results) {
             yield {
                 result,
-                level: level
+                level: level,
             }
         }
 

@@ -4,7 +4,7 @@ describe('api-documentation', () => {
     test('should queue failure when no api doc nodes were found', async () => {
         // given
         const fakeClownface = {
-            values: []
+            values: [],
         }
 
         // when
@@ -17,7 +17,7 @@ describe('api-documentation', () => {
     test('should queue failure when multiple api doc nodes were found', async () => {
         // given
         const fakeClownface = {
-            values: [1, 2, 3]
+            values: [1, 2, 3],
         }
 
         // when
@@ -30,7 +30,7 @@ describe('api-documentation', () => {
     test('sets discovered api doc to context', async () => {
         // given
         const fakeClownface = {
-            values: ['urn:api:documentation']
+            values: ['urn:api:documentation'],
         }
 
         // when

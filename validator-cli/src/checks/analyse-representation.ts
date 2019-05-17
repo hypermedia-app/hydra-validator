@@ -18,12 +18,12 @@ export default function (response: Response & any, isApiDoc: boolean): checkChai
                 return {
                     result: Result.Success(`Successfully parsed ${dataset.length} triples`),
                     nextChecks,
-                    sameLevel: true
+                    sameLevel: true,
                 }
             })
             .catch((e: Error) => {
                 return {
-                    result: Result.Failure(`Failed to parse ${response.url}`, e)
+                    result: Result.Failure(`Failed to parse ${response.url}`, e),
                 }
             })
     }

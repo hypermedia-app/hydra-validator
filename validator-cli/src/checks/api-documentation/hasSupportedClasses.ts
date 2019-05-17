@@ -7,12 +7,12 @@ export default function (apiDoc: any): checkChain {
 
         if (classes.values.length === 0) {
             return {
-                result: Result.Warning('No SupportedClasses found')
+                result: Result.Warning('No SupportedClasses found'),
             }
         }
 
         return {
-            result: Result.Success(`Found ${classes.values.length} Supported Classes`)
+            result: Result.Success(`Found ${classes.values.length} Supported Classes`),
         }
     }
 }

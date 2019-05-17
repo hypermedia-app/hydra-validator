@@ -9,7 +9,7 @@ export default function (response: Response): checkChain {
     return async function apiDocLink () {
         if (!response.headers.has('link')) {
             return {
-                result: Result.Failure('Link header missing')
+                result: Result.Failure('Link header missing'),
             }
         }
 
@@ -18,7 +18,7 @@ export default function (response: Response): checkChain {
 
         if (!links[Hydra.apiDocumentation.value]) {
             return {
-                result: Result.Failure(`rel=<${Hydra.apiDocumentation.value}> link not found in the response`)
+                result: Result.Failure(`rel=<${Hydra.apiDocumentation.value}> link not found in the response`),
             }
         }
 
@@ -34,14 +34,18 @@ export default function (response: Response): checkChain {
 
             return {
                 results,
-                nextChecks: [urlResolveCheck(apiDocUrl, { isApiDoc: true })]
+                nextChecks: [
+                    urlResolveCheck(apiDocUrl, { isApiDoc: true }),
+                    analyseRepresentation(response, false),
+                ],
+                sameLevel: true,
             }
         }
 
         return {
             result: Result.Informational('Resource is Api Documentation'),
             nextChecks: [analyseRepresentation(response, true)],
-            sameLevel: true
+            sameLevel: true,
         }
     }
 }

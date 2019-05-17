@@ -9,7 +9,7 @@ describe('api-doc-link', () => {
     test('Fails when there is no link', async () => {
         // given
         const response = new Response(null, {
-            headers: {}
+            headers: {},
         })
         const context = {}
 
@@ -24,8 +24,8 @@ describe('api-doc-link', () => {
         // given
         const response = new Response(null, {
             headers: {
-                Link: '<someting>; rel="up"'
-            }
+                Link: '<someting>; rel="up"',
+            },
         })
         const context = {}
 
@@ -41,8 +41,8 @@ describe('api-doc-link', () => {
         const response: any = {
             url: 'urn:doc:link',
             headers: new Headers({
-                Link: '<urn:doc:link>; rel="http://www.w3.org/ns/hydra/core#apiDocumentation"'
-            })
+                Link: '<urn:doc:link>; rel="http://www.w3.org/ns/hydra/core#apiDocumentation"',
+            }),
         }
 
         // when
@@ -57,8 +57,8 @@ describe('api-doc-link', () => {
         const response: any = {
             url: 'http://example.com/',
             headers: new Headers({
-                Link: '</doc>; rel="http://www.w3.org/ns/hydra/core#apiDocumentation"'
-            })
+                Link: '</doc>; rel="http://www.w3.org/ns/hydra/core#apiDocumentation"',
+            }),
         }
 
         // when
@@ -73,8 +73,8 @@ describe('api-doc-link', () => {
         const response: any = {
             url: 'http://example.com/test/resource',
             headers: new Headers({
-                Link: '<doc>; rel="http://www.w3.org/ns/hydra/core#apiDocumentation"'
-            })
+                Link: '<doc>; rel="http://www.w3.org/ns/hydra/core#apiDocumentation"',
+            }),
         }
 
         // when
@@ -89,8 +89,8 @@ describe('api-doc-link', () => {
         const response: any = {
             url: 'http://example.com/test/resource',
             headers: new Headers({
-                Link: '<http://example.com/doc>; rel="http://www.w3.org/ns/hydra/core#apiDocumentation"'
-            })
+                Link: '<http://example.com/doc>; rel="http://www.w3.org/ns/hydra/core#apiDocumentation"',
+            }),
         }
 
         // when
@@ -105,8 +105,8 @@ describe('api-doc-link', () => {
         const response: any = {
             url: 'urn:doc:link',
             headers: new Headers({
-                Link: '<urn:doc:link>; rel="http://www.w3.org/ns/hydra/core#apiDocumentation"'
-            })
+                Link: '<urn:doc:link>; rel="http://www.w3.org/ns/hydra/core#apiDocumentation"',
+            }),
         }
 
         // when
@@ -114,5 +114,21 @@ describe('api-doc-link', () => {
 
         // then
         expect(sameLevel).toBeTruthy()
+    })
+
+    test('queues up representation check if link is not api doc', async () => {
+        // given
+        const response: any = {
+            url: 'http://example.com/test/resource',
+            headers: new Headers({
+                Link: '<doc>; rel="http://www.w3.org/ns/hydra/core#apiDocumentation"',
+            }),
+        }
+
+        // when
+        await check(response).call({})
+
+        // then
+        expect(representationCheck).toHaveBeenCalledWith(response, false)
     })
 })

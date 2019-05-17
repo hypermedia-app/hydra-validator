@@ -12,7 +12,7 @@ describe('analyse-representation', () => {
         beforeEach(() => {
             response = {
                 url: 'https://example.com/',
-                dataset: jest.fn()
+                dataset: jest.fn(),
             }
 
             response.dataset.mockResolvedValue(rdf.dataset())
@@ -55,7 +55,7 @@ describe('analyse-representation', () => {
             // given
             const response = {
                 url: 'https://example.com',
-                dataset: jest.fn()
+                dataset: jest.fn(),
             }
 
             response.dataset.mockRejectedValue(new Error())

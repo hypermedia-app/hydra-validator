@@ -10,7 +10,7 @@ import representationCheck from './analyse-representation'
 
 function testContext (visitedUrls: string[] = []) {
     return {
-        visitedUrls
+        visitedUrls,
     }
 }
 
@@ -18,16 +18,16 @@ describe('url-resolvable', () => {
     test('does not append to visitedUrls when URL is already present', async () => {
         // given
         const response = {
-            dataset: jest.fn()
+            dataset: jest.fn(),
         }
         fetch.mockReturnValue(Promise.resolve(response))
-        const inputContext = testContext(['http://exmaple.com/'])
+        const context = testContext(['http://exmaple.com/'])
 
         // when
-        const { context } = await check('http://exmaple.com/').call(inputContext)
+        await check('http://exmaple.com/').call(context)
 
         // then
-        expect(context!.visitedUrls.length).toEqual(1)
+        expect(context.visitedUrls.length).toEqual(1)
     })
 
     test('returns informational when URL has already been visited', async () => {
@@ -57,12 +57,13 @@ describe('url-resolvable', () => {
         test('appends url to visitedUrls', async () => {
             // given
             fetch.mockReturnValue(Promise.reject(new Error()))
+            const context = testContext()
 
             // when
-            const { context } = await check('https://example.com').call(testContext())
+            await check('https://example.com').call(context)
 
             // then
-            expect(context!.visitedUrls).toContain('https://example.com/')
+            expect(context.visitedUrls).toContain('https://example.com/')
         })
     })
 
@@ -71,7 +72,7 @@ describe('url-resolvable', () => {
             // given
             fetch.mockReturnValue(Promise.resolve({
                 dataset: () => {
-                }
+                },
             }))
 
             // when
@@ -98,7 +99,7 @@ describe('url-resolvable', () => {
             fetch.mockReturnValue(Promise.resolve({
                 url: 'https://example.com',
                 dataset: () => {
-                }
+                },
             }))
 
             // when
@@ -112,7 +113,7 @@ describe('url-resolvable', () => {
             // given
             const response = {
                 dataset: () => {
-                }
+                },
             }
             fetch.mockReturnValue(Promise.resolve(response))
 
@@ -123,24 +124,10 @@ describe('url-resolvable', () => {
             expect(apiLinkCheck).toHaveBeenCalledWith(response)
         })
 
-        test('queues up representation check by default', async () => {
-            // given
-            const response = {
-                dataset: jest.fn()
-            }
-            fetch.mockReturnValue(Promise.resolve(response))
-
-            // when
-            await check('https://example.com').call(testContext())
-
-            // then
-            expect(representationCheck).toHaveBeenCalledWith(response, false)
-        })
-
         test('queues up representation check when apiDoc param is true', async () => {
             // given
             const response = {
-                dataset: jest.fn()
+                dataset: jest.fn(),
             }
             fetch.mockReturnValue(Promise.resolve(response))
 
@@ -154,12 +141,13 @@ describe('url-resolvable', () => {
         test('appends url to visitedUrls', async () => {
             // given
             const response = {
-                dataset: jest.fn()
+                dataset: jest.fn(),
             }
             fetch.mockReturnValue(Promise.resolve(response))
+            const context = testContext()
 
             // when
-            const { context } = await check('https://example.com').call(testContext())
+            await check('https://example.com').call(context)
 
             // then
             expect(context!.visitedUrls).toContain('https://example.com/')

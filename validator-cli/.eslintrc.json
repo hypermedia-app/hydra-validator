@@ -18,7 +18,8 @@
     "jest"
   ],
   "rules": {
-    "@typescript-eslint/explicit-function-return-type": 0
+    "@typescript-eslint/explicit-function-return-type": 0,
+    "comma-dangle": ["error", "always-multiline"]
   },
   "overrides": [
     {
