@@ -37,7 +37,8 @@ It can also be async.
 
 ```ts
 export interface CheckResult {
-    results?: IResult | IResult[];
+    result?: IResult;
+    results?: IResult[];
     nextChecks?: checkChain[];
     sameLevel?: boolean;
 }

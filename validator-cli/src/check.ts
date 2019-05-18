@@ -50,11 +50,18 @@ export interface Context {
     [s: string]: any;
 }
 
+/**
+ * Return type of check functions. Either results, or result will be reported
+ */
 export interface CheckResult {
     /**
      * Results to be reported
      */
-    results?: IResult | IResult[];
+    result?: IResult;
+    /**
+     * Results to be reported
+     */
+    results?: IResult[];
     /**
      * Checks to add to queue
      */

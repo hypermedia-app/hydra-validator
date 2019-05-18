@@ -1,10 +1,8 @@
 import { checkChain, Context, Result } from './check'
 
-function wrapCheck (check: checkChain, ctx: Context, level: number) {
-    return async function () {
-        const { result, results, context, nextChecks, sameLevel } = await check.call(ctx)
-
-        const nextContext = context ? { ...ctx, ...context } : ctx
+function wrapCheck (check: checkChain, level: number) {
+    return async function (ctx: Context) {
+        const { result, results, nextChecks, sameLevel } = await check.call(ctx)
 
         const outResults = []
         if (result) {
@@ -17,7 +15,6 @@ function wrapCheck (check: checkChain, ctx: Context, level: number) {
         return {
             level,
             results: outResults,
-            context: nextContext,
             nextChecks: nextChecks || [],
             bumpLevel: !sameLevel,
         }
@@ -29,7 +26,7 @@ async function * runChecks (firstCheck: checkChain, fetch: (input: RequestInfo, 
         visitedUrls: [],
         fetch,
     }
-    const checkQueue = [ wrapCheck(firstCheck, context, 0) ]
+    const checkQueue = [ wrapCheck(firstCheck, 0) ]
 
     yield {
         level: 0,
@@ -38,12 +35,12 @@ async function * runChecks (firstCheck: checkChain, fetch: (input: RequestInfo, 
 
     while (checkQueue.length > 0) {
         const currentCheck = checkQueue.splice(0, 1)[0]
-        const { results, context, nextChecks, level, bumpLevel } = await currentCheck()
+        const { results, nextChecks, level, bumpLevel } = await currentCheck(context)
 
         for (let result of results) {
             yield {
                 result,
-                level: level,
+                level,
             }
         }
 
@@ -53,10 +50,15 @@ async function * runChecks (firstCheck: checkChain, fetch: (input: RequestInfo, 
                 nextLevel += 1
             }
 
-            return wrapCheck(check, context, nextLevel)
+            return wrapCheck(check, nextLevel)
         })
 
         checkQueue.unshift(...wrapped)
+    }
+
+    yield {
+        level: 0,
+        result: Result.Informational('Analysis complete.'),
     }
 }
 

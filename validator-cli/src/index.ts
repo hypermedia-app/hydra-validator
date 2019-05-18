@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import * as program from 'commander'
-import runChecks from './runChecks'
+import runChecks from './run-checks'
 import urlResolvableCheck from './checks/url-resolvable'
 // @ts-ignore
 import * as fetch from 'nodeify-fetch'
