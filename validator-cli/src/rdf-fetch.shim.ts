@@ -19,9 +19,13 @@ async function dataset (this: Response) {
 
     quadStream.on('data', (quad: any) => dataset.add(quad))
 
-    return new Promise(resolve => {
+    return new Promise((resolve, reject) => {
         quadStream.on('end', () => {
             resolve(dataset)
+        })
+
+        quadStream.on('error', (e: Error) => {
+            reject(e)
         })
     })
 }
