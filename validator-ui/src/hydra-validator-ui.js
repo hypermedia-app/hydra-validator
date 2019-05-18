@@ -18,7 +18,7 @@ validator-shell {
   <p>This page let's authors run a set of tests against their Hydra server.</p>
   
   <h2>Usage</h2>
-  <p>Type of paste an URL to verify in the address bar above and press ENTER</p>
+  <p>Type or paste an URL to verify in the address bar above and press ENTER</p>
   
   <h2>The results</h2>
   <p>Results will be presented as a simple list. Each has of four possible outcomes:</p>
