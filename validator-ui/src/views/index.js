@@ -18,11 +18,11 @@ ViewTemplates.default.when
   .renders(check => {
     switch (check.result.status) {
       case 'informational':
-        return item.information(check.result.description)
+        return item.information(check.result.description, check.result.details)
       case 'success':
-        return item.success(check.result.description)
+        return item.success(check.result.description, check.result.details)
       default:
-        return item.warning(check.result.description)
+        return item.warning(check.result.description, check.result.details)
     }
   })
 

@@ -36,13 +36,18 @@ Each verification check is a parameterless function, which returns the result an
 It can also be async.
 
 ```ts
-export type CheckResult = [ Result, Array<checkChain> ] | [ Result ]
+export interface CheckResult {
+    result?: IResult;
+    results?: IResult[];
+    nextChecks?: checkChain[];
+    sameLevel?: boolean;
+}
 
-export type checkChain = () => Promise<CheckResult> | CheckResult
+export type checkChain = (this: Context) => Promise<CheckResult> | CheckResult
 ```
 
 To implement a check, you'd usually wrap the check function in a closure to pass in dependencies. This way checks are chained
-to run when the previoud check suceeds.
+to run when the previous check succeeds.
 
 Here's an example which could verify that the input is a number and then pass on to a check for parity.
 
@@ -55,13 +60,13 @@ export default function (maybeNum: any): checkChain {
     return () => {
         if (Number.isInteger(maybeNum)) {
             return {
-                result: Result.Success('Value is number'),
+                results: Result.Success('Value is number'),
                 nextChecks: [ iseven(maybeNum) ]
             }
         }
 
         return {
-            result: Result.Failure('Value is not a number')
+            results: Result.Failure('Value is not a number')
         }
     }
 }
@@ -75,7 +80,7 @@ export default function (num: number): checkChain {
             ? Result.Success(`Number ${num} is even`)
             : Result.Failure(`Number ${num} is odd`)
 
-        return { result }
+        return { results: result }
     }
 }
 ```
