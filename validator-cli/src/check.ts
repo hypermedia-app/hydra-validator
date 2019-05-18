@@ -21,26 +21,28 @@ class Failure implements IResult {
 export class Result implements IResult {
     public description: string
     public status: ResultKind
+    public details?: string
 
-    protected constructor (descrition: string, status: ResultKind) {
+    protected constructor (descrition: string, status: ResultKind, details?: string) {
         this.description = descrition
         this.status = status
+        this.details = details
     }
 
-    public static Success (description: string = '') {
-        return new Result(description, 'success')
+    public static Success (description: string = '', details?: string) {
+        return new Result(description, 'success', details)
     }
 
     public static Failure (reason: string, details?: string | Error): IResult {
         return new Failure('failed', reason, details)
     }
 
-    public static Warning (description: string) {
-        return new Result(description, 'warning')
+    public static Warning (description: string, details?: string) {
+        return new Result(description, 'warning', details)
     }
 
-    public static Informational (description: string) {
-        return new Result(description, 'informational')
+    public static Informational (description: string, details?: string) {
+        return new Result(description, 'informational', details)
     }
 }
 

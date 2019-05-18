@@ -22,7 +22,12 @@ function wrapCheck (check: checkChain, level: number) {
 }
 
 async function * runChecks (firstCheck: checkChain, fetch: (input: RequestInfo, init?: RequestInit) => Promise<Response>) {
-    let context = {
+    const summary = {
+        successes: 0,
+        warnings: 0,
+        failures: 0,
+    }
+    const context = {
         visitedUrls: [],
         fetch,
     }
@@ -38,6 +43,18 @@ async function * runChecks (firstCheck: checkChain, fetch: (input: RequestInfo, 
         const { results, nextChecks, level, bumpLevel } = await currentCheck(context)
 
         for (let result of results) {
+            switch (result.status) {
+                case 'success':
+                    summary.successes++
+                    break
+                case 'failure':
+                    summary.failures++
+                    break
+                case 'warning':
+                    summary.warnings++
+                    break
+            }
+
             yield {
                 result,
                 level,
@@ -56,9 +73,20 @@ async function * runChecks (firstCheck: checkChain, fetch: (input: RequestInfo, 
         checkQueue.unshift(...wrapped)
     }
 
+    const details = `Successful checks: ${summary.successes}`
+    let summaryResult = Result.Success('Analysis complete', details)
+
+    if (summary.warnings > 0) {
+        summaryResult = Result.Warning('Analysis complete with warnings', details)
+    }
+
+    if (summary.failures > 0) {
+        summaryResult = Result.Failure('Analysis complete with errors', details)
+    }
+
     yield {
         level: 0,
-        result: Result.Informational('Analysis complete.'),
+        result: summaryResult,
     }
 }
 

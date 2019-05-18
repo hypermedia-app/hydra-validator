@@ -92,6 +92,54 @@ describe('run-checks', () => {
         expect(results.length).toBe(4)
     })
 
+    test('yields failure summary when any check fails', async () => {
+        // given
+        const firstCheck = jest.fn().mockResolvedValue({
+            results: [
+                Result.Success('test'),
+                Result.Failure('test', 'test'),
+            ],
+        })
+
+        // when
+        const results = await getResults(runChecks(firstCheck, fetch))
+
+        // then
+        expect(results.pop()!.result.status).toBe('failure')
+    })
+
+    test('yields success summary when all check succeed', async () => {
+        // given
+        const firstCheck = jest.fn().mockResolvedValue({
+            results: [
+                Result.Success('test'),
+                Result.Success('test'),
+            ],
+        })
+
+        // when
+        const results = await getResults(runChecks(firstCheck, fetch))
+
+        // then
+        expect(results.pop()!.result.status).toBe('success')
+    })
+
+    test('yields warning summary when any check fails', async () => {
+        // given
+        const firstCheck = jest.fn().mockResolvedValue({
+            results: [
+                Result.Success('test'),
+                Result.Warning('test'),
+            ],
+        })
+
+        // when
+        const results = await getResults(runChecks(firstCheck, fetch))
+
+        // then
+        expect(results.pop()!.result.status).toBe('warning')
+    })
+
     test('bumps level for nextCheck', async () => {
         // given
         const spy = jest.fn().mockResolvedValue({
