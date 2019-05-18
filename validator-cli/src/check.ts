@@ -1,7 +1,7 @@
 type ResultKind = 'success' | 'failure' | 'informational' | 'warning'
 
 // eslint-disable-next-line @typescript-eslint/interface-name-prefix
-interface IResult {
+export interface IResult {
     description: string;
     status: ResultKind;
 }
@@ -31,7 +31,7 @@ export class Result implements IResult {
         return new Result(description, 'success')
     }
 
-    public static Failure (reason: string, details?: string | Error) {
+    public static Failure (reason: string, details?: string | Error): IResult {
         return new Failure('failed', reason, details)
     }
 

@@ -1,15 +1,14 @@
-jest.mock('rdf-fetch')
 jest.mock('./response/api-doc-link')
 jest.mock('./analyse-representation')
 
-// @ts-ignore
-import * as fetch from 'rdf-fetch'
 import check from './url-resolvable'
 import apiLinkCheck from './response/api-doc-link'
 import representationCheck from './analyse-representation'
 
+const fetch = jest.fn()
 function testContext (visitedUrls: string[] = []) {
     return {
+        fetch,
         visitedUrls,
     }
 }
@@ -84,7 +83,7 @@ describe('url-resolvable', () => {
 
         test('does not queue contents check if fetchOnly is true', async () => {
             // given
-            fetch.mockReturnValue(Promise.resolve(new Response()))
+            fetch.mockReturnValue(Promise.resolve({}))
 
             // when
             const { nextChecks } = await check('https://example.com', { fetchOnly: true }).call(testContext())

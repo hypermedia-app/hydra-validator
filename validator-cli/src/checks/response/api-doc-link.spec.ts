@@ -1,6 +1,7 @@
 jest.mock('../analyse-representation')
 jest.mock('../url-resolvable')
 
+import 'isomorphic-fetch'
 import check from './api-doc-link'
 import representationCheck from '../analyse-representation'
 import urlResolveCheck from '../url-resolvable'

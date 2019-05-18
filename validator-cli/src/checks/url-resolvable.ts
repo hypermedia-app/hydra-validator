@@ -1,5 +1,4 @@
-// @ts-ignore
-import * as fetch from 'rdf-fetch'
+import shimmed from '../rdf-fetch.shim'
 import { Context, Result } from '../check'
 import statusCheck from './response/status-code'
 import apiDocLink from './response/api-doc-link'
@@ -16,8 +15,10 @@ export default function (url: string, { fetchOnly = false, isApiDoc = false } = 
         }
         this.visitedUrls.push(urlNormalised)
 
-        return fetch(url)
-            .then(async (response: Response) => {
+        return this.fetch(url)
+            .then(async (response: Response & any) => {
+                response.dataset = shimmed.dataset.bind(response)
+
                 const nextChecks = [
                     statusCheck(response),
                 ]

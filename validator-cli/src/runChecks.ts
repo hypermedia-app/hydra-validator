@@ -24,9 +24,10 @@ function wrapCheck (check: checkChain, ctx: Context, level: number) {
     }
 }
 
-async function * runChecks (firstCheck: checkChain) {
+async function * runChecks (firstCheck: checkChain, fetch: (input: RequestInfo, init?: RequestInit) => Promise<Response>) {
     let context = {
         visitedUrls: [],
+        fetch,
     }
     const checkQueue = [ wrapCheck(firstCheck, context, 0) ]
 

@@ -1,6 +1,7 @@
 language: node_js
 node_js:
-- 11
+- "11"
+- "10"
 
 before_install:
 - export CXX="g++-4.9" CC="gcc-4.9"
