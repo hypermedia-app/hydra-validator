@@ -5,7 +5,7 @@ A tool (also website) validating a Hydra API against possible mistakes
 
 ### Online tool
 
-To check any endpoint for Hydra controls nd their correctness go to https://analyse.hypermedia.app and paste an URL
+To check any endpoint for Hydra controls and their correctness go to https://analyse.hypermedia.app and paste an URL
 to the textbox and press ENTER.
 
 The website will dereference that resource and linked API Documentation (if any) and try to check it against the implemented
