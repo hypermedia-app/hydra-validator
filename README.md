@@ -24,7 +24,7 @@ To install
 npm i -g hydra-validator
 ```
 
-And the run
+And then run
 
 ```
 hydra-validator analyze <URL>
