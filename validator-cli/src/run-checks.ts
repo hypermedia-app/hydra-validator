@@ -73,14 +73,16 @@ async function * runChecks (firstCheck: checkChain, fetch: (input: RequestInfo, 
         checkQueue.unshift(...wrapped)
     }
 
-    const details = `Successful checks: ${summary.successes}`
+    let details = `Success: ${summary.successes}`
     let summaryResult = Result.Success('Analysis complete', details)
 
     if (summary.warnings > 0) {
+        details = `${details}, Warnings: ${summary.warnings}`
         summaryResult = Result.Warning('Analysis complete with warnings', details)
     }
 
     if (summary.failures > 0) {
+        details = `${details}, Failures: ${summary.failures}`
         summaryResult = Result.Failure('Analysis complete with errors', details)
     }
 
