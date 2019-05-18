@@ -21,11 +21,10 @@ export default function (apiDocumentation: any): checkChain {
             }
         }
 
+        this.apiDocumentation = apiDocumentation
+
         return {
             nextChecks,
-            context: {
-                apiDocumentation,
-            },
             sameLevel: true,
         }
     }

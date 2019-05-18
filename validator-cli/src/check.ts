@@ -51,11 +51,21 @@ export interface Context {
 }
 
 export interface CheckResult {
-    result?: IResult;
-    results?: IResult[];
+    /**
+     * Results to be reported
+     */
+    results?: IResult | IResult[];
+    /**
+     * Checks to add to queue
+     */
     nextChecks?: checkChain[];
-    context?: Context;
+    /**
+     * If true, does not nest nextChecks
+     */
     sameLevel?: boolean;
 }
 
+/**
+ * Function delegate which runs actual check. It can be asynchronous
+ */
 export type checkChain = (this: Context) => Promise<CheckResult> | CheckResult

@@ -1,4 +1,5 @@
 import ensureSingleResource from './ensure-single-resource'
+import { Context } from '../../check'
 
 describe('api-documentation', () => {
     test('should queue failure when no api doc nodes were found', async () => {
@@ -32,11 +33,12 @@ describe('api-documentation', () => {
         const fakeClownface = {
             values: ['urn:api:documentation'],
         }
+        const context: Context = {}
 
         // when
-        const { context } = await ensureSingleResource(fakeClownface).call({})
+        await ensureSingleResource(fakeClownface).call(context)
 
         // then
-        expect(context!.apiDocumentation).toEqual(fakeClownface)
+        expect(context.apiDocumentation).toEqual(fakeClownface)
     })
 })
