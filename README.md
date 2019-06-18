@@ -60,13 +60,13 @@ export default function (maybeNum: any): checkChain {
     return () => {
         if (Number.isInteger(maybeNum)) {
             return {
-                results: Result.Success('Value is number'),
+                result: Result.Success('Value is number'),
                 nextChecks: [ iseven(maybeNum) ]
             }
         }
 
         return {
-            results: Result.Failure('Value is not a number')
+            result: Result.Failure('Value is not a number')
         }
     }
 }
@@ -80,7 +80,7 @@ export default function (num: number): checkChain {
             ? Result.Success(`Number ${num} is even`)
             : Result.Failure(`Number ${num} is odd`)
 
-        return { results: result }
+        return { result }
     }
 }
 ```
