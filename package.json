@@ -6,6 +6,9 @@
     "test": "lerna run test"
   },
   "devDependencies": {
+    "@commitlint/cli": "^8.0.0",
+    "@commitlint/config-conventional": "^8.0.0",
+    "husky": "^2.4.1",
     "lerna": "^3.13.0"
   }
 }

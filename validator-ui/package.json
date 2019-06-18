@@ -7,7 +7,8 @@
     "start:dev:legacy": "webpack-dev-server --mode development --legacy",
     "start:prod": "http-server dist/ -o",
     "build": "webpack --mode production",
-    "build:stats": "webpack --mode production --profile --json > bundle-stats.json"
+    "build:stats": "webpack --mode production --profile --json > bundle-stats.json",
+    "precommit": "lint-staged"
   },
   "dependencies": {
     "@hydrofoil/hydrofoil-paper-shell": "^0.1.3",
@@ -32,7 +33,8 @@
     "owc-dev-server": "^0.3.0",
     "standard": "^12.0.1",
     "webpack-cli": "^3.2.3",
-    "webpack-dev-server": "^3.1.14"
+    "webpack-dev-server": "^3.1.14",
+    "lint-staged": "^8.2.1"
   },
   "private": true,
   "version": "0.0.3"
