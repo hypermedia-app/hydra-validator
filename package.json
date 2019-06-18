@@ -3,12 +3,14 @@
   "private": true,
   "scripts": {
     "postinstall": "lerna bootstrap",
-    "test": "lerna run test"
+    "test": "lerna run test",
+    "version": "standard-changelog && git add CHANGELOG.md"
   },
   "devDependencies": {
     "@commitlint/cli": "^8.0.0",
     "@commitlint/config-conventional": "^8.0.0",
     "husky": "^2.4.1",
-    "lerna": "^3.13.0"
+    "lerna": "^3.13.0",
+    "standard-changelog": "^2.0.11"
   }
 }
