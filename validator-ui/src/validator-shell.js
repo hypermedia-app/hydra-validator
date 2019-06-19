@@ -68,8 +68,8 @@ ${super.renderMain()}`
 
   async loadResourceInternal (url) {
     const [runChecks, firstCheck] = await Promise.all([
-            import('hydra-validator/dist/run-checks'),
-            import('hydra-validator/dist/checks/url-resolvable')
+            import('hydra-validator-core/dist/run-checks'),
+            import('hydra-validator-analyse/dist/checks/url-resolvable')
     ])
 
     return runChecks.default(firstCheck.default(url), fetch.bind(window))

@@ -1,5 +1,5 @@
 import ensureSingleResource from './ensure-single-resource'
-import { Context } from '../../check'
+import { Context } from 'hydra-validator-core'
 
 describe('api-documentation', () => {
     test('should queue failure when no api doc nodes were found', async () => {

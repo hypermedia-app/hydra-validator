@@ -1,4 +1,4 @@
-import { checkChain, Result } from '../../check'
+import { checkChain, Result } from 'hydra-validator-core'
 import entrypointPresent from './entrypointCheck'
 import hasSupportedClasses from './hasSupportedClasses'
 

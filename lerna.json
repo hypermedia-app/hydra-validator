@@ -2,7 +2,9 @@
   "packages": [
     "validator-cli",
     "validator-ui",
-    "validator-e2e"
+    "validator-e2e",
+    "validator-analyse",
+    "validator-core"
   ],
   "version": "0.1.0",
   "command": {

@@ -1,4 +1,4 @@
-import { checkChain, Result } from '../../check'
+import { checkChain, Result } from 'hydra-validator-core'
 
 export default function (response: Response): checkChain {
     return function statusCode () {

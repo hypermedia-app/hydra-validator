@@ -1,5 +1,5 @@
 import shimmed from '../rdf-fetch.shim'
-import { Context, Result } from '../check'
+import { Context, Result } from 'hydra-validator-core'
 import statusCheck from './response/status-code'
 import apiDocLink from './response/api-doc-link'
 import analyseRepresentation from './analyse-representation'

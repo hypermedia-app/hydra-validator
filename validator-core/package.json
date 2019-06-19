@@ -1,11 +1,8 @@
 {
-  "name": "hydra-validator",
+  "name": "hydra-validator-core",
   "version": "0.1.0",
-  "description": "CLI tool to run checks against a Hydra API",
+  "description": "Shared package for hydra-validator",
   "main": "dist/index.js",
-  "bin": {
-    "hydra-validator": "dist/index.js"
-  },
   "files": [
     "dist/**/*.js"
   ],
@@ -48,9 +45,6 @@
     "typescript": "^3.4.5"
   },
   "dependencies": {
-    "commander": "^2.20.0",
-    "nodeify-fetch": "^2.0.0",
-    "hydra-validator-core": "^0.1.0",
-    "hydra-validator-analyse": "^0.1.0"
+    "@rdfjs/namespace": "^1.0.0"
   }
 }

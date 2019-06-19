@@ -1,5 +1,5 @@
 import runChecks from './run-checks'
-import { checkChain, Result } from './check'
+import { checkChain, Result } from '.'
 
 async function getResults<T> (iter: AsyncIterableIterator<T>) {
     const results: T[] = []

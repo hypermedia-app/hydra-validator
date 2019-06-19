@@ -1,8 +1,7 @@
 #!/usr/bin/env node
 
 import * as program from 'commander'
-import runChecks from './run-checks'
-import urlResolvableCheck from './checks/url-resolvable'
+import runChecks from 'hydra-validator-core/dist/run-checks'
 // @ts-ignore
 import * as fetch from 'nodeify-fetch'
 
@@ -11,7 +10,9 @@ program
     .action(function (url: string) {
         Promise.resolve()
             .then(async () => {
-                const firstCheck = urlResolvableCheck(url)
+                // eslint-disable-next-line @typescript-eslint/no-var-requires
+                const { check } = require(`hydra-validator-analyse`)
+                const firstCheck = check(url)
 
                 const checkGenerator = runChecks(firstCheck, fetch)
 

@@ -1,4 +1,4 @@
-import { checkChain, Context, Result } from './check'
+import { checkChain, Context, Result } from '.'
 
 function wrapCheck (check: checkChain, level: number) {
     return async function (ctx: Context) {

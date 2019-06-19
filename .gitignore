@@ -1,4 +1,6 @@
 node_modules/
 dist/
 coverage/
-validator-cli/src/**/*.js
+**/src/**/*.js
+!validator-ui/src/**/*.js
+*.log

@@ -1,6 +1,6 @@
 // @ts-ignore
 import * as clownface from 'clownface'
-import { checkChain, Result } from '../check'
+import { checkChain, Result } from 'hydra-validator-core'
 import apiDocsChecks from './api-documentation'
 
 export default function (response: Response & any, isApiDoc: boolean): checkChain {

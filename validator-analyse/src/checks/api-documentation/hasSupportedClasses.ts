@@ -1,5 +1,5 @@
-import { Hydra } from '../../namespace'
-import { checkChain, Result } from '../../check'
+import { Hydra } from 'hydra-validator-core/dist/namespace'
+import { checkChain, Result } from 'hydra-validator-core'
 
 export default function (apiDoc: any): checkChain {
     return function supportedClasses () {
