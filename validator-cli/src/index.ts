@@ -6,12 +6,12 @@ import runChecks from 'hydra-validator-core/dist/run-checks'
 import * as fetch from 'nodeify-fetch'
 
 program
-    .command('analyze <url>')
-    .action(function (url: string) {
+    .arguments('<cmd> <url>')
+    .action(function (cmd: string, url: string) {
         Promise.resolve()
             .then(async () => {
                 // eslint-disable-next-line @typescript-eslint/no-var-requires
-                const { check } = require(`hydra-validator-analyse`)
+                const { check } = require(`hydra-validator-${cmd}`)
                 const firstCheck = check(url)
 
                 const checkGenerator = runChecks(firstCheck, fetch)
