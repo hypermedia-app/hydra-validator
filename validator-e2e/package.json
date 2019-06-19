@@ -1,0 +1,47 @@
+{
+  "name": "hydra-validator-e2e",
+  "version": "0.1.0",
+  "description": "A set of tools to execute E2E tests on a Hydra API",
+  "main": "dist/index.js",
+  "files": [
+    "dist/**/*.js"
+  ],
+  "scripts": {
+    "pretest": "eslint --ext ts . --quiet",
+    "build": "tsc",
+    "prepublishOnly": "rimraf dist; npm run build",
+    "precommit": "lint-staged"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hypermedia-app/hydra-validator.git"
+  },
+  "keywords": [
+    "hydra",
+    "hypermedia",
+    "validator",
+    "e2e",
+    "tests"
+  ],
+  "author": "Tomasz Pluskiewicz <tomasz@t-code.pl>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/hypermedia-app/hydra-validator/issues"
+  },
+  "homepage": "https://github.com/hypermedia-app/hydra-validator#readme",
+  "devDependencies": {
+    "@types/jest": "^24.0.12",
+    "@types/node": "^11.13.9",
+    "@typescript-eslint/eslint-plugin": "^1.7.0",
+    "@typescript-eslint/parser": "^1.7.0",
+    "eslint": "^5.16.0",
+    "lint-staged": "^8.2.1",
+    "rimraf": "^2.6.3",
+    "standard": "^12.0.1",
+    "typescript": "^3.4.5"
+  },
+  "dependencies": {
+    "hydra-validator": "^0.1.0",
+    "alcaeus": "^0.6.2"
+  }
+}

@@ -1,7 +1,8 @@
 {
   "packages": [
     "validator-cli",
-    "validator-ui"
+    "validator-ui",
+    "validator-e2e"
   ],
   "version": "0.1.0",
   "command": {
