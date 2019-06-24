@@ -4,15 +4,36 @@ import * as program from 'commander'
 import runChecks from 'hydra-validator-core/dist/run-checks'
 // @ts-ignore
 import * as fetch from 'nodeify-fetch'
+// @ts-ignore
+import * as deps from 'matchdep'
 
-program
-    .arguments('<cmd> <url>')
-    .action(function (cmd: string, url: string) {
+const plugins: string[] = deps.filterAll([ 'hydra-validator-*', 'hydra-validator-core' ])
+
+for (let plugin of plugins) {
+    const match = plugin.match(/^hydra-validator-([\d\w]+)$/)
+    if (!match) {
+        continue
+    }
+
+    const commandName = match[1]
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const { check, options } = require(plugin)
+
+    const command = program
+        .command(`${commandName} <url>`)
+
+    if (options && Array.isArray(options)) {
+        for (let option of options) {
+            command.option(option.flags)
+        }
+    }
+
+    command.action(function (this: object, url: string) {
+        const commandParams = this
+
         Promise.resolve()
             .then(async () => {
-                // eslint-disable-next-line @typescript-eslint/no-var-requires
-                const { check } = require(`hydra-validator-${cmd}`)
-                const firstCheck = check(url)
+                const firstCheck = check(url, commandParams)
 
                 const checkGenerator = runChecks(firstCheck, fetch)
 
@@ -30,5 +51,6 @@ program
                 }
             })
     })
+}
 
 program.parse(process.argv)
