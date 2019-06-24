@@ -35,13 +35,14 @@
     "@typescript-eslint/eslint-plugin": "^1.7.0",
     "@typescript-eslint/parser": "^1.7.0",
     "eslint": "^5.16.0",
+    "eslint-plugin-jest": "^22.6.4",
     "lint-staged": "^8.2.1",
     "rimraf": "^2.6.3",
     "standard": "^12.0.1",
     "typescript": "^3.4.5"
   },
   "dependencies": {
-    "hydra-validator": "^0.1.0",
-    "alcaeus": "^0.6.2"
+    "alcaeus": "^0.6.2",
+    "hydra-validator-core": "^0.1.0"
   }
 }

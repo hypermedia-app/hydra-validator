@@ -1,0 +1,64 @@
+[
+  {
+    "type": "Resource",
+    "id": "http://flick-mis-traem.li/vocab#Entrypoint",
+    "children": [
+      {
+        "type": "Property",
+        "propertyId": "http://flick-mis-traem.li/vocab#installation",
+        "children": [
+          {
+            "type": "Invocation",
+            "operationId": "http://flick-mis-traem.li/vocab#Install",
+            "children": [
+              {
+                "type": "Expectation",
+                "expectation": "Status",
+                "code": 204
+              },
+              {
+                "type": "Expectation",
+                "expectation": "Header",
+                "name": "Location",
+                "captureValueAs": "uri"
+              },
+              {
+                "type": "Follow",
+                "resourceId": "uri"
+              }
+            ]
+          }
+        ]
+      }, {
+        "type": "Property",
+        "propertyId": "http://flick-mis-traem.li/vocab#missing"
+      }, {
+        "type": "Link",
+        "propertyId": "http://flick-mis-traem.li/vocab#dangerZone"
+      }
+    ]
+  },
+  {
+    "type": "Resource",
+    "id": "http://flick-mis-traem.li/vocab#NukeDatabase",
+    "children": [
+      {
+        "type": "Property",
+        "propertyId": "http://flick-mis-traem.li/vocab#entrypoint",
+        "children": [
+          {
+            "type": "Invocation",
+            "operationId": "http://flick-mis-traem.li/vocab#Operation/DropDatabase",
+            "children": [
+              {
+                "type": "Expectation",
+                "expectation": "Status",
+                "code": 200
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]
