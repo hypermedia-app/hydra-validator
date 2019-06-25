@@ -55,7 +55,7 @@ export interface Context {
 /**
  * Return type of check functions. Either results, or result will be reported
  */
-export interface CheckResult {
+export interface CheckResult<T extends Context = Context> {
     /**
      * Results to be reported
      */
@@ -67,7 +67,7 @@ export interface CheckResult {
     /**
      * Checks to add to queue
      */
-    nextChecks?: checkChain[];
+    nextChecks?: checkChain<T>[];
     /**
      * If true, does not nest nextChecks
      */
@@ -77,4 +77,4 @@ export interface CheckResult {
 /**
  * Function delegate which runs actual check. It can be asynchronous
  */
-export type checkChain = (this: Context) => Promise<CheckResult> | CheckResult
+export type checkChain<T extends Context = Context> = (this: T) => Promise<CheckResult<T>> | CheckResult<T>
