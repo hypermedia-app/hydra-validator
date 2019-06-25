@@ -27,18 +27,22 @@ interface ResponseAssertion extends ScenarioStep {
 
 interface FollowStep extends ScenarioStep {
     resourceId: string;
+    executed: boolean;
 }
 
 interface PropertyStep extends ScenarioStep {
     propertyId: string;
+    executed: boolean;
 }
 
 interface InvocationStep extends ScenarioStep {
     operationId: string;
+    executed: boolean;
 }
 
 interface RepresentationStep extends ScenarioStep {
     id: string;
+    executed: boolean;
 }
 
 function expectationCheck (response: IHydraResponse, expectation: ResponseAssertion, scope: Context): checkChain {
@@ -77,6 +81,9 @@ function operationChecks (resource: HydraResource, step: InvocationStep): checkC
     }
 
     return async function invokeOperation () {
+        if (step.executed) {
+            return {}
+        }
         const response: IHydraResponse = await operation.invoke('')
 
         let nextChecks: checkChain<E2eContext>[] = []
@@ -84,6 +91,8 @@ function operationChecks (resource: HydraResource, step: InvocationStep): checkC
             // eslint-disable-next-line @typescript-eslint/no-use-before-define
             nextChecks = [ responseChecks(response, step.children) ]
         }
+
+        step.executed = true
 
         return {
             result: Result.Informational(`Invoked operation '${operation.title}'`),
@@ -94,6 +103,10 @@ function operationChecks (resource: HydraResource, step: InvocationStep): checkC
 
 function propertyChecks (resource: HydraResource & any, step: PropertyStep): checkChain<E2eContext> {
     return function () {
+        if (step.executed) {
+            return {}
+        }
+
         const result: IResult = resource[step.propertyId]
             ? Result.Informational(`Stepping into property ${step.propertyId}`)
             : Result.Failure(`Property ${step.propertyId} missing on resource ${resource.id}`)
@@ -102,6 +115,8 @@ function propertyChecks (resource: HydraResource & any, step: PropertyStep): che
         if (step.children && result.status !== 'failure') {
             // eslint-disable-next-line @typescript-eslint/no-use-before-define
             nextChecks.push(representationChecks(resource[step.propertyId] as HydraResource, step.children))
+
+            step.executed = true
         }
 
         return {
@@ -113,6 +128,10 @@ function propertyChecks (resource: HydraResource & any, step: PropertyStep): che
 
 function linkChecks (resource: HydraResource & any, step: PropertyStep): checkChain<E2eContext> {
     return async function checkLink () {
+        if (step.executed) {
+            return {}
+        }
+
         const result: IResult = resource[step.propertyId]
             ? Result.Informational(`Stepping into link ${step.propertyId}`)
             : Result.Failure(`Link ${step.propertyId} missing on resource ${resource.id}`)
@@ -123,6 +142,8 @@ function linkChecks (resource: HydraResource & any, step: PropertyStep): checkCh
             const response = await Hydra.loadResource(linkedResource.id)
             // eslint-disable-next-line @typescript-eslint/no-use-before-define
             nextChecks.push(responseChecks(response, step.children || []))
+
+            step.executed = true
         }
 
         return {
@@ -134,6 +155,10 @@ function linkChecks (resource: HydraResource & any, step: PropertyStep): checkCh
 
 function followCheck (step: FollowStep, scope: Context): checkChain<E2eContext> {
     return async function checkLink () {
+        if (step.executed) {
+            return {}
+        }
+
         const resourceId = scope[step.resourceId]
 
         const result: IResult = resourceId
@@ -145,6 +170,8 @@ function followCheck (step: FollowStep, scope: Context): checkChain<E2eContext> 
             const response = await Hydra.loadResource(resourceId)
             // eslint-disable-next-line @typescript-eslint/no-use-before-define
             nextChecks.push(responseChecks(response, step.children || []))
+
+            step.executed = true
         }
 
         return {
