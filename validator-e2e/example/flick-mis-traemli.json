@@ -8,23 +8,28 @@
         "propertyId": "http://flick-mis-traem.li/vocab#installation",
         "children": [
           {
-            "type": "Invocation",
+            "type": "Operation",
             "operationId": "http://flick-mis-traem.li/vocab#Install",
             "children": [
               {
-                "type": "Expectation",
-                "expectation": "Status",
-                "code": 204
-              },
-              {
-                "type": "Expectation",
-                "expectation": "Header",
-                "name": "Location",
-                "captureValueAs": "uri"
-              },
-              {
-                "type": "Follow",
-                "resourceId": "uri"
+                "type": "Invocation",
+                "children": [
+                  {
+                    "type": "Expectation",
+                    "expectation": "Status",
+                    "code": 204
+                  },
+                  {
+                    "type": "Expectation",
+                    "expectation": "Header",
+                    "name": "Location",
+                    "captureValueAs": "uri"
+                  },
+                  {
+                    "type": "Follow",
+                    "resourceId": "uri"
+                  }
+                ]
               }
             ]
           }
@@ -47,13 +52,18 @@
         "propertyId": "http://flick-mis-traem.li/vocab#entrypoint",
         "children": [
           {
-            "type": "Invocation",
+            "type": "Operation",
             "operationId": "http://flick-mis-traem.li/vocab#Operation/DropDatabase",
             "children": [
               {
-                "type": "Expectation",
-                "expectation": "Status",
-                "code": 200
+                "type": "Invocation",
+                "children": [
+                  {
+                    "type": "Expectation",
+                    "expectation": "Status",
+                    "code": 200
+                  }
+                ]
               }
             ]
           }

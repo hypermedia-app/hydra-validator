@@ -1,7 +1,7 @@
 import { checkChain, Context, Result, IResult } from 'hydra-validator-core'
 import { Hydra } from 'alcaeus'
 import { IHydraResponse } from 'alcaeus/types/HydraResponse'
-import { HydraResource } from 'alcaeus/types/Resources'
+import { HydraResource, IOperation } from 'alcaeus/types/Resources'
 
 interface E2eOptions {
     docs: string;
@@ -14,7 +14,7 @@ interface ApiTestScenarios {
 }
 
 interface ScenarioStep {
-    type: 'Resource' | 'Property' | 'Invocation' | 'Expectation' | 'Link' | 'Follow';
+    type: 'Resource' | 'Property' | 'Operation' | 'Invocation' | 'Expectation' | 'Link' | 'Follow';
     children?: ScenarioStep[];
 }
 
@@ -35,8 +35,13 @@ interface PropertyStep extends ScenarioStep {
     executed: boolean;
 }
 
-interface InvocationStep extends ScenarioStep {
+interface OperationStep extends ScenarioStep {
     operationId: string;
+    executed: boolean;
+}
+
+interface InvocationStep extends ScenarioStep {
+    body: string;
     executed: boolean;
 }
 
@@ -72,19 +77,12 @@ function expectationCheck (response: IHydraResponse, expectation: ResponseAssert
     }
 }
 
-function operationChecks (resource: HydraResource, step: InvocationStep): checkChain<E2eContext> {
-    const operation = resource.operations.find(op => op._supportedOperation.id === step.operationId)
-    if (!operation) {
-        return () => ({
-            result: Result.Failure(`Operation ${step.operationId} not found`),
-        })
-    }
-
-    return async function invokeOperation () {
+function operationInvocationCheck (operation: IOperation, step: InvocationStep): checkChain<E2eContext> {
+    return async function () {
         if (step.executed) {
             return {}
         }
-        const response: IHydraResponse = await operation.invoke('')
+        const response: IHydraResponse = await operation.invoke(step.body || '')
 
         let nextChecks: checkChain<E2eContext>[] = []
         if (step.children) {
@@ -96,6 +94,37 @@ function operationChecks (resource: HydraResource, step: InvocationStep): checkC
 
         return {
             result: Result.Informational(`Invoked operation '${operation.title}'`),
+            nextChecks,
+        }
+    }
+}
+
+function operationChecks (resource: HydraResource, step: OperationStep): checkChain<E2eContext> {
+    return async function invokeOperation () {
+        const operation = resource.operations.find(op => op._supportedOperation.id === step.operationId)
+        if (!operation) {
+            return {
+                result: Result.Failure(`Operation ${step.operationId} not found`),
+            }
+        }
+
+        if (step.executed) {
+            return {}
+        }
+
+        let nextChecks: checkChain<E2eContext>[] = []
+        if (step.children) {
+            step.children.filter(child => child.type === 'Invocation')
+                .reduce((checks, child) => {
+                    checks.push(operationInvocationCheck(operation, child as InvocationStep))
+                    return checks
+                }, nextChecks)
+        }
+
+        step.executed = true
+
+        return {
+            result: Result.Informational(`Found operation '${operation.title}'`),
             nextChecks,
         }
     }
@@ -188,8 +217,8 @@ function representationChecks (resource: HydraResource, resourceScenario: Scenar
                 case 'Property':
                     checks.push(propertyChecks(resource, scenarioStep as PropertyStep))
                     break
-                case 'Invocation':
-                    checks.push(operationChecks(resource, scenarioStep as InvocationStep))
+                case 'Operation':
+                    checks.push(operationChecks(resource, scenarioStep as OperationStep))
                     break
                 case 'Link':
                     checks.push(linkChecks(resource, scenarioStep as PropertyStep))
