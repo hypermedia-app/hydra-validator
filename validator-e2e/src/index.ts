@@ -8,9 +8,11 @@ interface E2eOptions {
 }
 
 interface ApiTestScenarios {
-    resources: {
-        [id: string]: ScenarioStep[];
-    };
+    steps: ScenarioStep[];
+}
+
+interface E2eContext extends Context {
+    scenarios: ScenarioStep[];
 }
 
 interface ScenarioStep {
@@ -274,17 +276,14 @@ function responseChecks (response: IHydraResponse, steps: ScenarioStep[]): check
     }
 }
 
-interface E2eContext extends Context {
-    scenarios: ScenarioStep[];
-}
-
 export function check (url: string, { docs }: E2eOptions): checkChain<E2eContext> {
     if (!docs) {
         throw new Error()
     }
 
     return async function tryFetch (this: E2eContext) {
-        this.scenarios = await import(docs)
+        const apiTestSettings: ApiTestScenarios = await import(docs)
+        this.scenarios = apiTestSettings.steps
 
         const response = await Hydra.loadResource(url)
 
