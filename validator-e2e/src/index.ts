@@ -2,9 +2,12 @@ import { checkChain, Context, Result, IResult } from 'hydra-validator-core'
 import { Hydra } from 'alcaeus'
 import { IHydraResponse } from 'alcaeus/types/HydraResponse'
 import { HydraResource, IOperation } from 'alcaeus/types/Resources'
+import { readFileSync, statSync } from 'fs'
+import { join } from 'path'
 
 interface E2eOptions {
     docs: string;
+    cwd: string;
 }
 
 interface ApiTestScenarios {
@@ -276,13 +279,16 @@ function responseChecks (response: IHydraResponse, steps: ScenarioStep[]): check
     }
 }
 
-export function check (url: string, { docs }: E2eOptions): checkChain<E2eContext> {
-    if (!docs) {
+export function check (url: string, { docs, cwd }: E2eOptions): checkChain<E2eContext> {
+    const docsPath = join(cwd, docs)
+
+    const docsFileStats = statSync(docsPath)
+    if (!docsFileStats.isFile()) {
         throw new Error()
     }
 
     return async function tryFetch (this: E2eContext) {
-        const apiTestSettings: ApiTestScenarios = await import(docs)
+        const apiTestSettings: ApiTestScenarios = JSON.parse((await readFileSync(docsPath)).toString())
         this.scenarios = apiTestSettings.steps
 
         const response = await Hydra.loadResource(url)

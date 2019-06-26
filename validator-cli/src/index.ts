@@ -33,7 +33,7 @@ for (let plugin of plugins) {
 
         Promise.resolve()
             .then(async () => {
-                const firstCheck = check(url, commandParams)
+                const firstCheck = check(url, { ...commandParams, cwd: process.cwd() })
 
                 const checkGenerator = runChecks(firstCheck, fetch)
 
