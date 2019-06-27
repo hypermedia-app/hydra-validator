@@ -306,5 +306,6 @@ export function check (url: string, { docs, cwd }: E2eOptions): checkChain<E2eCo
 export const options = [
     {
         flags: '-d, --docs <docsPath>',
+        description: 'path to JSON containing test scenarios',
     },
 ]

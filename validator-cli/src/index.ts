@@ -24,7 +24,7 @@ for (let plugin of plugins) {
 
     if (options && Array.isArray(options)) {
         for (let option of options) {
-            command.option(option.flags)
+            command.option(option.flags, option.description, option.defaultValue)
         }
     }
 
