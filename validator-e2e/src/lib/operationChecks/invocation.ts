@@ -2,7 +2,7 @@ import { IOperation } from 'alcaeus/types/Resources'
 import { IHydraResponse } from 'alcaeus/types/HydraResponse'
 import { InvocationStep, E2eContext } from '../../types'
 import { checkChain, Result } from 'hydra-validator-core'
-import responseChecks from '../responseChecks'
+import { factory as responseChecks } from '../responseChecks'
 
 export default function (operation: IOperation, step: InvocationStep): checkChain<E2eContext> {
     return async function () {
