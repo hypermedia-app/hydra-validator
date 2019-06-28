@@ -1,7 +1,8 @@
 import { Hydra } from 'alcaeus'
-import { FollowStep, E2eContext } from '../../../../types'
+import { E2eContext } from '../../../../types'
 import { Context, checkChain, IResult, Result } from 'hydra-validator-core'
 import { factory as responseChecks } from '../../response'
+import { FollowStep } from '../../'
 
 export default function (step: FollowStep, scope: Context): checkChain<E2eContext> {
     return async function checkLink () {

@@ -1,9 +1,10 @@
 import { IHydraResponse } from 'alcaeus/types/HydraResponse'
-import { E2eContext, FollowStep, RepresentationStep, ResponseAssertion, ScenarioStep } from '../../../types'
+import { E2eContext } from '../../../types'
 import { checkChain } from 'hydra-validator-core'
-import representationChecks from '../representation'
+import representationChecks, { RepresentationStep } from '../representation'
 import follow from '../representation/link/follow'
-import expectationChecks from './expectation'
+import expectationChecks, { ExpectationStep } from './expectation'
+import { FollowStep, ScenarioStep } from '../'
 
 export function factory (response: IHydraResponse, steps: ScenarioStep[]): checkChain<E2eContext> {
     const localScope = {}
@@ -13,14 +14,14 @@ export function factory (response: IHydraResponse, steps: ScenarioStep[]): check
 
         steps.filter(step => step.type === 'Expectation')
             .reduce((checks, step) => {
-                checks.push(expectationChecks(response, step as ResponseAssertion, localScope))
+                checks.push(expectationChecks(response, step as ExpectationStep, localScope))
 
                 return checks
             }, nextChecks)
 
         steps.filter(step => step.type === 'Follow')
             .reduce((checks, step) => {
-                checks.push(follow(step as FollowStep, localScope))
+                checks.push(follow(step as any as FollowStep, localScope))
 
                 return checks
             }, nextChecks)
