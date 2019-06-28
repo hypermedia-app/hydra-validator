@@ -1,20 +1,23 @@
 import { checkChain, Result } from 'hydra-validator-core'
 import { Hydra } from 'alcaeus'
-import { readFileSync, statSync } from 'fs'
 import { join } from 'path'
 import { E2eOptions, E2eContext, ApiTestScenarios } from './types'
-import responseChecks from './lib/responseChecks'
+import { factory as responseChecks } from './lib/responseChecks'
+import { load } from './lib/docsLoader'
 
 export function check (url: string, { docs, cwd }: E2eOptions): checkChain<E2eContext> {
     const docsPath = join(cwd, docs)
+    let apiTestSettings: ApiTestScenarios
 
-    const docsFileStats = statSync(docsPath)
-    if (!docsFileStats.isFile()) {
-        throw new Error()
+    try {
+        apiTestSettings = load(docsPath)
+    } catch (e) {
+        return () => ({
+            result: Result.Failure('Failed to load test scenarios', e),
+        })
     }
 
     return async function tryFetch (this: E2eContext) {
-        const apiTestSettings: ApiTestScenarios = JSON.parse((await readFileSync(docsPath)).toString())
         this.scenarios = apiTestSettings.steps
 
         const response = await Hydra.loadResource(url)

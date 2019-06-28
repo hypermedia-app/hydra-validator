@@ -10,7 +10,8 @@
     "pretest": "eslint --ext ts . --quiet",
     "build": "tsc",
     "prepublishOnly": "rimraf dist; npm run build",
-    "precommit": "lint-staged"
+    "precommit": "lint-staged",
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -39,7 +40,9 @@
     "lint-staged": "^8.2.1",
     "rimraf": "^2.6.3",
     "standard": "^12.0.1",
-    "typescript": "^3.4.5"
+    "typescript": "^3.4.5",
+    "jest": "^24.7.1",
+    "ts-jest": "^24.0.2"
   },
   "dependencies": {
     "alcaeus": "^0.6.3",

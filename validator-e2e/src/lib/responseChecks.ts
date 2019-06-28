@@ -5,7 +5,7 @@ import representationChecks from './representationChecks'
 import follow from './linkChecks/follow'
 import expectationChecks from './expectationChecks'
 
-export default function (response: IHydraResponse, steps: ScenarioStep[]): checkChain<E2eContext> {
+export function factory (response: IHydraResponse, steps: ScenarioStep[]): checkChain<E2eContext> {
     const localScope = {}
 
     return function checkResponse (this: E2eContext) {
@@ -31,7 +31,7 @@ export default function (response: IHydraResponse, steps: ScenarioStep[]): check
                 .filter(step => step.children && step.children.length > 0) as RepresentationStep[]
 
             [...steps, ...resourceSteps].reduce((checks, step) => {
-                if (resource.types.contains(step.id)) {
+                if (resource.types.contains((step as any).id)) {
                     checks.push(representationChecks(resource, step.children || []))
                 }
 
