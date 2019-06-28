@@ -1,5 +1,5 @@
 import { HydraResource } from 'alcaeus/types/Resources'
-import { E2eContext, OperationStep, InvocationStep } from '../../types'
+import { E2eContext, OperationStep, InvocationStep } from '../../../../types'
 import { Result, checkChain } from 'hydra-validator-core'
 import invocation from './invocation'
 

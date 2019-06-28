@@ -1,9 +1,9 @@
 import { HydraResource } from 'alcaeus/types/Resources'
-import { ScenarioStep, E2eContext, PropertyStep, OperationStep } from '../types'
+import { ScenarioStep, E2eContext, PropertyStep, OperationStep } from '../../../types'
 import { checkChain } from 'hydra-validator-core'
 import propertyChecks from './property'
-import operationChecks from './operationChecks'
-import linkChecks from './linkChecks'
+import operationChecks from './operation'
+import linkChecks from './link'
 
 export default function (resource: HydraResource, resourceScenario: ScenarioStep[]): checkChain<E2eContext> {
     return function checkRepresentation () {

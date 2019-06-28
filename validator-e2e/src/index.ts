@@ -2,7 +2,7 @@ import { checkChain, Result } from 'hydra-validator-core'
 import { Hydra } from 'alcaeus'
 import { join } from 'path'
 import { E2eOptions, E2eContext, ApiTestScenarios } from './types'
-import { factory as responseChecks } from './lib/responseChecks'
+import { factory as responseChecks } from './lib/steps/response'
 import { load } from './lib/docsLoader'
 
 export function check (url: string, { docs, cwd }: E2eOptions): checkChain<E2eContext> {

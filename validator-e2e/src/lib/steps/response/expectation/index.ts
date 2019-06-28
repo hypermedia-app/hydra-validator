@@ -1,5 +1,5 @@
 import { IHydraResponse } from 'alcaeus/types/HydraResponse'
-import { ResponseAssertion } from '../../types'
+import { ResponseAssertion } from '../../../../types'
 import { checkChain, IResult, Result, Context } from 'hydra-validator-core'
 
 export default function (response: IHydraResponse, expectation: ResponseAssertion, scope: Context): checkChain {

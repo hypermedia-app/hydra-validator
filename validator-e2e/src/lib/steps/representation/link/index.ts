@@ -1,8 +1,8 @@
 import { HydraResource } from 'alcaeus/types/Resources'
 import { Hydra } from 'alcaeus'
-import { PropertyStep, E2eContext } from '../../types'
+import { PropertyStep, E2eContext } from '../../../../types'
 import { checkChain, IResult, Result } from 'hydra-validator-core'
-import { factory as responseChecks } from '../responseChecks'
+import { factory as responseChecks } from '../../response'
 
 export default function index (resource: HydraResource & any, step: PropertyStep): checkChain<E2eContext> {
     return async function checkLink () {

@@ -5,7 +5,7 @@ jest.mock('')
 import { Hydra } from 'alcaeus'
 import * as docsLoader from './lib/docsLoader'
 import { check } from './'
-import * as responseChecks from './lib/responseChecks'
+import * as responseChecks from './lib/steps/response'
 import { E2eContext } from './types'
 
 describe('validator-e2e', () => {
