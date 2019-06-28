@@ -12,7 +12,6 @@
   "scripts": {
     "pretest": "eslint --ext ts . --quiet",
     "build": "tsc",
-    "test": "jest",
     "prepublishOnly": "rimraf dist; npm run build",
     "precommit": "lint-staged"
   },
