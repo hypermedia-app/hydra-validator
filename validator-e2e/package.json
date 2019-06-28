@@ -42,7 +42,7 @@
     "typescript": "^3.4.5"
   },
   "dependencies": {
-    "alcaeus": "^0.6.2",
+    "alcaeus": "^0.6.3",
     "hydra-validator-core": "^0.1.0"
   }
 }

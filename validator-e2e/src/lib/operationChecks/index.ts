@@ -5,7 +5,7 @@ import invocation from './invocation'
 
 export default function (resource: HydraResource, step: OperationStep): checkChain<E2eContext> {
     return async function invokeOperation () {
-        const operation = resource.operations.find(op => op._supportedOperation.id === step.operationId)
+        const operation = resource.operations.find(op => op.supportedOperation.id === step.operationId)
         if (!operation) {
             return {
                 result: Result.Failure(`Operation ${step.operationId} not found`),
