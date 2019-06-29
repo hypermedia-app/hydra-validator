@@ -1,35 +1,51 @@
 import { HydraResource } from 'alcaeus/types/Resources'
-import { E2eContext, OperationStep, InvocationStep } from '../../../../types'
+import { E2eContext } from '../../../../types'
 import { Result, checkChain } from 'hydra-validator-core'
-import invocation from './invocation'
+import { ScenarioStep } from '../../index'
 
-export default function (resource: HydraResource, step: OperationStep): checkChain<E2eContext> {
-    return async function invokeOperation () {
-        const operation = resource.operations.find(op => op.supportedOperation.id === step.operationId)
-        if (!operation) {
-            return {
-                result: Result.Failure(`Operation ${step.operationId} not found`),
+export class OperationStep extends ScenarioStep {
+    public operationId: string;
+
+    public constructor (operationId: string, children: ScenarioStep[]) {
+        super(children)
+        this.operationId = operationId
+    }
+
+    protected appliesToInternal (obj: any): boolean {
+        return 'id' in obj
+    }
+
+    public getRunner (resource: HydraResource) {
+        const step = this
+        return async function invokeOperation () {
+            const operation = resource.operations.find(op => op.supportedOperation.id === step.operationId)
+            if (!operation) {
+                return {
+                    result: Result.Failure(`Operation ${step.operationId} not found`),
+                }
             }
-        }
 
-        if (step.executed) {
-            return {}
-        }
+            if (step.executed) {
+                return {}
+            }
 
-        let nextChecks: checkChain<E2eContext>[] = []
-        if (step.children) {
-            step.children.filter(child => child.type === 'Invocation')
-                .reduce((checks, child) => {
-                    checks.push(invocation(operation, child as InvocationStep))
-                    return checks
-                }, nextChecks)
-        }
+            let nextChecks: checkChain<E2eContext>[] = []
+            if (step.children) {
+                step.children
+                    .reduce((checks, child) => {
+                        if (child.appliesTo(operation)) {
+                            checks.push(child.getRunner(operation))
+                        }
+                        return checks
+                    }, nextChecks)
+            }
 
-        step.executed = true
+            step.markExecuted()
 
-        return {
-            result: Result.Informational(`Found operation '${operation.title}'`),
-            nextChecks,
+            return {
+                result: Result.Informational(`Found operation '${operation.title}'`),
+                nextChecks,
+            }
         }
     }
 }

@@ -1,37 +1,51 @@
 import { IHydraResponse } from 'alcaeus/types/HydraResponse'
-import { checkChain, IResult, Result, Context } from 'hydra-validator-core'
+import { IResult, Result, Context } from 'hydra-validator-core'
 import { ScenarioStep } from '../../'
 
-export interface ExpectationStep extends ScenarioStep {
-    expectation: 'Status' | 'Header';
-    code: number;
-    name: string;
-    captureValueAs: string;
-}
+export class ExpectationStep extends ScenarioStep {
+    public expectation: 'Status' | 'Header';
+    public code: number;
+    public name: string;
+    public captureValueAs: string;
 
-export default function (response: IHydraResponse, expectation: ExpectationStep, scope: Context): checkChain {
-    return function () {
-        let result: IResult
+    public constructor (step: any, children: ScenarioStep[]) {
+        super(children)
 
-        switch (expectation.expectation) {
-            case 'Header':
-                result = response.xhr.headers.has(expectation.name)
-                    ? Result.Success(`Found '${expectation.name}' header`)
-                    : Result.Failure(`Expected to find response header ${expectation.name}`)
+        this.expectation = step.expectation
+        this.code = step.code
+        this.name = step.name
+        this.captureValueAs = step.captureValueAs
+    }
 
-                scope[expectation.captureValueAs] = response.xhr.headers.get(expectation.name)
+    protected appliesToInternal (response: IHydraResponse): boolean {
+        return 'xhr' in response
+    }
 
-                break
-            case 'Status':
-                result = response.xhr.status === expectation.code
-                    ? Result.Success(`Status code '${expectation.code}'`)
-                    : Result.Failure(`Expected status code ${expectation.code} but got ${response.xhr.status}`)
-                break
-            default:
-                result = Result.Failure(`Unrecognized assertion ${expectation.type}`)
-                break
+    public getRunner (response: IHydraResponse, scope: Context) {
+        const expectation = this
+        return function () {
+            let result: IResult
+
+            switch (expectation.expectation) {
+                case 'Header':
+                    result = response.xhr.headers.has(expectation.name)
+                        ? Result.Success(`Found '${expectation.name}' header`)
+                        : Result.Failure(`Expected to find response header ${expectation.name}`)
+
+                    scope[expectation.captureValueAs] = response.xhr.headers.get(expectation.name)
+
+                    break
+                case 'Status':
+                    result = response.xhr.status === expectation.code
+                        ? Result.Success(`Status code '${expectation.code}'`)
+                        : Result.Failure(`Expected status code ${expectation.code} but got ${response.xhr.status}`)
+                    break
+                default:
+                    result = Result.Failure(`Unrecognized assertion ${expectation}`)
+                    break
+            }
+
+            return {result}
         }
-
-        return { result }
     }
 }

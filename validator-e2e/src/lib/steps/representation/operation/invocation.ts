@@ -5,29 +5,37 @@ import { checkChain, Result } from 'hydra-validator-core'
 import { factory as responseChecks } from '../../response'
 import { ScenarioStep } from '../../index'
 
-export interface InvocationStep extends ScenarioStep {
-    body: string;
-    executed: boolean;
-}
+export class InvocationStep extends ScenarioStep {
+    public body: any;
 
-export default function (operation: IOperation, step: InvocationStep): checkChain<E2eContext> {
-    return async function () {
-        if (step.executed) {
-            return {}
-        }
-        const response: IHydraResponse = await operation.invoke(step.body || '')
+    public constructor (body: any, children: ScenarioStep[]) {
+        super(children)
+        this.body = body
+    }
 
-        let nextChecks: checkChain<E2eContext>[] = []
-        if (step.children) {
-            // eslint-disable-next-line @typescript-eslint/no-use-before-define
-            nextChecks = [ responseChecks(response, step.children) ]
-        }
+    protected appliesToInternal (obj: any): boolean {
+        return 'invoke' in obj
+    }
 
-        step.executed = true
+    public getRunner (operation: IOperation) {
+        const step = this
+        return async function () {
+            if (step.executed) {
+                return {}
+            }
+            const response: IHydraResponse = await operation.invoke(step.body || '')
 
-        return {
-            result: Result.Informational(`Invoked operation '${operation.title}'`),
-            nextChecks,
+            let nextChecks: checkChain<E2eContext>[] = []
+            if (step.children) {
+                nextChecks = [responseChecks(response, step.children)]
+            }
+
+            step.markExecuted()
+
+            return {
+                result: Result.Informational(`Invoked operation '${operation.title}'`),
+                nextChecks,
+            }
         }
     }
 }

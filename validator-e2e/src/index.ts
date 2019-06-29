@@ -1,16 +1,18 @@
 import { checkChain, Result } from 'hydra-validator-core'
 import { Hydra } from 'alcaeus'
 import { join } from 'path'
-import { E2eOptions, E2eContext, ApiTestScenarios } from './types'
+import { E2eOptions, E2eContext } from './types'
 import { factory as responseChecks } from './lib/steps/response'
 import { load } from './lib/docsLoader'
+import createSteps from './lib/steps/factory'
+import { ScenarioStep } from './lib/steps'
 
 export function check (url: string, { docs, cwd }: E2eOptions): checkChain<E2eContext> {
     const docsPath = join(cwd, docs)
-    let apiTestSettings: ApiTestScenarios
+    let apiTestSettings: ScenarioStep[]
 
     try {
-        apiTestSettings = load(docsPath)
+        apiTestSettings = createSteps(load(docsPath))
     } catch (e) {
         return () => ({
             result: Result.Failure('Failed to load test scenarios', e),
@@ -18,7 +20,7 @@ export function check (url: string, { docs, cwd }: E2eOptions): checkChain<E2eCo
     }
 
     return async function tryFetch (this: E2eContext) {
-        this.scenarios = apiTestSettings.steps
+        this.scenarios = apiTestSettings
 
         const response = await Hydra.loadResource(url)
 

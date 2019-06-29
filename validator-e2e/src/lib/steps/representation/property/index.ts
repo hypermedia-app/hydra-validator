@@ -1,29 +1,51 @@
 import { HydraResource } from 'alcaeus/types/Resources'
-import { PropertyStep, E2eContext } from '../../../../types'
+import { E2eContext } from '../../../../types'
 import { checkChain, IResult, Result } from 'hydra-validator-core'
-import representationChecks from '../'
+import { ScenarioStep } from '../../'
+import { IResource } from 'alcaeus/types/Resources/Resource'
+import { IHydraResponse } from 'alcaeus/types/HydraResponse'
 
-export default function (resource: HydraResource & any, step: PropertyStep): checkChain<E2eContext> {
-    return function () {
-        if (step.executed) {
-            return {}
-        }
+export class PropertyStep extends ScenarioStep {
+    public propertyId: string
 
-        const result: IResult = resource[step.propertyId]
-            ? Result.Informational(`Stepping into property ${step.propertyId}`)
-            : Result.Failure(`Property ${step.propertyId} missing on resource ${resource.id}`)
+    public constructor (propertyId: string, children: ScenarioStep[]) {
+        super(children)
 
-        let nextChecks: checkChain<E2eContext>[] = []
-        if (step.children && result.status !== 'failure') {
-            // eslint-disable-next-line @typescript-eslint/no-use-before-define
-            nextChecks.push(representationChecks(resource[step.propertyId] as HydraResource, step.children))
+        this.propertyId = propertyId
+    }
 
-            step.executed = true
-        }
+    protected appliesToInternal (obj: (HydraResource & IResource) | IHydraResponse): boolean {
+        return 'id' in obj
+    }
 
-        return {
-            result,
-            nextChecks,
+    public getRunner (obj: HydraResource) {
+        const step = this
+        const resource = obj as any as { [ prop: string ]: HydraResource }
+
+        return function () {
+            if (step.executed) {
+                return {}
+            }
+
+            const result: IResult = resource[step.propertyId]
+                ? Result.Informational(`Stepping into property ${step.propertyId}`)
+                : Result.Failure(`Property ${step.propertyId} missing on resource ${resource.id}`)
+
+            let nextChecks: checkChain<E2eContext>[] = []
+            if (result.status !== 'failure') {
+                step.children.reduce((checks, child) => {
+                    if (child.appliesTo(resource[step.propertyId])) {
+                        checks.push(child.getRunner(resource[step.propertyId]))
+                    }
+                    return checks
+                }, nextChecks)
+                step.markExecuted()
+            }
+
+            return {
+                result,
+                nextChecks,
+            }
         }
     }
 }

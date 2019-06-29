@@ -1,8 +1,8 @@
 {
   "steps": [
     {
-      "type": "Resource",
-      "id": "http://schema.org/EntryPoint",
+      "type": "Class",
+      "classId": "http://schema.org/EntryPoint",
       "children": [
         {
           "type": "Property",

@@ -6,10 +6,6 @@ export interface E2eOptions {
     cwd: string;
 }
 
-export interface ApiTestScenarios {
-    steps: ScenarioStep[];
-}
-
 export interface E2eContext extends Context {
     scenarios: ScenarioStep[];
 }
