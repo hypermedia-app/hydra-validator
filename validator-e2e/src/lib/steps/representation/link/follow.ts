@@ -2,32 +2,46 @@ import { Hydra } from 'alcaeus'
 import { E2eContext } from '../../../../types'
 import { Context, checkChain, IResult, Result } from 'hydra-validator-core'
 import { factory as responseChecks } from '../../response'
-import { FollowStep } from '../../'
+import { ScenarioStep } from '../../'
 
-export default function (step: FollowStep, scope: Context): checkChain<E2eContext> {
-    return async function checkLink () {
-        if (step.executed) {
-            return {}
-        }
+export class FollowStep extends ScenarioStep {
+    public variable: string
 
-        const resourceId = scope[step.resourceId]
+    public constructor (variable: string, children: ScenarioStep[]) {
+        super(children)
 
-        const result: IResult = resourceId
-            ? Result.Informational(`Stepping into resource ${resourceId}`)
-            : Result.Failure(`Variable ${step.resourceId} not found`)
+        this.variable = variable
+    }
 
-        let nextChecks: checkChain<E2eContext>[] = []
-        if (result.status !== 'failure') {
-            const response = await Hydra.loadResource(resourceId)
-            // eslint-disable-next-line @typescript-eslint/no-use-before-define
-            nextChecks.push(responseChecks(response, step.children || []))
+    protected appliesToInternal (): boolean {
+        return true
+    }
 
-            step.executed = true
-        }
+    public getRunner (obj: never, scope: Context) {
+        const step = this
+        return async function checkLink () {
+            if (step.executed) {
+                return {}
+            }
 
-        return {
-            result,
-            nextChecks,
+            const resourceId = scope[step.variable]
+
+            const result: IResult = resourceId
+                ? Result.Informational(`Stepping into resource ${resourceId}`)
+                : Result.Failure(`Variable ${step.variable} not found`)
+
+            let nextChecks: checkChain<E2eContext>[] = []
+            if (result.status !== 'failure') {
+                const response = await Hydra.loadResource(resourceId)
+                nextChecks.push(responseChecks(response, step.children || []))
+
+                step.markExecuted()
+            }
+
+            return {
+                result,
+                nextChecks,
+            }
         }
     }
 }

@@ -17,15 +17,10 @@ export abstract class ScenarioStep {
         this.__executed = true
     }
 
-    public appliesTo (obj: any): boolean {
+    public appliesTo (obj: unknown): boolean {
         return !!obj && this.appliesToInternal(obj)
     }
 
-    abstract getRunner(obj: any, localContext?: Context): checkChain<E2eContext>;
-    protected abstract appliesToInternal(obj: any): boolean;
-}
-
-export interface FollowStep extends ScenarioStep {
-    resourceId: string;
-    executed: boolean;
+    abstract getRunner(obj: unknown, localContext?: Context): checkChain<E2eContext>;
+    protected abstract appliesToInternal(obj: unknown): boolean;
 }

@@ -5,9 +5,10 @@ import { ExpectationStep } from './response/expectation'
 import { InvocationStep } from './representation/operation/invocation'
 import { OperationStep } from './representation/operation'
 import { LinkStep } from './representation/link'
+import { FollowStep } from './representation/link/follow'
 
 interface StepDescription {
-    type: 'Class' | 'Expectation' | 'Operation' | 'Property' | 'Invocation' | 'Link';
+    type: 'Class' | 'Expectation' | 'Operation' | 'Property' | 'Invocation' | 'Link' | 'Follow';
     children: StepDescription[];
 }
 
@@ -31,6 +32,8 @@ function create (step: StepDescription & { [key: string]: string }): ScenarioSte
             return new OperationStep(step.operationId, children)
         case 'Invocation':
             return new InvocationStep(step.body, children)
+        case 'Follow':
+            return new FollowStep(step.variable, children)
         default:
             throw new Error(`Unexpected step ${step.type}`)
     }

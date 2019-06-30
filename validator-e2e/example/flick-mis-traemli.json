@@ -1,8 +1,8 @@
 {
   "steps": [
     {
-      "type": "Resource",
-      "id": "http://flick-mis-traem.li/vocab#Entrypoint",
+      "type": "Class",
+      "classId": "http://flick-mis-traem.li/vocab#Entrypoint",
       "children": [
         {
           "type": "Property",
@@ -28,7 +28,7 @@
                     },
                     {
                       "type": "Follow",
-                      "resourceId": "uri"
+                      "variable": "uri"
                     }
                   ]
                 }
@@ -47,8 +47,8 @@
       ]
     },
     {
-      "type": "Resource",
-      "id": "http://flick-mis-traem.li/vocab#NukeDatabase",
+      "type": "Class",
+      "classId": "http://flick-mis-traem.li/vocab#NukeDatabase",
       "children": [
         {
           "type": "Property",

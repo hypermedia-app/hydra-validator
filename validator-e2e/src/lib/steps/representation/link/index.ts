@@ -37,7 +37,7 @@ export class LinkStep extends ScenarioStep {
             if (result.status !== 'failure') {
                 const linkedResource = resource[step.propertyId] as HydraResource
                 const response = await Hydra.loadResource(linkedResource.id)
-                nextChecks.push(responseChecks(response, step.children || []))
+                nextChecks.push(responseChecks(response, step.children))
 
                 step.markExecuted()
             }
