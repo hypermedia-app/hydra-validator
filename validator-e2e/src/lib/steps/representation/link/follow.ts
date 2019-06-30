@@ -4,13 +4,17 @@ import { Context, checkChain, IResult, Result } from 'hydra-validator-core'
 import processResponse from '../../../processResponse'
 import { ScenarioStep } from '../../'
 
+interface FollowStepInit {
+    variable: string;
+}
+
 export class FollowStep extends ScenarioStep {
     public variable: string
 
-    public constructor (variable: string, children: ScenarioStep[]) {
+    public constructor (init: FollowStepInit, children: ScenarioStep[]) {
         super(children)
 
-        this.variable = variable
+        this.variable = init.variable
     }
 
     protected appliesToInternal (): boolean {

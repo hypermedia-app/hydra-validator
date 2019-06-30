@@ -5,15 +5,19 @@ import { checkChain, Result } from 'hydra-validator-core'
 import processResponse from '../../../processResponse'
 import { ScenarioStep } from '../../index'
 
-export class InvocationStep extends ScenarioStep {
-    public body: any;
+interface InvocationStepInit {
+    body: string;
+}
 
-    public constructor (body: any, children: ScenarioStep[]) {
+export class InvocationStep extends ScenarioStep {
+    public body: string;
+
+    public constructor (init: InvocationStepInit, children: ScenarioStep[]) {
         super(children)
-        this.body = body
+        this.body = init.body
     }
 
-    protected appliesToInternal (obj: any): boolean {
+    protected appliesToInternal (obj: IOperation): boolean {
         return 'invoke' in obj
     }
 

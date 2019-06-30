@@ -4,13 +4,17 @@ import { checkChain } from 'hydra-validator-core'
 import { ScenarioStep } from '../'
 import { IHydraResponse } from 'alcaeus/types/HydraResponse'
 
+interface ClassStepInit {
+    classId: string;
+}
+
 export class ClassStep extends ScenarioStep {
     public classId: string
 
-    public constructor (classId: string, children: ScenarioStep[]) {
+    public constructor (init: ClassStepInit, children: ScenarioStep[]) {
         super(children)
 
-        this.classId = classId
+        this.classId = init.classId
     }
 
     protected appliesToInternal (obj: HydraResource): boolean {

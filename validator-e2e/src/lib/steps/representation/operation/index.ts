@@ -3,15 +3,19 @@ import { E2eContext } from '../../../../types'
 import { Result, checkChain } from 'hydra-validator-core'
 import { ScenarioStep } from '../../index'
 
+interface OperationStepInit {
+    operationId: string;
+}
+
 export class OperationStep extends ScenarioStep {
     public operationId: string;
 
-    public constructor (operationId: string, children: ScenarioStep[]) {
+    public constructor (init: OperationStepInit, children: ScenarioStep[]) {
         super(children)
-        this.operationId = operationId
+        this.operationId = init.operationId
     }
 
-    protected appliesToInternal (obj: any): boolean {
+    protected appliesToInternal (obj: HydraResource): boolean {
         return 'id' in obj
     }
 

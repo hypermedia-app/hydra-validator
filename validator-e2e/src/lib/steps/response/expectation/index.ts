@@ -2,13 +2,20 @@ import { IHydraResponse } from 'alcaeus/types/HydraResponse'
 import { IResult, Result, Context } from 'hydra-validator-core'
 import { ScenarioStep } from '../../'
 
+interface ExpectationStepInit {
+    expectation: 'Status' | 'Header';
+    code: number;
+    name: string;
+    captureValueAs: string;
+}
+
 export class ExpectationStep extends ScenarioStep {
     public expectation: 'Status' | 'Header';
     public code: number;
     public name: string;
     public captureValueAs: string;
 
-    public constructor (step: any, children: ScenarioStep[]) {
+    public constructor (step: ExpectationStepInit, children: ScenarioStep[]) {
         super(children)
 
         this.expectation = step.expectation
@@ -45,7 +52,7 @@ export class ExpectationStep extends ScenarioStep {
                     break
             }
 
-            return {result}
+            return { result }
         }
     }
 }

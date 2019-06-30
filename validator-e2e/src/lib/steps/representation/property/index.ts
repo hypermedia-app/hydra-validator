@@ -5,13 +5,17 @@ import { ScenarioStep } from '../../'
 import { IResource } from 'alcaeus/types/Resources/Resource'
 import { IHydraResponse } from 'alcaeus/types/HydraResponse'
 
+interface PropertyStepInit {
+    propertyId: string;
+}
+
 export class PropertyStep extends ScenarioStep {
     public propertyId: string
 
-    public constructor (propertyId: string, children: ScenarioStep[]) {
+    public constructor (init: PropertyStepInit, children: ScenarioStep[]) {
         super(children)
 
-        this.propertyId = propertyId
+        this.propertyId = init.propertyId
     }
 
     protected appliesToInternal (obj: (HydraResource & IResource) | IHydraResponse): boolean {

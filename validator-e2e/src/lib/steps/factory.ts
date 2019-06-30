@@ -8,7 +8,7 @@ import { LinkStep } from './representation/link'
 import { FollowStep } from './representation/link/follow'
 
 interface StepDescription {
-    type: 'Class' | 'Expectation' | 'Operation' | 'Property' | 'Invocation' | 'Link' | 'Follow';
+    type: string;
     children: StepDescription[];
 }
 
@@ -16,27 +16,28 @@ export interface ApiTestScenarios {
     steps: StepDescription[];
 }
 
-function create (step: StepDescription & { [key: string]: string }): ScenarioStep {
-    const children = (step.children || []).map(child => create(child as any))
+interface StepConstructor {
+    new(stepInit: any, children: ScenarioStep[]): ScenarioStep;
+}
 
-    switch (step.type) {
-        case 'Class':
-            return new ClassStep(step.classId, children)
-        case 'Link':
-            return new LinkStep(step.propertyId, children)
-        case 'Property':
-            return new PropertyStep(step.propertyId, children)
-        case 'Expectation':
-            return new ExpectationStep(step, children)
-        case 'Operation':
-            return new OperationStep(step.operationId, children)
-        case 'Invocation':
-            return new InvocationStep(step.body, children)
-        case 'Follow':
-            return new FollowStep(step.variable, children)
-        default:
-            throw new Error(`Unexpected step ${step.type}`)
+const stepConstructors = new Map<string, StepConstructor>()
+stepConstructors.set('Class', ClassStep)
+stepConstructors.set('Link', LinkStep)
+stepConstructors.set('Property', PropertyStep)
+stepConstructors.set('Expectation', ExpectationStep)
+stepConstructors.set('Invocation', InvocationStep)
+stepConstructors.set('Follow', FollowStep)
+stepConstructors.set('Operation', OperationStep)
+
+function create (step: StepDescription): ScenarioStep {
+    const children = (step.children || []).map(create)
+
+    const Step = stepConstructors.get(step.type)
+    if (Step) {
+        return new Step(step, children)
     }
+
+    throw new Error(`Unexpected step ${step.type}`)
 }
 
 export default function (scenarios: ApiTestScenarios) {
