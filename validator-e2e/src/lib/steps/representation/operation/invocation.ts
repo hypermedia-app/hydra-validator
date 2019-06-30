@@ -2,7 +2,7 @@ import { IOperation } from 'alcaeus/types/Resources'
 import { IHydraResponse } from 'alcaeus/types/HydraResponse'
 import { E2eContext } from '../../../../types'
 import { checkChain, Result } from 'hydra-validator-core'
-import { factory as responseChecks } from '../../response'
+import processResponse from '../../../processResponse'
 import { ScenarioStep } from '../../index'
 
 export class InvocationStep extends ScenarioStep {
@@ -27,7 +27,7 @@ export class InvocationStep extends ScenarioStep {
 
             let nextChecks: checkChain<E2eContext>[] = []
             if (step.children) {
-                nextChecks = [responseChecks(response, step.children)]
+                nextChecks = [processResponse(response, step.children)]
             }
 
             step.markExecuted()

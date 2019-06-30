@@ -1,7 +1,7 @@
 import { Hydra } from 'alcaeus'
 import { E2eContext } from '../../../../types'
 import { Context, checkChain, IResult, Result } from 'hydra-validator-core'
-import { factory as responseChecks } from '../../response'
+import processResponse from '../../../processResponse'
 import { ScenarioStep } from '../../'
 
 export class FollowStep extends ScenarioStep {
@@ -33,7 +33,7 @@ export class FollowStep extends ScenarioStep {
             let nextChecks: checkChain<E2eContext>[] = []
             if (result.status !== 'failure') {
                 const response = await Hydra.loadResource(resourceId)
-                nextChecks.push(responseChecks(response, step.children || []))
+                nextChecks.push(processResponse(response, step.children || []))
 
                 step.markExecuted()
             }

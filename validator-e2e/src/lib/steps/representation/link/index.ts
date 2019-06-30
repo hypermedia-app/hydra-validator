@@ -2,7 +2,7 @@ import { HydraResource, IHydraResource } from 'alcaeus/types/Resources'
 import { Hydra } from 'alcaeus'
 import { E2eContext } from '../../../../types'
 import { checkChain, IResult, Result } from 'hydra-validator-core'
-import { factory as responseChecks } from '../../response'
+import processResponse from '../../../processResponse'
 import { ScenarioStep } from '../../index'
 import { IHydraResponse } from 'alcaeus/types/HydraResponse'
 import { IResource } from 'alcaeus/types/Resources/Resource'
@@ -37,7 +37,7 @@ export class LinkStep extends ScenarioStep {
             if (result.status !== 'failure') {
                 const linkedResource = resource[step.propertyId] as HydraResource
                 const response = await Hydra.loadResource(linkedResource.id)
-                nextChecks.push(responseChecks(response, step.children))
+                nextChecks.push(processResponse(response, step.children))
 
                 step.markExecuted()
             }
