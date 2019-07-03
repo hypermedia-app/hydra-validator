@@ -2,8 +2,6 @@ import { HydraResource } from 'alcaeus/types/Resources'
 import { E2eContext } from '../../../../types'
 import { checkChain, IResult, Result } from 'hydra-validator-core'
 import { ScenarioStep } from '../../'
-import { IResource } from 'alcaeus/types/Resources/Resource'
-import { IHydraResponse } from 'alcaeus/types/HydraResponse'
 
 interface PropertyStepInit {
     propertyId: string;
@@ -18,13 +16,12 @@ export class PropertyStep extends ScenarioStep {
         this.propertyId = init.propertyId
     }
 
-    protected appliesToInternal (obj: (HydraResource & IResource) | IHydraResponse): boolean {
-        return 'id' in obj
+    protected appliesToInternal (obj: { [ prop: string ]: HydraResource }): boolean {
+        return obj[this.propertyId] && 'id' in obj[this.propertyId]
     }
 
-    public getRunner (obj: HydraResource) {
+    public getRunner (resource: { [ prop: string ]: HydraResource }) {
         const step = this
-        const resource = obj as any as { [ prop: string ]: HydraResource }
 
         return function () {
             if (step.executed) {
