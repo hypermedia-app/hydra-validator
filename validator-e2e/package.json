@@ -47,5 +47,8 @@
   "dependencies": {
     "alcaeus": "^0.6.3",
     "hydra-validator-core": "^0.1.0"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
