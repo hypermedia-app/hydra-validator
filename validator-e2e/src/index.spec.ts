@@ -1,11 +1,13 @@
 jest.mock('./lib/docsLoader')
+jest.mock('./lib/steps/factory')
 jest.mock('alcaeus')
 jest.mock('')
 
 import { Hydra } from 'alcaeus'
 import * as docsLoader from './lib/docsLoader'
+import createSteps from './lib/steps/factory'
 import { check } from './'
-import * as responseChecks from './lib/steps/response'
+import * as responseChecks from './lib/processResponse'
 import { E2eContext } from './types'
 
 describe('validator-e2e', () => {
@@ -39,9 +41,10 @@ describe('validator-e2e', () => {
         it('sets loaded scenarios to context', async () => {
             // given
             (docsLoader.load as any).mockReturnValue({
-                steps: [{}, {}, {}],
+                steps: [],
             })
             ;(Hydra.loadResource as any).mockResolvedValue({})
+            ;(createSteps as any).mockReturnValue([{}, {}, {}])
 
             // when
             await check('urn:irrelevant', {
@@ -60,7 +63,7 @@ describe('validator-e2e', () => {
             })
             const response = {}
             ;(Hydra.loadResource as any).mockResolvedValue(response)
-            jest.spyOn(responseChecks, 'factory')
+            jest.spyOn(responseChecks, 'default')
 
             // when
             await check('urn:irrelevant', {
@@ -70,7 +73,7 @@ describe('validator-e2e', () => {
 
             // then
             expect(Hydra.loadResource).toHaveBeenCalledWith('urn:irrelevant')
-            expect(responseChecks.factory).toHaveBeenCalledWith(response, [])
+            expect(responseChecks.default).toHaveBeenCalledWith(response, [])
         })
     })
 })
