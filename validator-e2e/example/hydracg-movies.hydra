@@ -1,0 +1,13 @@
+With Class "http://schema.org/EntryPoint" {
+    Expect Property "http://www.w3.org/ns/hydra/core#collection" {
+        Expect Operation "https://hydra-movies.herokuapp.com/doc#create-movie" {
+            Invoke {
+                Expect Status 201
+            }
+        }
+    }
+
+    Expect Link "http://www.w3.org/ns/hydra/core#collection" {
+        Expect Status 200
+    }
+}
