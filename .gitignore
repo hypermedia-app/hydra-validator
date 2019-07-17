@@ -4,3 +4,4 @@ coverage/
 **/src/**/*.js
 !validator-ui/src/**/*.js
 *.log
+*.hydra.json
