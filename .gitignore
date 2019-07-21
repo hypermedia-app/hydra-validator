@@ -7,3 +7,5 @@ coverage/
 !validator-ui/src/**/*.js
 *.log
 *.hydra.json
+*.d.ts
+*.js.map
