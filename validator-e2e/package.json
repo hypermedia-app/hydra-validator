@@ -9,8 +9,7 @@
   ],
   "scripts": {
     "pretest": "eslint --ext ts . --quiet",
-    "build": "tsc",
-    "prepublishOnly": "rimraf dist; npm run build",
+    "prepublishOnly": "rimraf dist; tsc",
     "precommit": "lint-staged",
     "test": "jest",
     "example:compile": "hypertest-compiler example"

@@ -9,9 +9,8 @@
   ],
   "scripts": {
     "pretest": "eslint --ext ts . --quiet",
-    "build": "tsc",
     "test": "jest",
-    "prepublishOnly": "rimraf dist; npm run build",
+    "prepublishOnly": "rimraf dist; tsc",
     "precommit": "lint-staged"
   },
   "repository": {
