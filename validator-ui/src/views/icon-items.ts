@@ -17,7 +17,7 @@ function item ({ icon, color, description, details }) {
 </paper-icon-item>`
 }
 
-export function warning (description, details) {
+export function warning (description, details?) {
   return item({
     description,
     details,
@@ -35,7 +35,7 @@ export function failure (description, details) {
   })
 }
 
-export function success (description, details) {
+export function success (description, details?) {
   return item({
     description,
     details,
@@ -44,7 +44,7 @@ export function success (description, details) {
   })
 }
 
-export function information (description, details) {
+export function information (description, details?) {
   return item({
     description,
     details,
