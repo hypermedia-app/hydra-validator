@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import * as program from 'commander'
-import runChecks from 'hydra-validator-core/dist/run-checks'
+import runChecks from 'hydra-validator-core/run-checks'
 // @ts-ignore
 import * as fetch from 'nodeify-fetch'
 // @ts-ignore

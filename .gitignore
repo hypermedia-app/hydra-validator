@@ -1,7 +1,9 @@
 node_modules/
 dist/
 coverage/
-**/src/**/*.js
+*.js
+!*.config.js
+!*.conf.js
 !validator-ui/src/**/*.js
 *.log
 *.hydra.json

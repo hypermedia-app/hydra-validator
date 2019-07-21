@@ -1,4 +1,4 @@
-import { Hydra } from 'hydra-validator-core/dist/namespace'
+import { Hydra } from 'hydra-validator-core/namespace'
 import { checkChain, Result } from 'hydra-validator-core'
 
 export default function (apiDoc: any): checkChain {

@@ -2,10 +2,10 @@
   "name": "hydra-validator-analyse",
   "version": "0.1.0",
   "description": "Static analysis checks for hydra-validator",
-  "main": "dist/index.js",
+  "main": "index.js",
   "files": [
-    "dist/**/*.d.ts",
-    "dist/**/*.js"
+    "**/*.d.ts",
+    "**/*.js"
   ],
   "scripts": {
     "pretest": "eslint --ext ts . --quiet",

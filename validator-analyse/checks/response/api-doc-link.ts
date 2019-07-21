@@ -1,7 +1,7 @@
 import { checkChain, Result } from 'hydra-validator-core'
 // @ts-ignore
 import * as parse from 'parse-link-header'
-import { Hydra } from 'hydra-validator-core/dist/namespace'
+import { Hydra } from 'hydra-validator-core/namespace'
 import urlResolveCheck from '../url-resolvable'
 import analyseRepresentation from '../analyse-representation'
 

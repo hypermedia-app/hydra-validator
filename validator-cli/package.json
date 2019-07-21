@@ -2,12 +2,13 @@
   "name": "hydra-validator",
   "version": "0.1.0",
   "description": "CLI tool to run checks against a Hydra API",
-  "main": "dist/index.js",
+  "main": "index.js",
   "bin": {
-    "hydra-validator": "dist/index.js"
+    "hydra-validator": "index.js"
   },
   "files": [
-    "dist/**/*.js"
+    "**/*.js",
+    "**/*.d.ts"
   ],
   "scripts": {
     "pretest": "eslint --ext ts . --quiet",

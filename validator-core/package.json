@@ -4,8 +4,8 @@
   "description": "Shared package for hydra-validator",
   "main": "dist/index.js",
   "files": [
-    "dist/**/*.d.ts",
-    "dist/**/*.js"
+    "**/*.d.ts",
+    "**/*.js"
   ],
   "scripts": {
     "pretest": "eslint --ext ts . --quiet",

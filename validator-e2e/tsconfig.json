@@ -8,9 +8,6 @@
     ],
     "strict": true,
     "declaration": true,
-    "outDir": "dist",
     "sourceMap": true
-  },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "**/*.spec.ts"]
+  }
 }

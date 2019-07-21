@@ -1,5 +1,5 @@
 import { checkChain, Result } from 'hydra-validator-core'
-import { Hydra } from 'hydra-validator-core/dist/namespace'
+import { Hydra } from 'hydra-validator-core/namespace'
 import checkDereference from '../url-resolvable'
 
 export default function (apiDoc: any): checkChain {

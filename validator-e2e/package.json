@@ -4,14 +4,16 @@
   "description": "A set of tools to execute E2E tests on a Hydra API",
   "main": "dist/index.js",
   "files": [
-    "dist/**/*.js"
+    "**/*.js",
+    "**/*.d.ts"
   ],
   "scripts": {
     "pretest": "eslint --ext ts . --quiet",
     "build": "tsc",
     "prepublishOnly": "rimraf dist; npm run build",
     "precommit": "lint-staged",
-    "test": "jest"
+    "test": "jest",
+    "example:compile": "hypertest-compiler example"
   },
   "repository": {
     "type": "git",
@@ -43,14 +45,14 @@
     "typescript": "^3.4.5",
     "jest": "^24.7.1",
     "ts-jest": "^24.0.2",
-    "@hydrofoil/hypertest": "^0.2.1"
+    "@hydrofoil/hypertest": "^0.3.0"
   },
   "dependencies": {
     "alcaeus": "^0.6.3",
     "hydra-validator-core": "^0.1.0"
   },
   "peerDependencies": {
-    "@hydrofoil/hypertest": "^0.2.1"
+    "@hydrofoil/hypertest": "^0.3.0"
   },
   "publishConfig": {
     "access": "public"
