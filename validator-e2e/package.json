@@ -1,0 +1,61 @@
+{
+  "name": "hydra-validator-e2e",
+  "version": "0.1.0",
+  "description": "A set of tools to execute E2E tests on a Hydra API",
+  "main": "dist/index.js",
+  "files": [
+    "**/*.js",
+    "**/*.d.ts"
+  ],
+  "scripts": {
+    "pretest": "eslint --ext ts . --quiet",
+    "prepublishOnly": "rimraf dist; tsc",
+    "precommit": "lint-staged",
+    "test": "jest",
+    "example:compile": "hypertest-compiler example"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hypermedia-app/hydra-validator.git"
+  },
+  "keywords": [
+    "hydra",
+    "hypermedia",
+    "validator",
+    "e2e",
+    "tests"
+  ],
+  "author": "Tomasz Pluskiewicz <tomasz@t-code.pl>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/hypermedia-app/hydra-validator/issues"
+  },
+  "homepage": "https://github.com/hypermedia-app/hydra-validator#readme",
+  "devDependencies": {
+    "@types/jest": "^24.0.12",
+    "@types/node": "^11.13.9",
+    "@typescript-eslint/eslint-plugin": "^1.7.0",
+    "@typescript-eslint/parser": "^1.7.0",
+    "eslint": "^5.16.0",
+    "eslint-plugin-jest": "^22.6.4",
+    "lint-staged": "^8.2.1",
+    "rimraf": "^2.6.3",
+    "standard": "^12.0.1",
+    "typescript": "^3.4.5",
+    "jest": "^24.7.1",
+    "ts-jest": "^24.0.2",
+    "@hydrofoil/hypertest": "^0.3.0",
+    "isomorphic-fetch": "^2.2.1"
+  },
+  "dependencies": {
+    "alcaeus": "^0.6.3",
+    "hydra-validator-core": "^0.1.0",
+    "escape-string-regexp": "^2.0.0"
+  },
+  "peerDependencies": {
+    "@hydrofoil/hypertest": "^0.3.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

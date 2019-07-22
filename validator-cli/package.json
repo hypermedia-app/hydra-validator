@@ -2,18 +2,17 @@
   "name": "hydra-validator",
   "version": "0.1.0",
   "description": "CLI tool to run checks against a Hydra API",
-  "main": "dist/index.js",
+  "main": "index.js",
   "bin": {
-    "hydra-validator": "dist/index.js"
+    "hydra-validator": "index.js"
   },
   "files": [
-    "dist/**/*.js"
+    "**/*.js",
+    "**/*.d.ts"
   ],
   "scripts": {
     "pretest": "eslint --ext ts . --quiet",
-    "build": "tsc",
-    "test": "jest",
-    "prepublishOnly": "rimraf dist; npm run build",
+    "prepublishOnly": "rimraf dist; tsc",
     "precommit": "lint-staged"
   },
   "repository": {
@@ -45,16 +44,14 @@
     "rimraf": "^2.6.3",
     "standard": "^12.0.1",
     "ts-jest": "^24.0.2",
-    "typescript": "^3.4.5"
+    "typescript": "^3.4.5",
+    "hydra-validator-analyse": "^0.1.0",
+    "hydra-validator-e2e": "^0.1.0"
   },
   "dependencies": {
-    "@rdfjs/formats-common": "^2.0.0",
-    "@rdfjs/namespace": "^1.0.0",
-    "clownface": "^0.10.0",
     "commander": "^2.20.0",
     "nodeify-fetch": "^2.0.0",
-    "parse-link-header": "^1.0.1",
-    "rdf-ext": "^1.3.0",
-    "string-to-stream": "^1.1.1"
+    "hydra-validator-core": "^0.1.0",
+    "matchdep": "^2.0.0"
   }
 }

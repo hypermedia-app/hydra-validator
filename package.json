@@ -3,14 +3,22 @@
   "private": true,
   "scripts": {
     "postinstall": "lerna bootstrap",
+    "pretest": "lerna run build",
     "test": "lerna run test",
     "version": "standard-changelog && git add CHANGELOG.md"
   },
   "devDependencies": {
     "@commitlint/cli": "^8.0.0",
     "@commitlint/config-conventional": "^8.0.0",
+    "cz-conventional-changelog": "^2.1.0",
     "husky": "^2.4.1",
     "lerna": "^3.13.0",
-    "standard-changelog": "^2.0.11"
+    "standard-changelog": "^2.0.11",
+    "ts-node": "^8.3.0"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
   }
 }

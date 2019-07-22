@@ -1,36 +1,44 @@
-# hydra-validator
-A tool (also website) validating a Hydra API against possible mistakes
+> # hydra-validator
+> A tool (also website) validating a Hydra API against possible mistakes
 
 ## Usage
 
+This is a monorepo. Check the packages for more information:
+
 ### Online tool
 
-To check any endpoint for Hydra controls and their correctness go to https://analyse.hypermedia.app and paste an URL
-to the textbox and press ENTER.
+Visit [https://analyse.hypermedia.app](https://analyse.hypermedia.app)
 
-The website will dereference that resource and linked API Documentation (if any) and try to check it against the implemented
-rules.
-
-For the online version to work, the API must be served over HTTPS and [CORS must be enabled](https://enable-cors.org) on the server.
+More info in [validator-ui](validator-ui) package.
 
 ### Command Line tool
 
-It is also possible to run verification of a Hydra API fomr the command line. This may be useful to run sanity checks
+It is also possible to run verification of a Hydra API from the command line. This may be useful to run sanity checks
 locally during development or as part of a CI pipeline.
 
-To install
+More info in [validator-cli](validator-cli) package.
 
-```
-npm i -g hydra-validator
-```
+### Core package
 
-And then run
+Code shared between other packages. 
 
-```
-hydra-validator analyze <URL>
-```
+More info in [validator-core](validator-core) package.
+
+### Static API Documentation analysis
+
+Static analyser of a Hydra API. Checks the triples and hypermedia controls for potential errors. 
+
+More info in [validator-analyse](validator-analyse) package.
+
+### E2E plugin (WIP)
+
+End-to-end rules executed against a Hydra API.
+
+More info in [validator-e2e](validator-e2e) package.
 
 ## Contributing
+
+### Creating individual checks
 
 Each verification check is a parameterless function, which returns the result and optionally an array of child checks.
 It can also be async.
@@ -91,3 +99,25 @@ Results can be reported with four factory methods: `Result.Succes`, `Result.Fail
 and `Result.Informational`.
 
 Note that there is no restriction for chaining. Additional checks can follow a successful check as well as failed ones.
+
+### Creating a CLI plugin
+
+To create a plugin, create a project called `hydra-validator-uber-check`, where `uber-check` will become
+the CLI command.
+
+In the package main module, export a default `checkChain` function which will be called first from
+the CLI.
+
+Optionally, add `export const options`, which exports an array of command line parameters. Here's an example
+of one such option:
+
+```
+  {
+    flags: '-l, --log-level <logLevel>',
+    description: 'Minimum log level',
+    defaultValue: 'INFO'
+  }
+```
+
+An object with the values passed from the command line will be provided as the second argument to the
+main `checkChain` function.
