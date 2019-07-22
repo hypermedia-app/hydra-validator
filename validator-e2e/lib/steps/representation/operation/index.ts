@@ -22,7 +22,7 @@ export class OperationStep extends ScenarioStep {
     public getRunner (resource: HydraResource) {
         const step = this
         return async function invokeOperation () {
-            const operation = resource.operations.find(op => op.supportedOperation.id === step.operationId)
+            const operation = resource.operations.find(op => op.supportedOperation.id === step.operationId || op.supportedOperation.types.contains(step.operationId))
             if (!operation) {
                 return {
                     result: Result.Failure(`Operation ${step.operationId} not found`),
