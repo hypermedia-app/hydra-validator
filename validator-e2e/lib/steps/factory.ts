@@ -1,7 +1,8 @@
 import { ScenarioStep } from './'
 import { ClassStep } from './representation'
 import { PropertyStep } from './representation/property'
-import { ExpectationStep } from './response/expectation'
+import { StatusStep } from './response/status'
+import { HeaderStep } from './response/header'
 import { InvocationStep } from './representation/operation/invocation'
 import { OperationStep } from './representation/operation'
 import { LinkStep } from './representation/link'
@@ -24,7 +25,8 @@ const stepConstructors = new Map<string, StepConstructor>()
 stepConstructors.set('Class', ClassStep)
 stepConstructors.set('Link', LinkStep)
 stepConstructors.set('Property', PropertyStep)
-stepConstructors.set('Expectation', ExpectationStep)
+stepConstructors.set('ResponseStatus', StatusStep)
+stepConstructors.set('ResponseHeader', HeaderStep)
 stepConstructors.set('Invocation', InvocationStep)
 stepConstructors.set('Follow', FollowStep)
 stepConstructors.set('Operation', OperationStep)

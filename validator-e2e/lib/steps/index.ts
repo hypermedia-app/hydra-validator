@@ -22,5 +22,7 @@ export abstract class ScenarioStep {
     }
 
     abstract getRunner(obj: unknown, localContext?: Context): checkChain<E2eContext>;
-    protected abstract appliesToInternal(obj: unknown): boolean;
+    protected appliesToInternal (obj: unknown): boolean {
+        return true
+    }
 }

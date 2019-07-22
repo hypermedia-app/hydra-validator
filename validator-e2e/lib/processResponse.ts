@@ -9,10 +9,11 @@ export default function (response: IHydraResponse, steps: ScenarioStep[]): check
     return function checkResponse (this: E2eContext) {
         const nextChecks: checkChain<E2eContext>[] = []
         const resource = response.root
+        const xhr = response.xhr
 
         for (let step of [...steps, ...this.scenarios]) {
-            if (step.appliesTo(response)) {
-                nextChecks.push(step.getRunner(response, localContext))
+            if (step.appliesTo(xhr)) {
+                nextChecks.push(step.getRunner(xhr, localContext))
             } else if (step.appliesTo(resource)) {
                 nextChecks.push(step.getRunner(resource, localContext))
             }

@@ -17,10 +17,6 @@ export class FollowStep extends ScenarioStep {
         this.variable = init.variable
     }
 
-    protected appliesToInternal (): boolean {
-        return true
-    }
-
     public getRunner (obj: never, scope: Context) {
         const step = this
         return async function checkLink () {
@@ -31,7 +27,7 @@ export class FollowStep extends ScenarioStep {
             const resourceId = scope[step.variable]
 
             const result: IResult = resourceId
-                ? Result.Informational(`Stepping into resource ${resourceId}`)
+                ? Result.Informational(`Fetching resource ${resourceId}`)
                 : Result.Failure(`Variable ${step.variable} not found`)
 
             let nextChecks: checkChain<E2eContext>[] = []

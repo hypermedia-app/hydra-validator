@@ -44,11 +44,13 @@
     "typescript": "^3.4.5",
     "jest": "^24.7.1",
     "ts-jest": "^24.0.2",
-    "@hydrofoil/hypertest": "^0.3.0"
+    "@hydrofoil/hypertest": "^0.3.0",
+    "isomorphic-fetch": "^2.2.1"
   },
   "dependencies": {
     "alcaeus": "^0.6.3",
-    "hydra-validator-core": "^0.1.0"
+    "hydra-validator-core": "^0.1.0",
+    "escape-string-regexp": "^2.0.0"
   },
   "peerDependencies": {
     "@hydrofoil/hypertest": "^0.3.0"

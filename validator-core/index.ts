@@ -1,9 +1,21 @@
-type ResultKind = 'success' | 'failure' | 'informational' | 'warning'
+type ResultKind = 'success' | 'failure' | 'informational' | 'warning' | 'error'
 
 // eslint-disable-next-line @typescript-eslint/interface-name-prefix
 export interface IResult {
     description: string;
     status: ResultKind;
+}
+
+class ErrorResult implements IResult {
+    public description: string;
+    public status: ResultKind;
+    public details: string | Error
+
+    public constructor (description: string, details: string | Error) {
+        this.status = 'error'
+        this.description = description
+        this.details = details
+    }
 }
 
 class Failure implements IResult {
@@ -43,6 +55,10 @@ export class Result implements IResult {
 
     public static Informational (description: string, details?: string) {
         return new Result(description, 'informational', details)
+    }
+
+    public static Error (description: string, details: string | Error = '') {
+        return new ErrorResult(description, details)
     }
 }
 
