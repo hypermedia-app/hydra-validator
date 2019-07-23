@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.1](https://github.com/hypermedia-app/hydra-validator/compare/hydra-validator@1.0.0...hydra-validator@1.0.1) (2019-07-23)
+
+
+### Bug Fixes
+
+* the cli must look for plugin in calling package and not itself ([435e298](https://github.com/hypermedia-app/hydra-validator/commit/435e298))
+
+
+
+
+
 # 1.0.0 (2019-07-23)
 
 
