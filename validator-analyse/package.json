@@ -1,6 +1,6 @@
 {
   "name": "hydra-validator-analyse",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Static analysis checks for hydra-validator",
   "main": "index.js",
   "files": [
@@ -47,9 +47,9 @@
   "dependencies": {
     "@rdfjs/formats-common": "^2.0.0",
     "clownface": "^0.10.0",
-    "rdf-ext": "^1.3.0",
-    "string-to-stream": "^1.1.1",
+    "hydra-validator-core": "^0.2.0",
     "parse-link-header": "^1.0.1",
-    "hydra-validator-core": "^0.1.0"
+    "rdf-ext": "^1.3.0",
+    "string-to-stream": "^1.1.1"
   }
 }
