@@ -9,3 +9,4 @@ coverage/
 *.hydra.json
 *.d.ts
 *.js.map
+/CHANGELOG.md
