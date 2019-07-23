@@ -7,7 +7,7 @@ import * as fetch from 'nodeify-fetch'
 // @ts-ignore
 import * as deps from 'matchdep'
 
-const plugins: string[] = deps.filterAll([ 'hydra-validator-*', 'hydra-validator-core' ])
+const plugins: string[] = deps.filterAll([ 'hydra-validator-*', 'hydra-validator-core' ], `${process.cwd()}/package.json`)
 
 for (let plugin of plugins) {
     const match = plugin.match(/^hydra-validator-([\d\w]+)$/)
