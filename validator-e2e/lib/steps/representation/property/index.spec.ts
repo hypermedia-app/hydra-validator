@@ -1,6 +1,7 @@
 import { PropertyStep } from '.'
 import { E2eContext } from '../../../../types'
 import { StepStub } from '../../stub'
+import { expand } from '@zazuko/rdf-vocabularies'
 
 describe('property step', () => {
     let context: E2eContext & any
@@ -19,7 +20,7 @@ describe('property step', () => {
         }, [ {} as any ])
 
         // when
-        const execute = propertyStatement.getRunner({})
+        const execute = propertyStatement.getRunner({} as any)
         const result = await execute.call(context)
 
         // then
@@ -114,6 +115,69 @@ describe('property step', () => {
 
             // then
             expect(result.result!.status).toBe('informational')
+        })
+
+        it('returns success when comparing resource has expected rdf:type', async () => {
+            // given
+            const propertyStatement = new PropertyStep({
+                propertyId: expand('rdf:type'),
+                value: 'http://example.com/Class',
+                strict: true,
+            }, [])
+            const value = {
+                types: {
+                    contains: () => true,
+                },
+            }
+
+            // when
+            const execute = propertyStatement.getRunner(value as any)
+            const result = await execute.call(context)
+
+            // then
+            expect(result.result!.status).toBe('success')
+        })
+
+        it('returns success when resource does not have expected rdf:type', async () => {
+            // given
+            const propertyStatement = new PropertyStep({
+                propertyId: expand('rdf:type'),
+                value: 'http://example.com/Class',
+                strict: true,
+            }, [])
+            const value = {
+                types: {
+                    contains: () => false,
+                },
+            }
+
+            // when
+            const execute = propertyStatement.getRunner(value as any)
+            const result = await execute.call(context)
+
+            // then
+            expect(result.result!.status).toBe('failure')
+        })
+
+        it('returns error when rdf:type statement is not strict', async () => {
+            // given
+            const propertyStatement = new PropertyStep({
+                propertyId: expand('rdf:type'),
+                value: 'http://example.com/Class',
+                strict: false,
+            }, [])
+            const value = {
+                types: {
+                    contains: () => false,
+                },
+            }
+
+            // when
+            const execute = propertyStatement.getRunner(value as any)
+            const result = await execute.call(context)
+
+            // then
+            expect(result.result!.status).toBe('error')
         })
     })
 

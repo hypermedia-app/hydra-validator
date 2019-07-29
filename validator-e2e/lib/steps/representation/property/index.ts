@@ -2,6 +2,7 @@ import { HydraResource, IHydraResource } from 'alcaeus/types/Resources'
 import { E2eContext } from '../../../../types'
 import { checkChain, CheckResult, Result } from 'hydra-validator-core'
 import { ScenarioStep } from '../../'
+import { expand } from '@zazuko/rdf-vocabularies'
 
 interface PropertyStepInit {
     propertyId: string;
@@ -26,7 +27,7 @@ export class PropertyStep extends ScenarioStep {
         return typeof obj === 'object' && 'id' in obj
     }
 
-    public getRunner (resource: { [ prop: string ]: HydraResource }): checkChain<E2eContext> {
+    public getRunner (resource: { [ prop: string ]: HydraResource } & HydraResource): checkChain<E2eContext> {
         const step = this
 
         if (step.children.length > 0 && !!step.expectedValue) {
@@ -38,15 +39,12 @@ export class PropertyStep extends ScenarioStep {
         }
 
         return function () {
-            if (!(step.propertyId in resource)) {
-                let result
-                if (step.strict) {
-                    result = Result.Failure(`Property ${step.propertyId} missing on resource ${resource.id}`)
-                } else {
-                    result = Result.Informational(`Skipping missing property ${step.propertyId}`)
-                }
+            if (step.propertyId === expand('rdf:type')) {
+                return step.__executeRdfTypeStatement(resource)
+            }
 
-                return { result }
+            if (!(step.propertyId in resource)) {
+                return step.__getMissingPropertyResult(resource)
             }
 
             if (step.expectedValue) {
@@ -55,6 +53,33 @@ export class PropertyStep extends ScenarioStep {
 
             return step.__executeBlock(resource[step.propertyId], this)
         }
+    }
+
+    private __executeRdfTypeStatement (resource: HydraResource) {
+        if (!this.strict) {
+            return { result: Result.Error('Expect Type statement must be strict') }
+        }
+
+        let result
+        const hasType = resource.types.contains(this.expectedValue as string)
+        if (hasType) {
+            result = Result.Success(`Found type ${this.expectedValue}`)
+        } else {
+            result = Result.Failure(`Resource ${resource.id} does not have expected RDF type ${this.expectedValue}`)
+        }
+
+        return { result }
+    }
+
+    private __getMissingPropertyResult (resource: { [ prop: string ]: HydraResource }) {
+        let result
+        if (this.strict) {
+            result = Result.Failure(`Property ${this.propertyId} missing on resource ${resource.id}`)
+        } else {
+            result = Result.Informational(`Skipping missing property ${this.propertyId}`)
+        }
+
+        return { result }
     }
 
     private __executeStatement (value: unknown): CheckResult<E2eContext> {
@@ -72,14 +97,9 @@ export class PropertyStep extends ScenarioStep {
     private __executeBlock (value: IHydraResource, context: E2eContext): CheckResult<E2eContext> {
         const result = Result.Informational(`Stepping into property ${this.propertyId}`)
 
-        let nextChecks: checkChain<E2eContext>[] = []
-        if (result.status !== 'failure') {
-            nextChecks = this._getChildChecks(value, context.scenarios)
-        }
-
         return {
             result,
-            nextChecks,
+            nextChecks: this._getChildChecks(value, context.scenarios),
         }
     }
 }
