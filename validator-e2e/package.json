@@ -32,7 +32,7 @@
   },
   "homepage": "https://github.com/hypermedia-app/hydra-validator#readme",
   "devDependencies": {
-    "@hydrofoil/hypertest": "^0.3.0",
+    "@hydrofoil/hypertest": "^0.4.0",
     "@types/jest": "^24.0.12",
     "@types/node": "^11.13.9",
     "@typescript-eslint/eslint-plugin": "^1.7.0",
@@ -53,7 +53,7 @@
     "hydra-validator-core": "^0.2.0"
   },
   "peerDependencies": {
-    "@hydrofoil/hypertest": "^0.3.0"
+    "@hydrofoil/hypertest": ">= 0.4.0"
   },
   "publishConfig": {
     "access": "public"
