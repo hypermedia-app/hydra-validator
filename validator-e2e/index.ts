@@ -1,6 +1,6 @@
 import { checkChain, Result } from 'hydra-validator-core'
 import { Hydra } from 'alcaeus'
-import { join } from 'path'
+import { join, dirname } from 'path'
 import { E2eOptions, E2eContext } from './types'
 import processResponse from './lib/processResponse'
 import { load } from './lib/docsLoader'
@@ -21,6 +21,7 @@ export function check (url: string, { docs, cwd }: E2eOptions): checkChain<E2eCo
 
     return async function tryFetch (this: E2eContext) {
         this.scenarios = apiTestSettings
+        this.basePath = dirname(docsPath)
 
         const response = await Hydra.loadResource(url)
 

@@ -16,6 +16,7 @@ describe('validator-e2e', () => {
     beforeEach(() => {
         context = {
             scenarios: [],
+            basePath: '',
         }
     })
 
@@ -34,6 +35,20 @@ describe('validator-e2e', () => {
 
             // then
             expect(result!.status).toBe('failure')
+        })
+
+        it('sets base path', async () => {
+            // given
+            (docsLoader.load as any).mockImplementationOnce(() => ({}))
+
+            // when
+            await check('urn:irrelevant', {
+                docs: '/base/path/docs.api',
+                cwd: '/',
+            }).call(context)
+
+            // then
+            expect(context.basePath).toBe('/base/path')
         })
     })
 

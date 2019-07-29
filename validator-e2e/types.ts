@@ -8,4 +8,5 @@ export interface E2eOptions {
 
 export interface E2eContext extends Context {
     scenarios: ScenarioStep[];
+    basePath: string;
 }
