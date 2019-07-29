@@ -57,7 +57,7 @@ export class Result implements IResult {
         return new Result(description, 'informational', details)
     }
 
-    public static Error (description: string, details: string | Error = '') {
+    public static Error (description: string, details: string | Error = ''): IResult {
         return new ErrorResult(description, details)
     }
 }
