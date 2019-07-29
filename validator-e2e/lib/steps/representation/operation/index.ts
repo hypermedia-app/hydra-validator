@@ -18,6 +18,10 @@ export class OperationStep extends ScenarioStep {
         this.strict = init.strict
     }
 
+    protected appliesToInternal (obj: HydraResource): boolean {
+        return 'operations' in obj
+    }
+
     public getRunner (resource: HydraResource) {
         const step = this
         return async function invokeOperation (this: E2eContext) {
@@ -25,7 +29,7 @@ export class OperationStep extends ScenarioStep {
             if (!operation) {
                 const message = `Operation ${step.operationId} not found`
                 return {
-                    result: step.strict ? Result.Failure(message) : Result.Informational(message),
+                    result: Result.Failure(message),
                 }
             }
 
