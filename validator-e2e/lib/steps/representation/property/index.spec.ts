@@ -3,7 +3,7 @@ import { E2eContext } from '../../../../types'
 import { StepStub } from '../../stub'
 
 describe('property step', () => {
-    let context: E2eContext
+    let context: E2eContext & any
     beforeEach(() => {
         context = {
             scenarios: [],
