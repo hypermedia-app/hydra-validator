@@ -25,4 +25,19 @@ export abstract class ScenarioStep {
     protected appliesToInternal (obj: unknown): boolean {
         return true
     }
+
+    protected _getChildChecks (obj: unknown, topLevelSteps: ScenarioStep[] = []) {
+        let nextChecks: checkChain<E2eContext>[] = []
+        const nextStepCandidates = this.children ? [...this.children, ...topLevelSteps] : topLevelSteps
+
+        nextStepCandidates
+            .reduce((checks, child) => {
+                if (child.appliesTo(obj)) {
+                    checks.push(child.getRunner(obj))
+                }
+                return checks
+            }, nextChecks)
+
+        return nextChecks
+    }
 }

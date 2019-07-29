@@ -1,31 +1,31 @@
 import { HydraResource } from 'alcaeus/types/Resources'
 import { E2eContext } from '../../../../types'
-import { Result, checkChain } from 'hydra-validator-core'
+import { Result } from 'hydra-validator-core'
 import { ScenarioStep } from '../../index'
 
 interface OperationStepInit {
     operationId: string;
+    strict: boolean;
 }
 
 export class OperationStep extends ScenarioStep {
     public operationId: string;
+    public strict: boolean;
 
     public constructor (init: OperationStepInit, children: ScenarioStep[]) {
         super(children)
         this.operationId = init.operationId
-    }
-
-    protected appliesToInternal (obj: HydraResource): boolean {
-        return 'id' in obj
+        this.strict = init.strict
     }
 
     public getRunner (resource: HydraResource) {
         const step = this
-        return async function invokeOperation () {
+        return async function invokeOperation (this: E2eContext) {
             const operation = resource.operations.find(op => op.supportedOperation.id === step.operationId || op.supportedOperation.types.contains(step.operationId))
             if (!operation) {
+                const message = `Operation ${step.operationId} not found`
                 return {
-                    result: Result.Failure(`Operation ${step.operationId} not found`),
+                    result: step.strict ? Result.Failure(message) : Result.Informational(message),
                 }
             }
 
@@ -33,22 +33,11 @@ export class OperationStep extends ScenarioStep {
                 return {}
             }
 
-            let nextChecks: checkChain<E2eContext>[] = []
-            if (step.children) {
-                step.children
-                    .reduce((checks, child) => {
-                        if (child.appliesTo(operation)) {
-                            checks.push(child.getRunner(operation))
-                        }
-                        return checks
-                    }, nextChecks)
-            }
-
             step.markExecuted()
 
             return {
                 result: Result.Informational(`Found operation '${operation.title}'`),
-                nextChecks,
+                nextChecks: step._getChildChecks(operation, this.scenarios),
             }
         }
     }

@@ -74,12 +74,7 @@ export class PropertyStep extends ScenarioStep {
 
         let nextChecks: checkChain<E2eContext>[] = []
         if (result.status !== 'failure') {
-            [...this.children, ...context.scenarios].reduce((checks, child) => {
-                if (child.appliesTo(value)) {
-                    checks.push(child.getRunner(value))
-                }
-                return checks
-            }, nextChecks)
+            nextChecks = this._getChildChecks(value, context.scenarios)
         }
 
         return {
