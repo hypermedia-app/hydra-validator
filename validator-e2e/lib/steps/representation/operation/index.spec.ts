@@ -28,7 +28,7 @@ describe('Operation block', () => {
         expect(result.result!.status).toBe('failure')
     })
 
-    it('when not strict and operation is not found returns informational', async () => {
+    it('when not strict and operation is not found returns no result', async () => {
         // given
         const operationStep = new OperationStep({
             strict: false,
@@ -43,7 +43,7 @@ describe('Operation block', () => {
         const result = await execute.call(context)
 
         // then
-        expect(result.result!.status).toBe('informational')
+        expect(result.result).toBeUndefined()
     })
 
     it('returns informational when operation is found matching SupportedOperation id', async () => {
