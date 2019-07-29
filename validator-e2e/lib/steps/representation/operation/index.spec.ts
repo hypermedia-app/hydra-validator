@@ -3,7 +3,7 @@ import { OperationStep } from './index'
 import { StepStub } from '../../stub'
 
 describe('Operation block', () => {
-    let context: E2eContext
+    let context: E2eContext & any
     beforeEach(() => {
         context = {
             scenarios: [],
