@@ -83,7 +83,8 @@ export class PropertyStep extends ScenarioStep {
     }
 
     private __executeStatement (value: unknown): CheckResult<E2eContext> {
-        if (value === this.expectedValue) {
+        // eslint-disable-next-line eqeqeq
+        if (value == this.expectedValue) {
             return {
                 result: Result.Success(`Property ${this.propertyId} as expected`),
             }
