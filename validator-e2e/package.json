@@ -50,7 +50,8 @@
   "dependencies": {
     "alcaeus": "^0.6.3",
     "escape-string-regexp": "^2.0.0",
-    "hydra-validator-core": "^0.2.0"
+    "hydra-validator-core": "^0.2.0",
+    "@zazuko/rdf-vocabularies": "^2019.7.9-2"
   },
   "peerDependencies": {
     "@hydrofoil/hypertest": ">= 0.4.0"
