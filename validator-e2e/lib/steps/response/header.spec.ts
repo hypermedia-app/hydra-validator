@@ -3,7 +3,7 @@ import { E2eContext } from '../../../types'
 import 'isomorphic-fetch'
 
 describe('header statement', () => {
-    let context: E2eContext
+    let context: E2eContext & any
 
     beforeEach(() => {
         context = {
