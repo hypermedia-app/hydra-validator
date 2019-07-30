@@ -1,5 +1,6 @@
-PREFIX api: <https://rdf-cube-curation.described.at/api#>
+PREFIX api: <https://rdf-cube-curation.described.at/>
 PREFIX hydra: <http://www.w3.org/ns/hydra/core#>
+PREFIX schema: <http://schema.org/>
 
 With Class api:Entrypoint {
     Expect Property api:dataCubeProjects {
@@ -17,6 +18,7 @@ With Operation api:CreateDataCubeProject {
         Expect Header Location
 
         Expect Type api:DataCubeProject
+        Expect Property schema:name
 
         Expect Link api:DataCubeProject/csvwMetadata {
             Expect Header Content-Type "application/csvm+json"
