@@ -1,23 +1,23 @@
-With Class "http://flick-mis-traem.li/vocab#Entrypoint" {
-    With Property "http://flick-mis-traem.li/vocab#installation" {
-        Expect Operation "http://flick-mis-traem.li/vocab#Install" {
+With Class <http://flick-mis-traem.li/vocab#Entrypoint> {
+    With Property <http://flick-mis-traem.li/vocab#installation> {
+        Expect Operation <http://flick-mis-traem.li/vocab#Install> {
             Invoke {
                 Expect Status 204
                 Expect Header Location [uri]
 
-                //Follow [uri]
+                Follow [uri]
             }
         }
     }
 
-    Expect Property "http://flick-mis-traem.li/vocab#missing"
+    Expect Property <http://flick-mis-traem.li/vocab#missing>
 
-    Expect Link "http://flick-mis-traem.li/vocab#dangerZone"
+    Expect Link <http://flick-mis-traem.li/vocab#dangerZone>
 }
 
-With Class "http://flick-mis-traem.li/vocab#NukeDatabase" {
-    Expect Property "http://flick-mis-traem.li/vocab#entrypoint" {
-        With Operation "http://flick-mis-traem.li/vocab#Operation/DropDatabase" {
+With Class <http://flick-mis-traem.li/vocab#NukeDatabase> {
+    Expect Property <http://flick-mis-traem.li/vocab#entrypoint> {
+        With Operation <http://flick-mis-traem.li/vocab#Operation/DropDatabase> {
             Invoke {
                 Expect Status 200
             }
