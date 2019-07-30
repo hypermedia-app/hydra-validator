@@ -1,0 +1,36 @@
+PREFIX api: <https://rdf-cube-curation.described.at/api#>
+PREFIX hydra: <http://www.w3.org/ns/hydra/core#>
+
+With Class api:Entrypoint {
+    Expect Property api:dataCubeProjects {
+        Expect Operation api:CreateDataCubeProject
+    }
+}
+
+With Operation api:CreateDataCubeProject {
+    Invoke {
+        Content-Type "text/csv"
+
+        <<< "/Users/tomaszpluskiewicz/projects/zazuko/data-cube-curation/api/test/bodies/UBD0028.Daten_de.csv"
+    } => {
+        Expect Status 201
+        Expect Header Location
+
+        Expect Type api:DataCubeProject
+
+        Expect Link api:DataCubeProject/csvwMetadata {
+            Expect Header Content-Type "application/csvm+json"
+        }
+
+        Expect Property api:DataCubeProject/columns {
+            Expect Type hydra:Collection
+
+            Expect Property hydra:totalItems 19
+            Expect Property hydra:member {
+                Expect Type api:DataCubeColumn
+
+                Expect Property api:DataCubeColumn/unmapped true
+            }
+        }
+    }
+}
