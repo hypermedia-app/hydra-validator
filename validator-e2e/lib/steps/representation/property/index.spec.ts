@@ -296,6 +296,24 @@ describe('property step', () => {
             expect(results.successes).toBe(1)
             expect(results.failures).toBe(1)
         })
+
+        it('returns success when expected value is not specified and property exists', async () => {
+            // given
+            const propertyStatement = new PropertyStep({
+                propertyId: 'count',
+                strict: false,
+            }, [])
+            const value: any = {
+                count: '',
+            }
+
+            // when
+            const execute = propertyStatement.getRunner(value)
+            const result = await execute.call(context)
+
+            // then
+            expect(result.result!.status).toBe('success')
+        })
     })
 
     describe('block', () => {
@@ -304,7 +322,9 @@ describe('property step', () => {
             const propertyBlock = new PropertyStep({
                 propertyId: 'title',
                 strict: true,
-            }, [])
+            }, [
+                new StepStub('foo'),
+            ])
             const value: any = {}
 
             // when
@@ -320,7 +340,9 @@ describe('property step', () => {
             const propertyBlock = new PropertyStep({
                 propertyId: 'title',
                 strict: false,
-            }, [])
+            }, [
+                new StepStub('foo'),
+            ])
             const value: any = {}
 
             // when
