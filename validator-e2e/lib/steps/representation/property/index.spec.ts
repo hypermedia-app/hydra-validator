@@ -84,6 +84,101 @@ describe('property step', () => {
             expect(result.result!.status).toBe('success')
         })
 
+        it('returns success when boolean false matches expectation', async () => {
+            // given
+            const propertyStatement = new PropertyStep({
+                propertyId: 'active',
+                value: false,
+                strict: false,
+            }, [])
+            const value: any = {
+                active: false,
+            }
+
+            // when
+            const execute = propertyStatement.getRunner(value)
+            const result = await execute.call(context)
+
+            // then
+            expect(result.result!.status).toBe('success')
+        })
+
+        it('returns success when number 0 matches expectation', async () => {
+            // given
+            const propertyStatement = new PropertyStep({
+                propertyId: 'count',
+                value: 0,
+                strict: false,
+            }, [])
+            const value: any = {
+                count: 0,
+            }
+
+            // when
+            const execute = propertyStatement.getRunner(value)
+            const result = await execute.call(context)
+
+            // then
+            expect(result.result!.status).toBe('success')
+        })
+
+        it('returns success when number expecting 0 but value is "0"', async () => {
+            // given
+            const propertyStatement = new PropertyStep({
+                propertyId: 'count',
+                value: 0,
+                strict: false,
+            }, [])
+            const value: any = {
+                count: '0',
+            }
+
+            // when
+            const execute = propertyStatement.getRunner(value)
+            const result = await execute.call(context)
+
+            // then
+            expect(result.result!.status).toBe('success')
+        })
+
+        it('returns success when number expecting false but value is "false"', async () => {
+            // given
+            const propertyStatement = new PropertyStep({
+                propertyId: 'count',
+                value: false,
+                strict: false,
+            }, [])
+            const value: any = {
+                count: 'false',
+            }
+
+            // when
+            const execute = propertyStatement.getRunner(value)
+            const result = await execute.call(context)
+
+            // then
+            expect(result.result!.status).toBe('success')
+        })
+
+        it('returns success when empty string matches expectation', async () => {
+            // given
+            const propertyStatement = new PropertyStep({
+                propertyId: 'count',
+                value: '',
+                strict: false,
+            }, [])
+            const value: any = {
+                count: '',
+            }
+
+            // when
+            const execute = propertyStatement.getRunner(value)
+            const result = await execute.call(context)
+
+            // then
+            expect(result.result!.status).toBe('success')
+        })
+
         it('returns failure when strict and property is missing', async () => {
             // given
             const propertyStatement = new PropertyStep({

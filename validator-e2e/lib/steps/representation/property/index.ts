@@ -3,6 +3,7 @@ import { E2eContext } from '../../../../types'
 import { checkChain, CheckResult, Result } from 'hydra-validator-core'
 import { ScenarioStep } from '../../'
 import { expand } from '@zazuko/rdf-vocabularies'
+import areEqual from '../../../comparison'
 
 interface PropertyStepInit {
     propertyId: string;
@@ -59,7 +60,7 @@ export class PropertyStep extends ScenarioStep {
             }
         }
 
-        if (this.expectedValue) {
+        if (typeof this.expectedValue !== 'undefined' && this.expectedValue !== null) {
             return this.__executeStatement(value)
         }
 
@@ -94,8 +95,7 @@ export class PropertyStep extends ScenarioStep {
     }
 
     private __executeStatement (value: unknown): CheckResult<E2eContext> {
-        // eslint-disable-next-line eqeqeq
-        if (value == this.expectedValue) {
+        if (areEqual(this.expectedValue, value)) {
             return {
                 result: Result.Success(`Property ${this.propertyId} as expected`),
             }
