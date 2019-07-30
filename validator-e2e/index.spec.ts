@@ -1,9 +1,7 @@
 jest.mock('./lib/docsLoader')
 jest.mock('./lib/steps/factory')
-jest.mock('alcaeus')
 jest.mock('')
 
-import { Hydra } from 'alcaeus'
 import * as docsLoader from './lib/docsLoader'
 import createSteps from './lib/steps/factory'
 import { check } from './'
@@ -58,7 +56,6 @@ describe('validator-e2e', () => {
             (docsLoader.load as any).mockReturnValue({
                 steps: [],
             })
-            ;(Hydra.loadResource as any).mockResolvedValue({})
             ;(createSteps as any).mockReturnValue([{}, {}, {}])
 
             // when
@@ -76,9 +73,7 @@ describe('validator-e2e', () => {
             (docsLoader.load as any).mockReturnValue({
                 steps: [],
             })
-            const response = {}
-            ;(Hydra.loadResource as any).mockResolvedValue(response)
-            jest.spyOn(responseChecks, 'default')
+            jest.spyOn(responseChecks, 'getResourceRunner')
 
             // when
             await check('urn:irrelevant', {
@@ -87,8 +82,7 @@ describe('validator-e2e', () => {
             }).call(context)
 
             // then
-            expect(Hydra.loadResource).toHaveBeenCalledWith('urn:irrelevant')
-            expect(responseChecks.default).toHaveBeenCalledWith(response, [])
+            expect(responseChecks.getResourceRunner).toHaveBeenCalledWith('urn:irrelevant', [])
         })
     })
 })

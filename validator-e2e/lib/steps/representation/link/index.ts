@@ -1,53 +1,55 @@
-import { HydraResource, IHydraResource } from 'alcaeus/types/Resources'
-import { Hydra } from 'alcaeus'
-import { E2eContext } from '../../../../types'
-import { checkChain, IResult, Result } from 'hydra-validator-core'
-import processResponse from '../../../processResponse'
+import { HydraResource } from 'alcaeus/types/Resources'
+import { Result } from 'hydra-validator-core'
+import { getResourceRunner } from '../../../processResponse'
 import { ScenarioStep } from '../../index'
-import { IHydraResponse } from 'alcaeus/types/HydraResponse'
-import { IResource } from 'alcaeus/types/Resources/Resource'
 
 interface LinkStepInit {
-    propertyId: string;
+    rel: string;
+    strict: boolean;
 }
 
 export class LinkStep extends ScenarioStep {
-    public propertyId: string
+    private relation: string
+    private strict: boolean
 
     public constructor (init: LinkStepInit, children: ScenarioStep[]) {
         super(children)
 
-        this.propertyId = init.propertyId
+        this.relation = init.rel
+        this.strict = init.strict
     }
 
-    protected appliesToInternal (obj: (IHydraResource & IResource) | IHydraResponse): boolean {
+    protected appliesToInternal (obj: any): boolean {
         return 'id' in obj
     }
 
-    public getRunner (obj: (IHydraResource & IResource) | IHydraResponse) {
+    public getRunner (resource: HydraResource) {
         const step = this
-        const resource = obj as any as { [ prop: string ]: IHydraResource }
 
         return async function checkLink () {
             if (step.executed) {
                 return {}
             }
 
-            const result: IResult = resource[step.propertyId]
-                ? Result.Informational(`Stepping into link ${step.propertyId}`)
-                : Result.Failure(`Link ${step.propertyId} missing on resource ${resource.id}`)
+            const linkValue = resource.getLinks()
+                .find(link => link.supportedProperty.property.id === step.relation)
 
-            let nextChecks: checkChain<E2eContext>[] = []
-            if (result.status !== 'failure') {
-                const linkedResource = resource[step.propertyId] as HydraResource
-                const response = await Hydra.loadResource(linkedResource.id)
-                nextChecks.push(processResponse(response, step.children))
+            if (!linkValue) {
+                if (step.strict) {
+                    return {
+                        result: Result.Failure(`Link ${step.relation} missing on resource ${resource.id}`),
+                    }
+                }
 
-                step.markExecuted()
+                return {}
             }
 
+            const nextChecks = linkValue.resources.map(resource => getResourceRunner(resource.id, step.children))
+
+            step.markExecuted()
+
             return {
-                result,
+                result: Result.Informational(`Stepping into link ${step.relation}`),
                 nextChecks,
             }
         }

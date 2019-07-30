@@ -2,7 +2,7 @@ import { IOperation } from 'alcaeus/types/Resources'
 import { IHydraResponse } from 'alcaeus/types/HydraResponse'
 import { E2eContext } from '../../../../types'
 import { Result } from 'hydra-validator-core'
-import processResponse from '../../../processResponse'
+import { getResponseRunner } from '../../../processResponse'
 import { ScenarioStep } from '../../index'
 import { readFileSync } from 'fs'
 import { resolve } from 'path'
@@ -59,7 +59,7 @@ export class InvocationStep extends ScenarioStep {
 
             return {
                 result: Result.Informational(`Invoked operation '${operation.title}'`),
-                nextChecks: [processResponse(response, step.children)],
+                nextChecks: [getResponseRunner(response, step.children)],
             }
         }
     }
