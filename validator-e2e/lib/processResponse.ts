@@ -1,15 +1,22 @@
 import { Hydra } from 'alcaeus'
 import { IHydraResponse } from 'alcaeus/types/HydraResponse'
 import { E2eContext } from '../types'
-import { checkChain, Result } from 'hydra-validator-core'
+import { checkChain, CheckResult, Result } from 'hydra-validator-core'
 import { ScenarioStep } from './steps'
 
-function processResponse (response: IHydraResponse, steps: ScenarioStep[], topLevelSteps: ScenarioStep[]) {
+function processResponse (response: IHydraResponse, steps: ScenarioStep[], topLevelSteps: ScenarioStep[]): CheckResult<E2eContext> {
     const localContext = {}
 
     const nextChecks: checkChain<E2eContext>[] = []
     const resource = response.root
     const xhr = response.xhr
+
+    const results = [
+        Result.Informational(`Fetched resource ${xhr.url}`),
+    ]
+    if (!resource) {
+        results.push(Result.Warning('Could not determine the resource representation'))
+    }
 
     for (let step of [...steps, ...topLevelSteps]) {
         if (step.appliesTo(xhr)) {
@@ -20,7 +27,7 @@ function processResponse (response: IHydraResponse, steps: ScenarioStep[], topLe
     }
 
     return {
-        result: Result.Informational(`Fetched resource ${xhr.url}`),
+        results,
         nextChecks,
         sameLevel: true,
     }
