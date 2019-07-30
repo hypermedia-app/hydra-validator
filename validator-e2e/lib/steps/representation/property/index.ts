@@ -64,6 +64,12 @@ export class PropertyStep extends ScenarioStep {
             return this.__executeStatement(value)
         }
 
+        if (!this.children || this.children.length === 0) {
+            return {
+                result: Result.Success(`Found expected property ${this.propertyId}`),
+            }
+        }
+
         return this.__executeBlock(value as IHydraResource, context)
     }
 
@@ -97,7 +103,7 @@ export class PropertyStep extends ScenarioStep {
     private __executeStatement (value: unknown): CheckResult<E2eContext> {
         if (areEqual(this.expectedValue, value)) {
             return {
-                result: Result.Success(`Property ${this.propertyId} as expected`),
+                result: Result.Success(`Found ${this.propertyId} property with expected value`),
             }
         }
 
