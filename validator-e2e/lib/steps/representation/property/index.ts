@@ -47,12 +47,23 @@ export class PropertyStep extends ScenarioStep {
                 return step.__getMissingPropertyResult(resource)
             }
 
-            if (step.expectedValue) {
-                return step.__executeStatement(resource[step.propertyId])
-            }
-
-            return step.__executeBlock(resource[step.propertyId], this)
+            return step.__checkValues(resource[step.propertyId], this)
         }
+    }
+
+    private __checkValues (value: unknown | unknown[], context: E2eContext): CheckResult<E2eContext> {
+        if (Array.isArray(value)) {
+            return {
+                result: Result.Informational(`Stepping into members of array ${this.propertyId}`),
+                nextChecks: value.map((v, i) => this.__checkArrayItem(v, i)),
+            }
+        }
+
+        if (this.expectedValue) {
+            return this.__executeStatement(value)
+        }
+
+        return this.__executeBlock(value as IHydraResource, context)
     }
 
     private __executeRdfTypeStatement (resource: HydraResource) {
@@ -101,6 +112,24 @@ export class PropertyStep extends ScenarioStep {
         return {
             result,
             nextChecks: this._getChildChecks(value, context.scenarios),
+        }
+    }
+
+    private __checkArrayItem (value: unknown, index: number): checkChain<E2eContext> {
+        const step = this
+        if (Array.isArray(value)) {
+            return () => ({
+                result: Result.Warning(`Cannot check value at index ${index}`, 'Nested arrays are not supported'),
+            })
+        }
+
+        return function () {
+            return {
+                result: Result.Informational(`Array item at index ${index}`),
+                nextChecks: [function () {
+                    return step.__checkValues(value, this)
+                }],
+            }
         }
     }
 }
