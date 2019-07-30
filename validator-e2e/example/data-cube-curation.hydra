@@ -29,7 +29,7 @@ With Operation api:CreateDataCubeProject {
             Expect Property hydra:member {
                 Expect Type api:DataCubeColumn
 
-                Expect Property api:DataCubeColumn/unmapped true
+                Expect Property api:DataCubeColumn/mapped false
             }
         }
     }
