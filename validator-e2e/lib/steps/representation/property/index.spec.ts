@@ -1,7 +1,8 @@
 import { PropertyStep } from '.'
 import { E2eContext } from '../../../../types'
-import { StepStub } from '../../stub'
+import { StepStub, StepSpy } from '../../stub'
 import { expand } from '@zazuko/rdf-vocabularies'
+import { runAll } from '../../../testHelpers'
 
 describe('property step', () => {
     let context: E2eContext & any
@@ -64,7 +65,7 @@ describe('property step', () => {
             expect(result.result!.status).toBe('failure')
         })
 
-        it('returns success when values not match', async () => {
+        it('returns success when values match', async () => {
             // given
             const propertyStatement = new PropertyStep({
                 propertyId: 'title',
@@ -179,6 +180,27 @@ describe('property step', () => {
             // then
             expect(result.result!.status).toBe('error')
         })
+
+        it('runs check on each value of array', async () => {
+            // given
+            const propertyStatement = new PropertyStep({
+                propertyId: 'title',
+                value: 'foo',
+                strict: false,
+            }, [])
+            const value: any = {
+                title: [ 'foo', 'bar' ],
+            }
+
+            // when
+            const arrayRunner = propertyStatement.getRunner(value)
+            const results = await runAll(arrayRunner)
+
+            // then
+            expect(results.length).toBe(5)
+            expect(results.successes).toBe(1)
+            expect(results.failures).toBe(1)
+        })
     })
 
     describe('block', () => {
@@ -234,6 +256,30 @@ describe('property step', () => {
             // then
             expect(result.nextChecks!.map(check => check.name).join(', '))
                 .toBe('step1, step2, topLevel1, topLevel2')
+        })
+
+        it('runs check on each value of array', async () => {
+            // given
+            const children = [
+                new StepSpy(),
+                new StepSpy(),
+            ]
+            const propertyStatement = new PropertyStep({
+                propertyId: 'friend',
+                strict: false,
+            }, children)
+            const value: any = {
+                friend: [ 'foo', 'bar' ],
+            }
+
+            // when
+            const arrayRunner = propertyStatement.getRunner(value)
+            await runAll(arrayRunner)
+
+            // then
+            children.forEach(childStep => {
+                expect(childStep.getRunner()).toHaveBeenCalledTimes(2)
+            })
         })
     })
 })

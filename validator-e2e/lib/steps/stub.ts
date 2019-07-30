@@ -21,3 +21,17 @@ export class StepStub extends ScenarioStep {
         return this.runner
     }
 }
+
+export class StepSpy extends ScenarioStep {
+    private readonly runner: jest.Mock
+
+    public constructor () {
+        super([])
+        this.runner = jest.fn()
+        this.runner.mockReturnValue({ })
+    }
+
+    public getRunner () {
+        return this.runner
+    }
+}
