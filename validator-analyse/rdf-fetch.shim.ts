@@ -13,9 +13,7 @@ async function dataset (this: Response) {
 
     const quadStream = formats.parsers.import(
         contentType.split(';').shift(),
-        stringToStream(await this.text()), {
-            baseIRI: this.url,
-        })
+        stringToStream(await this.text()))
 
     const dataset = rdf.dataset()
 
