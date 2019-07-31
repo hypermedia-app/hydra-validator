@@ -116,7 +116,7 @@ describe('run-checks', () => {
         })
 
         // when
-        const results = await getResults(runChecks(firstCheck, fetch))
+        const results = await getResults(runChecks(firstCheck))
 
         // then
         expect(results.pop()!.result.status).toBe('failure')
@@ -171,7 +171,7 @@ describe('run-checks', () => {
         })
 
         // when
-        const results = await getResults(runChecks(firstCheck, fetch))
+        const results = await getResults(runChecks(firstCheck))
 
         // then
         const summary = results.pop()
@@ -224,7 +224,7 @@ describe('run-checks', () => {
         })
 
         // when
-        const results = await getResults(runChecks(firstCheck, fetch))
+        const results = await getResults(runChecks(firstCheck))
 
         // then
         const { result } = results[1] as any
@@ -247,7 +247,7 @@ describe('run-checks', () => {
         })
 
         // when
-        const results = await getResults(runChecks(firstCheck, fetch))
+        const results = await getResults(runChecks(firstCheck))
 
         // then
         const { level } = results[2]!
