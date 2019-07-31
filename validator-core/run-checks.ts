@@ -26,6 +26,7 @@ async function * runChecks (firstCheck: checkChain) {
         successes: 0,
         warnings: 0,
         failures: 0,
+        errors: 0,
     }
     const context = {
         visitedUrls: [],
@@ -60,6 +61,9 @@ async function * runChecks (firstCheck: checkChain) {
                 case 'warning':
                     summary.warnings++
                     break
+                case 'error':
+                    summary.errors++
+                    break
             }
 
             yield {
@@ -90,6 +94,11 @@ async function * runChecks (firstCheck: checkChain) {
 
     if (summary.failures > 0) {
         details = `${details}, Failures: ${summary.failures}`
+        summaryResult = Result.Failure('Analysis complete with errors', details)
+    }
+
+    if (summary.errors > 0) {
+        details = `${details}, Errors: ${summary.errors}`
         summaryResult = Result.Failure('Analysis complete with errors', details)
     }
 
