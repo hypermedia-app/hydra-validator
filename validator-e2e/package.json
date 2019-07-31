@@ -1,6 +1,6 @@
 {
   "name": "hydra-validator-e2e",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "A set of tools to execute E2E tests on a Hydra API",
   "main": "dist/index.js",
   "files": [
@@ -51,7 +51,7 @@
     "@zazuko/rdf-vocabularies": "^2019.7.9-2",
     "alcaeus": "^0.6.3",
     "escape-string-regexp": "^2.0.0",
-    "hydra-validator-core": "^0.3.0"
+    "hydra-validator-core": "^0.3.1"
   },
   "peerDependencies": {
     "@hydrofoil/hypertest": ">= 0.4.0"

@@ -1,6 +1,6 @@
 {
   "name": "hydra-validator-core",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Shared package for hydra-validator",
   "main": "dist/index.js",
   "files": [

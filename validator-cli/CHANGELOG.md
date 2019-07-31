@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.3](https://github.com/hypermedia-app/hydra-validator/compare/hydra-validator@1.0.2...hydra-validator@1.0.3) (2019-07-31)
+
+
+### Bug Fixes
+
+* cli must return appropriate status code ([dfc285d](https://github.com/hypermedia-app/hydra-validator/commit/dfc285d))
+
+
+
+
+
 ## [1.0.2](https://github.com/hypermedia-app/hydra-validator/compare/hydra-validator@1.0.1...hydra-validator@1.0.2) (2019-07-31)
 
 
