@@ -38,9 +38,17 @@ async function * runChecks (firstCheck: checkChain, fetch: (input: RequestInfo, 
         result: Result.Informational('Analysis started...'),
     }
 
+    let previousLevel = 0
     while (checkQueue.length > 0) {
         const currentCheck = checkQueue.splice(0, 1)[0]
         const { results, nextChecks, level, bumpLevel } = await currentCheck(context)
+            .catch(reason => ({
+                results: [ Result.Error('Unhandled error occurred in check', reason) ],
+                nextChecks: [] as checkChain<Context>[],
+                level: previousLevel,
+                bumpLevel: false,
+            }))
+        previousLevel = level
 
         for (let result of results) {
             switch (result.status) {
