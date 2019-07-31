@@ -20,7 +20,7 @@ describe('url-resolvable', () => {
         const response = {
             dataset: jest.fn(),
         }
-        fetch.mockReturnValue(Promise.resolve(response))
+        fetch.mockResolvedValue(response)
         const context = testContext(['http://exmaple.com/'])
 
         // when
@@ -45,7 +45,7 @@ describe('url-resolvable', () => {
     describe('when fetch fails', () => {
         test('returns failure', async () => {
             // given
-            fetch.mockReturnValue(Promise.reject(new Error()))
+            fetch.mockRejectedValue(new Error())
 
             // when
             const { result } = await check('https://example.com').call(testContext())
@@ -56,7 +56,7 @@ describe('url-resolvable', () => {
 
         test('appends url to visitedUrls', async () => {
             // given
-            fetch.mockReturnValue(Promise.reject(new Error()))
+            fetch.mockRejectedValue(new Error())
             const context = testContext()
 
             // when
@@ -70,10 +70,10 @@ describe('url-resolvable', () => {
     describe('when request succeeds', () => {
         test('returns success', async () => {
             // given
-            fetch.mockReturnValue(Promise.resolve({
+            fetch.mockResolvedValue({
                 dataset: () => {
                 },
-            }))
+            })
 
             // when
             const { result } = await check('https://example.com').call(testContext())
@@ -96,11 +96,11 @@ describe('url-resolvable', () => {
 
         test('does not queue up Link check if apiDoc param is true', async () => {
             // given
-            fetch.mockReturnValue(Promise.resolve({
+            fetch.mockResolvedValue({
                 url: 'https://example.com',
                 dataset: () => {
                 },
-            }))
+            })
 
             // when
             await check('https://example.com', { isApiDoc: true }).call(testContext())
@@ -115,7 +115,7 @@ describe('url-resolvable', () => {
                 dataset: () => {
                 },
             }
-            fetch.mockReturnValue(Promise.resolve(response))
+            fetch.mockResolvedValue(response)
 
             // when
             await check('https://example.com', { isApiDoc: false }).call(testContext())
@@ -129,7 +129,7 @@ describe('url-resolvable', () => {
             const response = {
                 dataset: jest.fn(),
             }
-            fetch.mockReturnValue(Promise.resolve(response))
+            fetch.mockResolvedValue(response)
 
             // when
             await check('https://example.com', { isApiDoc: true }).call(testContext())
@@ -143,7 +143,7 @@ describe('url-resolvable', () => {
             const response = {
                 dataset: jest.fn(),
             }
-            fetch.mockReturnValue(Promise.resolve(response))
+            fetch.mockResolvedValue(response)
             const context = testContext()
 
             // when
