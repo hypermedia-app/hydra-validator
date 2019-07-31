@@ -3,6 +3,29 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.3.0](https://github.com/hypermedia-app/hydra-validator/compare/hydra-validator-e2e@0.2.0...hydra-validator-e2e@0.3.0) (2019-07-31)
+
+
+### Bug Fixes
+
+* property comparison with expected falsy values ([59af108](https://github.com/hypermedia-app/hydra-validator/commit/59af108))
+* property statement should compare string representation ([64fe437](https://github.com/hypermedia-app/hydra-validator/commit/64fe437))
+* silently ignore non-strict operation blocks ([4a03ff3](https://github.com/hypermedia-app/hydra-validator/commit/4a03ff3))
+
+
+### Features
+
+* **validator-e2e:** warn when representation cannot be figured out ([a8c0ff9](https://github.com/hypermedia-app/hydra-validator/commit/a8c0ff9))
+* invocation step to handle headers and bodies ([3c3b878](https://github.com/hypermedia-app/hydra-validator/commit/3c3b878))
+* operation step can be not strict ([b2310fe](https://github.com/hypermedia-app/hydra-validator/commit/b2310fe))
+* property statement now handles rdf:type assertion ([331eaac](https://github.com/hypermedia-app/hydra-validator/commit/331eaac))
+* run child checks on all values of link/property arrays ([a03c8f2](https://github.com/hypermedia-app/hydra-validator/commit/a03c8f2))
+* update link step to current DSL state ([9e39a68](https://github.com/hypermedia-app/hydra-validator/commit/9e39a68))
+
+
+
+
+
 # 0.2.0 (2019-07-23)
 
 

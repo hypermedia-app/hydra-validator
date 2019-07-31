@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.2.0](https://github.com/hypermedia-app/hydra-validator/compare/hydra-validator-ui@0.1.1...hydra-validator-ui@0.2.0) (2019-07-31)
+
+
+### Features
+
+* **validator-ui:** handle errors on web UI ([645ea1d](https://github.com/hypermedia-app/hydra-validator/commit/645ea1d))
+
+
+### Reverts
+
+* roll back fetch hack ([a43d0d0](https://github.com/hypermedia-app/hydra-validator/commit/a43d0d0)), closes [#16](https://github.com/hypermedia-app/hydra-validator/issues/16)
+
+
+
+
+
 ## 0.1.1 (2019-07-23)
 
 
