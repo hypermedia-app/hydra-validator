@@ -108,6 +108,22 @@ describe('run-checks', () => {
         expect(results.pop()!.result.status).toBe('failure')
     })
 
+    test('yields failure summary when any check errors', async () => {
+        // given
+        const firstCheck = jest.fn().mockResolvedValue({
+            results: [
+                Result.Success('test'),
+                Result.Error('test', 'test'),
+            ],
+        })
+
+        // when
+        const results = await getResults(runChecks(firstCheck, fetch))
+
+        // then
+        expect(results.pop()!.result.status).toBe('failure')
+    })
+
     test('yields success summary when all check succeed', async () => {
         // given
         const firstCheck = jest.fn().mockResolvedValue({
@@ -138,6 +154,34 @@ describe('run-checks', () => {
 
         // then
         expect(results.pop()!.result.status).toBe('warning')
+    })
+
+    test('sums the number of results', async () => {
+        // given
+        const firstCheck = jest.fn().mockResolvedValue({
+            results: [
+                Result.Success('test'),
+                Result.Success('test'),
+                Result.Success('test'),
+                Result.Success('test'),
+                Result.Warning('test'),
+                Result.Warning('test'),
+                Result.Warning('test'),
+                Result.Error('test'),
+                Result.Failure('test'),
+            ],
+        })
+
+        // when
+        const results = await getResults(runChecks(firstCheck, fetch))
+
+        // then
+        const summary = results.pop()
+        const result = summary!.result as Result
+        expect(result.details).toMatch(/Success: 4/)
+        expect(result.details).toMatch(/Warnings: 3/)
+        expect(result.details).toMatch(/Failures: 1/)
+        expect(result.details).toMatch(/Errors: 1/)
     })
 
     test('bumps level for nextCheck', async () => {
