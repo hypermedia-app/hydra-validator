@@ -3,8 +3,6 @@
 import * as program from 'commander'
 import runChecks from 'hydra-validator-core/run-checks'
 // @ts-ignore
-import * as fetch from 'nodeify-fetch'
-// @ts-ignore
 import * as deps from 'matchdep'
 
 const plugins: string[] = deps.filterAll([ 'hydra-validator-*', 'hydra-validator-core' ], `${process.cwd()}/package.json`)
@@ -35,7 +33,7 @@ for (let plugin of plugins) {
             .then(async () => {
                 const firstCheck = check(url, { ...commandParams, cwd: process.cwd() })
 
-                const checkGenerator = runChecks(firstCheck, fetch)
+                const checkGenerator = runChecks(firstCheck)
 
                 for await (let check of checkGenerator) {
                     const prefix = check.level === 0 ? '' : `${'-'.repeat(check.level * 2)} `

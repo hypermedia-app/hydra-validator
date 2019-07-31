@@ -51,7 +51,6 @@
   "dependencies": {
     "commander": "^2.20.0",
     "hydra-validator-core": "^0.2.0",
-    "matchdep": "^2.0.0",
-    "nodeify-fetch": "^2.0.0"
+    "matchdep": "^2.0.0"
   }
 }

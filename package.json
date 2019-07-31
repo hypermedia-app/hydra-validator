@@ -3,7 +3,6 @@
   "private": true,
   "scripts": {
     "postinstall": "lerna bootstrap",
-    "pretest": "lerna run build",
     "test": "lerna run test",
     "version": "standard-changelog && git add CHANGELOG.md"
   },

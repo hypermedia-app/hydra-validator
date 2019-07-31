@@ -1,4 +1,9 @@
-import shimmed from '../rdf-fetch.shim'
+// @ts-ignore
+import * as fetch from '@rdfjs/fetch-lite'
+// @ts-ignore
+import * as formats from '@rdfjs/formats-common'
+// @ts-ignore
+import * as rdf from 'rdf-ext'
 import { Context, Result } from 'hydra-validator-core'
 import statusCheck from './response/status-code'
 import apiDocLink from './response/api-doc-link'
@@ -15,10 +20,8 @@ export default function (url: string, { fetchOnly = false, isApiDoc = false } = 
         }
         this.visitedUrls.push(urlNormalised)
 
-        return this.fetch(url)
-            .then(async (response: Response & any) => {
-                response.dataset = shimmed.dataset.bind(response)
-
+        return fetch(url, { formats, factory: rdf })
+            .then(async (response: Response) => {
                 const nextChecks = [
                     statusCheck(response),
                 ]
