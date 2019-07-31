@@ -1,4 +1,4 @@
-type ResultKind = 'success' | 'failure' | 'informational' | 'warning' | 'error'
+export type ResultKind = 'success' | 'failure' | 'informational' | 'warning' | 'error'
 
 // eslint-disable-next-line @typescript-eslint/interface-name-prefix
 export interface IResult {
