@@ -12,14 +12,12 @@ async function getResults<T> (iter: AsyncIterableIterator<T>) {
 }
 
 describe('run-checks', () => {
-    const fetch: (input: RequestInfo, init?: RequestInit) => Promise<Response> = jest.fn()
-
     test('yields an initial informational message', async () => {
         // given
         const check: checkChain = () => ({})
 
         // when
-        const [ first ] = await getResults(runChecks(check, fetch))
+        const [ first ] = await getResults(runChecks(check))
 
         // expect
         expect(first.level).toBe(0)
@@ -34,7 +32,7 @@ describe('run-checks', () => {
         })
 
         // when
-        await getResults(runChecks(firstCheck, fetch))
+        await getResults(runChecks(firstCheck))
 
         // then
         expect(firstCheck.mock.instances[0]).toBe(secondCheck.mock.instances[0])
@@ -53,7 +51,7 @@ describe('run-checks', () => {
         })
 
         // when
-        await getResults(runChecks(firstCheck, fetch))
+        await getResults(runChecks(firstCheck))
 
         // then
         expect(spy.mock.calls.length).toBe(6)
@@ -70,7 +68,7 @@ describe('run-checks', () => {
         })
 
         // when
-        const results = await getResults(runChecks(firstCheck, fetch))
+        const results = await getResults(runChecks(firstCheck))
 
         // then
         expect(results.length).toBe(5)
@@ -86,7 +84,7 @@ describe('run-checks', () => {
         })
 
         // when
-        const results = await getResults(runChecks(firstCheck, fetch))
+        const results = await getResults(runChecks(firstCheck))
 
         // then
         expect(results.length).toBe(4)
@@ -102,7 +100,7 @@ describe('run-checks', () => {
         })
 
         // when
-        const results = await getResults(runChecks(firstCheck, fetch))
+        const results = await getResults(runChecks(firstCheck))
 
         // then
         expect(results.pop()!.result.status).toBe('failure')
@@ -118,7 +116,7 @@ describe('run-checks', () => {
         })
 
         // when
-        const results = await getResults(runChecks(firstCheck, fetch))
+        const results = await getResults(runChecks(firstCheck))
 
         // then
         expect(results.pop()!.result.status).toBe('success')
@@ -134,7 +132,7 @@ describe('run-checks', () => {
         })
 
         // when
-        const results = await getResults(runChecks(firstCheck, fetch))
+        const results = await getResults(runChecks(firstCheck))
 
         // then
         expect(results.pop()!.result.status).toBe('warning')
@@ -151,7 +149,7 @@ describe('run-checks', () => {
         })
 
         // when
-        const results = await getResults(runChecks(firstCheck, fetch))
+        const results = await getResults(runChecks(firstCheck))
 
         // then
         expect(results[2].level).toBe(1)
@@ -169,7 +167,7 @@ describe('run-checks', () => {
         })
 
         // when
-        const results = await getResults(runChecks(firstCheck, fetch))
+        const results = await getResults(runChecks(firstCheck))
 
         // then
         expect(results[2].level).toBe(0)

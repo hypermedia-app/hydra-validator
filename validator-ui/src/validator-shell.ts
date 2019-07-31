@@ -72,7 +72,7 @@ ${super.renderMain()}`
             import('hydra-validator-analyse/checks/url-resolvable')
     ])
 
-    return runChecks.default(firstCheck.default(url), fetch.bind(window))
+    return runChecks.default(firstCheck.default(url))
   }
 }
 
