@@ -172,4 +172,41 @@ describe('run-checks', () => {
         // then
         expect(results[2].level).toBe(0)
     })
+
+    test('yields error when a check throws', async () => {
+        // given
+        const firstCheck = jest.fn().mockImplementation(() => {
+            throw new Error('Check failed catastrophically')
+        })
+
+        // when
+        const results = await getResults(runChecks(firstCheck, fetch))
+
+        // then
+        const { result } = results[1] as any
+        expect(result.status).toBe('error')
+        expect(result.details.message).toBe('Check failed catastrophically')
+    })
+
+    test('keeps same level when a check throws', async () => {
+        // given
+        const throwingCheck = jest.fn().mockImplementation(() => {
+            throw new Error('Check failed catastrophically')
+        })
+        const secondCheck = jest.fn().mockResolvedValue({
+            result: Result.Success('second'),
+            nextChecks: [throwingCheck],
+        })
+        const firstCheck = jest.fn().mockResolvedValue({
+            result: Result.Success('first'),
+            nextChecks: [secondCheck],
+        })
+
+        // when
+        const results = await getResults(runChecks(firstCheck, fetch))
+
+        // then
+        const { level } = results[2]!
+        expect(level).toBe(1)
+    })
 })
