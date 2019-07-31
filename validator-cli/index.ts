@@ -4,6 +4,35 @@ import * as program from 'commander'
 import runChecks from 'hydra-validator-core/run-checks'
 // @ts-ignore
 import * as deps from 'matchdep'
+import debug from 'debug'
+import { ResultKind } from 'hydra-validator-core'
+
+type Loggers = { [ key in ResultKind ]: (...args: unknown[]) => unknown }
+const loggers: Loggers = {
+    success: debug('SUCCESS'),
+    informational: debug('INFO'),
+    warning: debug('WARNING'),
+    failure: debug('FAILURE'),
+    error: debug('ERROR'),
+}
+
+debug.enable('*')
+
+debug.formatters.p = (level) => {
+    return level === 0 ? '' : ` ${'-'.repeat(level * 2)}`
+}
+
+debug.formatters.l = (logger: ResultKind) => {
+    if (logger === 'informational') {
+        return '   '
+    }
+
+    if (logger === 'error') {
+        return '  '
+    }
+
+    return ''
+}
 
 const plugins: string[] = deps.filterAll([ 'hydra-validator-*', 'hydra-validator-core' ], `${process.cwd()}/package.json`)
 
@@ -31,22 +60,21 @@ for (let plugin of plugins) {
 
         Promise.resolve()
             .then(async () => {
+                let unsucessfulCount = 0
                 const firstCheck = check(url, { ...commandParams, cwd: process.cwd() })
 
                 const checkGenerator = runChecks(firstCheck)
 
                 for await (let check of checkGenerator) {
-                    const prefix = check.level === 0 ? '' : `${'-'.repeat(check.level * 2)} `
+                    // @ts-ignore
+                    loggers[check.result.status]('%l %p %s %s', check.result.status, check.level, check.result.description, check.result.details || '')
 
-                    if (check.result.status === 'success') {
-                        console.log(`${prefix}${check.result.description}`)
-                    } else if (check.result.status === 'informational') {
-                        console.warn(`${prefix}${check.result.description}`)
-                    } else {
-                        // @ts-ignore
-                        console.error(`${prefix}${check.result.description} ${check.result.details || ''}`)
+                    if (check.result.status === 'failure' || check.result.status === 'error') {
+                        unsucessfulCount++
                     }
                 }
+
+                process.exit(unsucessfulCount)
             })
     })
 }
