@@ -14,7 +14,7 @@ ViewTemplates.default.when
 
 ViewTemplates.default.when
   .scopeMatches('result')
-  .valueMatches(v => v.result && v.result.status !== 'failure')
+  .valueMatches(v => v.result && (v.result.status !== 'failure' && v.result.status !== 'error'))
   .renders(check => {
     switch (check.result.status) {
       case 'informational':
@@ -28,7 +28,7 @@ ViewTemplates.default.when
 
 ViewTemplates.default.when
   .scopeMatches('result')
-  .valueMatches(v => v.result && v.result.status === 'failure')
+  .valueMatches(v => v.result && (v.result.status === 'failure' || v.result.status === 'error'))
   .renders(check => {
     console.error(check.result.details)
 
