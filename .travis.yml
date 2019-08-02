@@ -7,10 +7,6 @@ before_install:
 - export CXX="g++-4.9" CC="gcc-4.9"
 - npm install -g codecov
 
-before_deploy:
-- lerna bootstrap
-- lerna run build
-
 after_success:
   - codecov
 after_failure:
@@ -22,3 +18,18 @@ addons:
     - ubuntu-toolchain-r-test
     packages:
     - g++-4.9
+
+
+before_deploy:
+- echo "//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" >> $HOME/.npmrc 2> /dev/null
+deploy:
+  provider: script
+  script: lerna publish from-git --yes
+  skip_cleanup: true
+  on:
+    node: '10'
+    tags: true
+    repo: hypermedia-app/hydra-validator
+env:
+  global:
+    secure: PM9rE/XJzo/yvqWtC2ZMcsANp8j9K3Zc7VbAO3S09THohqaHFFxAQSjjF7fa4yKsL5kX6Z8NRehbqL4UHb+EuhnpF9WpZbLFK+Onh6tB7sRk2ky7DK/XnQ5bNJSjzWD5yrX1HJEpadX4ImYKig1qiDaMgoXowsNeyLGPaac1BKMIOUloFqblasbjEzF6OuD6e/CP9oKV/fCk9+xy9hyBBZOLjMWpL6Uf7Ij3QaW29yjg+oSPfJDYlUOPertEv7kW7XT3LrIHJNMBKsaNUSx3U/QV4OMf7EQfzuITuDvVXmtHn14JhJlsFB4hMOGz2GI9TCgJobrGSE00o0NB56gOuQxzI/T+nebEcdWcgtt5NwBDZS590I873tbSBWccNlK8aworqn9k3nNGKkjlSbtU/el/hJYG554zqX7q3Uqt2sxVPtSXLuVe7kqrZSUGhcnLTu9iN3+Q9g6WLZk7J4ZqdOL8ur07vrSfXZPwXGRLBotK5SiyC6v6q39Uvuzrh7/GckhggU90tSIHi+SPH5/N+pD4eT2XUqWx91lWzkQz0Qp8ymCYX2DiNDmmxpompxIu67RvORLsvL7FJcbYBDNssyJ3PNwnQJOm3kAgFzIO8W/liP0g0VyStdtOBgHQmtApe6guJXChrfZ4ar06w8mCRHay01sbhuS3pxqTmFkCySo=
