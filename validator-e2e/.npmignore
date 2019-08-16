@@ -1,0 +1,9 @@
+*.spec.js
+*.ts
+!*.d.ts
+*.spec.d.ts
+*.config.js
+coverage/
+example/
+tsconfig.json
+/.*
