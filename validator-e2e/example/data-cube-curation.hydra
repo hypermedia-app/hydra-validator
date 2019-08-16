@@ -10,28 +10,60 @@ With Class api:Entrypoint {
 
 With Operation api:CreateDataCubeProject {
     Invoke {
-        Content-Type "text/csv"
+        Content-Type "text/turtle"
 
-        <<< "/Users/tomaszpluskiewicz/projects/zazuko/data-cube-curation/api/test/bodies/UBD0028.Daten_de.csv"
+        ```
+        @prefix schema: <http://schema.org/> .
+
+        <> schema:name "BAFU UBD 28" .
+        ```
     } => {
         Expect Status 201
         Expect Header Location
 
         Expect Type api:DataCubeProject
-        Expect Property schema:name
+        Expect Property schema:name "BAFU UBD 28"
 
-        Expect Link api:DataCubeProject/csvwMetadata {
+        Expect Property api:DataCubeProject/sources {
+            Expect Property hydra:totalItems 0
+        }
+    }
+}
+
+With Class api:DataCubeProject {
+    With Property api:DataCubeProject/sources {
+         Expect Operation api:DataCubeProject/PostSource
+    }
+}
+
+With Link api:DataCubeProject/sources {
+    Expect Status 200
+}
+
+With Operation api:DataCubeProject/PostSource {
+    Invoke {
+        Content-Type "text/csv"
+        Content-Disposition 'attachment; filename="UBD0028.Daten_de.csv"'
+
+        <<< "/Users/tomaszpluskiewicz/projects/zazuko/data-cube-curation/api/test/bodies/UBD0028.Daten_de.csv"
+    } => {
+        Expect Status 201
+        Expect Type api:DataCubeSource
+
+        Expect Property schema:name "UBD0028.Daten_de.csv"
+
+        Expect Link api:DataCubeSource/csvwMetadata {
             Expect Header Content-Type "application/csvm+json"
         }
 
-        Expect Property api:DataCubeProject/columns {
+        Expect Property api:DataCubeSource/columns {
             Expect Type hydra:Collection
 
             Expect Property hydra:totalItems 19
             Expect Property hydra:member {
-                Expect Type api:DataCubeColumn
+                Expect Type api:DataCubeSourceColumn
 
-                Expect Property api:DataCubeColumn/mapped false
+                Expect Property api:DataCubeSourceColumn/mapped false
             }
         }
     }

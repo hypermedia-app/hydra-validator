@@ -16,12 +16,13 @@ describe('Invoke block', () => {
         }
     })
 
-    it('invokes operation with content-type header', async () => {
+    it('invokes operation with provided headers', async () => {
         // given
         const step = new InvocationStep({
             body: 'Test',
             headers: {
                 'Content-Type': 'text/csv',
+                'accept': 'application/rdf+xml',
             },
         }, [ ])
         const operation = {
@@ -33,7 +34,11 @@ describe('Invoke block', () => {
         await execute.call(context)
 
         // then
-        expect(operation.invoke).toHaveBeenCalledWith('Test', 'text/csv')
+        expect(operation.invoke).toHaveBeenCalledWith(
+            'Test', {
+                'content-type': 'text/csv',
+                'accept': 'application/rdf+xml',
+            })
     })
 
     it('resolves relative path for referenced body', async () => {
@@ -119,6 +124,6 @@ describe('Invoke block', () => {
         await execute.call(context)
 
         // then
-        expect(operation.invoke).toHaveBeenCalledWith('', undefined)
+        expect(operation.invoke).toHaveBeenCalledWith('', {})
     })
 })

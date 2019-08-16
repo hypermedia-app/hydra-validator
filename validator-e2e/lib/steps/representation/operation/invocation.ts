@@ -7,8 +7,6 @@ import { ScenarioStep } from '../../index'
 import { readFileSync } from 'fs'
 import { resolve } from 'path'
 
-const contentTypeHeader = 'content-type'
-
 interface InvocationStepInit {
     body?: string | { path: string };
     headers?: { [key: string]: string };
@@ -53,7 +51,14 @@ export class InvocationStep extends ScenarioStep {
                     }
                 }
             }
-            const response: IHydraResponse = await operation.invoke(body, step.headers.get(contentTypeHeader))
+            const headers = [...step.headers.entries()].reduce((obj, [header, value]) => {
+                return {
+                    ...obj,
+                    [header]: value,
+                }
+            }, {})
+
+            const response: IHydraResponse = await operation.invoke(body, headers)
 
             step.markExecuted()
 
