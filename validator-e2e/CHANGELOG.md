@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.3](https://github.com/hypermedia-app/hydra-validator/compare/hydra-validator-e2e@0.3.2...hydra-validator-e2e@0.3.3) (2019-08-19)
+
+
+### Bug Fixes
+
+* invocation step must send all headers to the API ([279596d](https://github.com/hypermedia-app/hydra-validator/commit/279596d))
+
+
+
+
+
 ## [0.3.2](https://github.com/hypermedia-app/hydra-validator/compare/hydra-validator-e2e@0.3.1...hydra-validator-e2e@0.3.2) (2019-08-05)
 
 **Note:** Version bump only for package hydra-validator-e2e
