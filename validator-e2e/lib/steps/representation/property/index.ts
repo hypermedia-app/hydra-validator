@@ -1,4 +1,4 @@
-import { HydraResource, IHydraResource } from 'alcaeus/types/Resources'
+import { HydraResource } from 'alcaeus/types/Resources'
 import { E2eContext } from '../../../../types'
 import { checkChain, CheckResult, Result } from 'hydra-validator-core'
 import { ScenarioStep } from '../../'
@@ -24,11 +24,11 @@ export class PropertyStep extends ScenarioStep {
         this.expectedValue = init.value
     }
 
-    protected appliesToInternal (obj: { [ prop: string ]: HydraResource }): boolean {
+    protected appliesToInternal (obj: HydraResource): boolean {
         return typeof obj === 'object' && 'id' in obj
     }
 
-    public getRunner (resource: { [ prop: string ]: HydraResource } & HydraResource): checkChain<E2eContext> {
+    public getRunner (resource: HydraResource): checkChain<E2eContext> {
         const step = this
 
         if (step.children.length > 0 && !!step.expectedValue) {
@@ -89,7 +89,7 @@ export class PropertyStep extends ScenarioStep {
         return { result }
     }
 
-    private __getMissingPropertyResult (resource: { [ prop: string ]: HydraResource }) {
+    private __getMissingPropertyResult (resource: HydraResource) {
         let result
         if (this.strict) {
             result = Result.Failure(`Property ${this.propertyId} missing on resource ${resource.id}`)
