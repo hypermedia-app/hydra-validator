@@ -52,7 +52,7 @@ export class PropertyStep extends ScenarioStep {
         }
     }
 
-    private __checkValues (value: unknown | unknown[], context: E2eContext): CheckResult<E2eContext> {
+    private __checkValues (value: unknown | unknown[], context: E2eContext, arrayItem = false): CheckResult<E2eContext> {
         if (Array.isArray(value)) {
             return {
                 result: Result.Informational(`Stepping into members of array ${this.propertyId}`),
@@ -70,7 +70,7 @@ export class PropertyStep extends ScenarioStep {
             }
         }
 
-        return this.__executeBlock(value as IHydraResource, context)
+        return this.__executeBlock(value as HydraResource, context, arrayItem)
     }
 
     private __executeRdfTypeStatement (resource: HydraResource) {
@@ -112,13 +112,15 @@ export class PropertyStep extends ScenarioStep {
         }
     }
 
-    private __executeBlock (value: IHydraResource, context: E2eContext): CheckResult<E2eContext> {
+    private __executeBlock (value: HydraResource, context: E2eContext, arrayItem: boolean): CheckResult<E2eContext> {
         const result = Result.Informational(`Stepping into property ${this.propertyId}`)
+        const nextChecks = this._getChildChecks(value, context.scenarios)
 
-        return {
-            result,
-            nextChecks: this._getChildChecks(value, context.scenarios),
+        if (arrayItem) {
+            return { nextChecks }
         }
+
+        return { result, nextChecks }
     }
 
     private __checkArrayItem (value: unknown, index: number): checkChain<E2eContext> {
@@ -133,7 +135,7 @@ export class PropertyStep extends ScenarioStep {
             return {
                 result: Result.Informational(`Array item at index ${index}`),
                 nextChecks: [function () {
-                    return step.__checkValues(value, this)
+                    return step.__checkValues(value, this, true)
                 }],
             }
         }
