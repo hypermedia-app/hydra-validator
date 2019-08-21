@@ -1,5 +1,5 @@
 // @ts-ignore
-import * as clownface from 'clownface'
+import clownface from 'clownface'
 import { checkChain, Result } from 'hydra-validator-core'
 import apiDocsChecks from './api-documentation'
 

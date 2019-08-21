@@ -1,6 +1,6 @@
 import { IResult, Result, Context } from 'hydra-validator-core'
 import { ScenarioStep } from '../'
-import * as escapeStringRegexp from 'escape-string-regexp'
+import escapeStringRegexp from 'escape-string-regexp'
 
 interface ExpectationStepInit {
     header: string;

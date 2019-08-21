@@ -3,7 +3,7 @@ jest.mock('./api-documentation')
 import check from './analyse-representation'
 import apiDocsChecks from './api-documentation'
 // @ts-ignore
-import * as rdf from 'rdf-ext'
+import rdf from 'rdf-ext'
 
 describe('analyse-representation', () => {
     describe('when parsing succeeds', () => {
