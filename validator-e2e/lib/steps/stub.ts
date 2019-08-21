@@ -48,8 +48,12 @@ export class StepSpy extends ScenarioStep {
 }
 
 export class ConstraintMock extends Constraint<unknown> {
-    public constructor (mockResult: boolean = true) {
+    public type: 'Representation' | 'Response' | null
+
+    public constructor (mockResult: boolean = true, type?: 'Representation' | 'Response') {
         super(() => mockResult, false)
+
+        this.type = type || null
     }
 
     protected getValue (subject: unknown): unknown {
@@ -58,9 +62,5 @@ export class ConstraintMock extends Constraint<unknown> {
 
     protected sanityCheckValue (value: unknown): boolean {
         return true
-    }
-
-    public get type (): 'Representation' | 'Response' | null {
-        return null
     }
 }
