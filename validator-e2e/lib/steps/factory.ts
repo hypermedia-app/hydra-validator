@@ -1,5 +1,7 @@
 import { ScenarioStep } from './'
 import { ClassStep } from './representation'
+import { StepConstraintInit, factory as createConstraint } from './constraints/'
+import { Constraint } from './constraints/Constraint'
 import { PropertyStep } from './representation/property'
 import { StatusStep } from './response/status'
 import { HeaderStep } from './response/header'
@@ -11,6 +13,7 @@ import { FollowStep } from './representation/link/follow'
 interface StepDescription {
     type: string;
     children: StepDescription[];
+    constraints?: StepConstraintInit[];
 }
 
 export interface ApiTestScenarios {
@@ -18,7 +21,7 @@ export interface ApiTestScenarios {
 }
 
 interface StepConstructor {
-    new(stepInit: any, children: ScenarioStep[]): ScenarioStep;
+    new(stepInit: any, children: ScenarioStep[], constraints: Constraint<unknown>[]): ScenarioStep;
 }
 
 const stepConstructors = new Map<string, StepConstructor>()
@@ -33,10 +36,11 @@ stepConstructors.set('Operation', OperationStep)
 
 function create (step: StepDescription): ScenarioStep {
     const children = (step.children || []).map(create)
+    const constraints = (step.constraints || []).map(createConstraint)
 
     const Step = stepConstructors.get(step.type)
     if (Step) {
-        return new Step(step, children)
+        return new Step(step, children, constraints)
     }
 
     throw new Error(`Unexpected step ${step.type}`)

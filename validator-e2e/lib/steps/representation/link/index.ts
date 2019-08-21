@@ -1,7 +1,9 @@
 import { HydraResource } from 'alcaeus/types/Resources'
-import { Result } from 'hydra-validator-core'
-import { getResponseRunner } from '../../../processResponse'
+import { checkChain, Result } from 'hydra-validator-core'
+import { getResponseRunner } from '../../../checkRunner'
 import { ScenarioStep } from '../../index'
+import { Constraint } from '../../constraints/Constraint'
+import { E2eContext } from '../../../../types'
 
 interface LinkStepInit {
     rel: string;
@@ -12,8 +14,8 @@ export class LinkStep extends ScenarioStep<HydraResource> {
     private relation: string
     private strict: boolean
 
-    public constructor (init: LinkStepInit, children: ScenarioStep[]) {
-        super(children)
+    public constructor (init: LinkStepInit, children: ScenarioStep[], constraints: Constraint[]) {
+        super(children, constraints)
 
         this.relation = init.rel
         this.strict = init.strict
@@ -23,7 +25,7 @@ export class LinkStep extends ScenarioStep<HydraResource> {
         return 'id' in obj
     }
 
-    public getRunner (resource: HydraResource) {
+    public getRunner (resource: HydraResource): checkChain<E2eContext> {
         const step = this
 
         return async function checkLink () {
@@ -44,7 +46,7 @@ export class LinkStep extends ScenarioStep<HydraResource> {
                 return {}
             }
 
-            const nextChecks = linkValue.resources.map(resource => getResponseRunner(resource.id, step.children))
+            const nextChecks = linkValue.resources.map(resource => getResponseRunner(resource.id, step))
 
             step.markExecuted()
 

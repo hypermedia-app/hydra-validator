@@ -1,8 +1,8 @@
 import { HydraResource } from 'alcaeus/types/Resources'
 import { E2eContext } from '../../../../types'
-import { Result } from 'hydra-validator-core'
+import { checkChain, Result } from 'hydra-validator-core'
 import { ScenarioStep } from '../../index'
-import { getResourceRunner } from '../../../processResponse'
+import { getResourceRunner } from '../../../checkRunner'
 
 interface OperationStepInit {
     operationId: string;
@@ -23,7 +23,7 @@ export class OperationStep extends ScenarioStep {
         return 'operations' in obj
     }
 
-    public getRunner (resource: HydraResource) {
+    public getRunner (resource: HydraResource): checkChain<E2eContext> {
         const step = this
         return async function invokeOperation (this: E2eContext) {
             const operation = resource.operations.find(op => op.supportedOperation.id === step.operationId || op.supportedOperation.types.contains(step.operationId))
@@ -47,7 +47,7 @@ export class OperationStep extends ScenarioStep {
 
             return {
                 result: Result.Informational(`Found operation '${operation.title}'`),
-                nextChecks: [ getResourceRunner(operation, step.children) ],
+                nextChecks: [ getResourceRunner(operation, step) ],
             }
         }
     }
