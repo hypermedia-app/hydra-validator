@@ -3,7 +3,7 @@ import { getResponseRunner, getResourceRunner } from './checkRunner'
 import { E2eContext } from '../types'
 import { ScenarioStep } from './steps'
 import { HydraResource } from 'alcaeus/types/Resources'
-import { StepSpy, StepStub } from './steps/stub'
+import { ConstraintMock, StepSpy } from './steps/stub'
 import { IHydraResponse } from 'alcaeus/types/HydraResponse'
 import { runAll } from './testHelpers'
 
@@ -59,6 +59,49 @@ describe('processResponse', () => {
             // then
             expect(Hydra.loadResource).not.toHaveBeenCalled()
         })
+        it('runs steps on representation', async () => {
+            // given
+            const spy = new StepSpy()
+            const step: ScenarioStep = {
+                children: [ spy ],
+                constraints: [],
+            } as any
+            const topLevelStep = new StepSpy()
+            const response: IHydraResponse = {
+                xhr: { url: 'foo' },
+            } as any
+            const runner = getResponseRunner(response, step)
+            context.scenarios.push(topLevelStep)
+
+            // when
+            await runAll(runner, context)
+
+            // then
+            expect(spy.runner).toHaveBeenCalled()
+            expect(topLevelStep.runner).toHaveBeenCalled()
+        })
+
+        it('does not run steps when constraint fails', async () => {
+            // given
+            const spy = new StepSpy()
+            const step: ScenarioStep = {
+                children: [ spy ],
+                constraints: [ new ConstraintMock(false, 'Response') ],
+            } as any
+            const topLevelStep = new StepSpy()
+            const response: IHydraResponse = {
+                xhr: { url: 'foo' },
+            } as any
+            const runner = getResponseRunner(response, step)
+            context.scenarios.push(topLevelStep)
+
+            // when
+            await runAll(runner, context)
+
+            // then
+            expect(spy.runner).not.toHaveBeenCalled()
+            expect(topLevelStep.runner).not.toHaveBeenCalled()
+        })
     })
 
     describe('resource runner', () => {
@@ -80,6 +123,26 @@ describe('processResponse', () => {
             // then
             expect(spy.runner).toHaveBeenCalled()
             expect(topLevelStep.runner).toHaveBeenCalled()
+        })
+
+        it('does not run steps when constraint fails', async () => {
+            // given
+            const spy = new StepSpy()
+            const step: ScenarioStep = {
+                children: [ spy ],
+                constraints: [ new ConstraintMock(false, 'Representation') ],
+            } as any
+            const topLevelStep = new StepSpy()
+            const resource: HydraResource = {} as any
+            const runner = getResourceRunner(resource, step)
+            context.scenarios.push(topLevelStep)
+
+            // when
+            await runAll(runner, context)
+
+            // then
+            expect(spy.runner).not.toHaveBeenCalled()
+            expect(topLevelStep.runner).not.toHaveBeenCalled()
         })
     })
 })
