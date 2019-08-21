@@ -1,6 +1,7 @@
 import { E2eContext } from '../../../../types'
 import { OperationStep } from './index'
 import { StepStub } from '../../stub'
+import { runAll } from '../../../testHelpers'
 
 describe('Operation block', () => {
     let context: E2eContext & any
@@ -113,10 +114,10 @@ describe('Operation block', () => {
 
         // when
         const execute = operationStep.getRunner(resource as any)
-        const result = await execute.call(context)
+        const result = await runAll(execute, context)
 
         // then
-        expect(result.nextChecks![0].name).toBe('topLevel')
+        expect(result.checkNames).toContain('topLevel')
     })
 
     it('enqueues child steps before top-level steps', async () => {
@@ -137,10 +138,11 @@ describe('Operation block', () => {
 
         // when
         const execute = operationStep.getRunner(resource as any)
-        const result = await execute.call(context)
+        const result = await runAll(execute, context)
 
         // then
-        expect(result.nextChecks![0].name).toBe('child')
-        expect(result.nextChecks![1].name).toBe('topLevel')
+        expect(result.checkNames).toContain('child')
+        expect(result.checkNames).toContain('topLevel')
+        expect(result.checkNames.indexOf('child')).toBeLessThan(result.checkNames.indexOf('topLevel'))
     })
 })

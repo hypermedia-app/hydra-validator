@@ -1,5 +1,5 @@
 import { Hydra } from 'alcaeus'
-import { getResourceRunner } from './processResponse'
+import { getResponseRunner } from './processResponse'
 import { E2eContext } from '../types'
 import { ScenarioStep } from './steps'
 
@@ -13,11 +13,11 @@ describe('processResponse', () => {
         }
     })
 
-    describe('.getResourceRunner', () => {
+    describe('.getResponseRunner', () => {
         it('fetches representation with alcaeus', async () => {
             // given
             const steps: ScenarioStep[] = []
-            const runner = getResourceRunner('urn:resource:id', steps)
+            const runner = getResponseRunner('urn:resource:id', steps)
             ;(Hydra.loadResource as any).mockResolvedValue({
                 xhr: {
                     url: 'x:y:z',

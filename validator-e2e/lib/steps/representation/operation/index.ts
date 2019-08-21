@@ -2,6 +2,7 @@ import { HydraResource } from 'alcaeus/types/Resources'
 import { E2eContext } from '../../../../types'
 import { Result } from 'hydra-validator-core'
 import { ScenarioStep } from '../../index'
+import { getResourceRunner } from '../../../processResponse'
 
 interface OperationStepInit {
     operationId: string;
@@ -46,7 +47,7 @@ export class OperationStep extends ScenarioStep {
 
             return {
                 result: Result.Informational(`Found operation '${operation.title}'`),
-                nextChecks: step._getChildChecks(operation, this.scenarios),
+                nextChecks: [ getResourceRunner(operation, step.children) ],
             }
         }
     }
