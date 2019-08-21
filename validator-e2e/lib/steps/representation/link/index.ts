@@ -1,6 +1,6 @@
 import { HydraResource } from 'alcaeus/types/Resources'
 import { Result } from 'hydra-validator-core'
-import { getResourceRunner } from '../../../processResponse'
+import { getResponseRunner } from '../../../processResponse'
 import { ScenarioStep } from '../../index'
 
 interface LinkStepInit {
@@ -8,7 +8,7 @@ interface LinkStepInit {
     strict: boolean;
 }
 
-export class LinkStep extends ScenarioStep {
+export class LinkStep extends ScenarioStep<HydraResource> {
     private relation: string
     private strict: boolean
 
@@ -19,7 +19,7 @@ export class LinkStep extends ScenarioStep {
         this.strict = init.strict
     }
 
-    protected appliesToInternal (obj: any): boolean {
+    protected appliesToInternal (obj: HydraResource): boolean {
         return 'id' in obj
     }
 
@@ -44,7 +44,7 @@ export class LinkStep extends ScenarioStep {
                 return {}
             }
 
-            const nextChecks = linkValue.resources.map(resource => getResourceRunner(resource.id, step.children))
+            const nextChecks = linkValue.resources.map(resource => getResponseRunner(resource.id, step.children))
 
             step.markExecuted()
 

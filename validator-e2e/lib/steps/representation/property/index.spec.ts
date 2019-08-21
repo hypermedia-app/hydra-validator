@@ -39,7 +39,7 @@ describe('property step', () => {
         // when
         const result = propertyStatement.appliesTo({
             id: 'id',
-        })
+        } as any)
 
         // then
         expect(result).toBe(true)
@@ -368,11 +368,13 @@ describe('property step', () => {
 
             // when
             const execute = propertyBlock.getRunner({ title: 'hello' } as any)
-            const result = await execute.call(context)
+            const result = await runAll(execute)
 
             // then
-            expect(result.nextChecks!.map(check => check.name).join(', '))
-                .toBe('step1, step2, topLevel1, topLevel2')
+            expect(result.checkNames).toContain('step1')
+            expect(result.checkNames).toContain('step2')
+            expect(result.checkNames).toContain('topLevel1')
+            expect(result.checkNames).toContain('topLevel2')
         })
 
         it('runs check on each value of array', async () => {

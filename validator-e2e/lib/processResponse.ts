@@ -3,6 +3,7 @@ import { IHydraResponse } from 'alcaeus/types/HydraResponse'
 import { E2eContext } from '../types'
 import { checkChain, CheckResult, Result } from 'hydra-validator-core'
 import { ScenarioStep } from './steps'
+import { HydraResource } from 'alcaeus/types/Resources'
 
 function processResponse (response: IHydraResponse, steps: ScenarioStep[], topLevelSteps: ScenarioStep[]): CheckResult<E2eContext> {
     const localContext = {}
@@ -33,15 +34,40 @@ function processResponse (response: IHydraResponse, steps: ScenarioStep[], topLe
     }
 }
 
-export function getResponseRunner (response: IHydraResponse, steps: ScenarioStep[]) {
-    return function checkResponse (this: E2eContext) {
-        return processResponse(response, steps, this.scenarios)
+function processResource<T = HydraResource> (resource: T, steps: ScenarioStep[], topLevelSteps: ScenarioStep[]): CheckResult<E2eContext> {
+    const localContext = {}
+
+    const nextChecks: checkChain<E2eContext>[] = []
+
+    for (let step of [...steps, ...topLevelSteps]) {
+        if (step.appliesTo(resource)) {
+            nextChecks.push(step.getRunner(resource, localContext))
+        }
+    }
+
+    return {
+        nextChecks,
+        sameLevel: true,
     }
 }
 
-export function getResourceRunner (resourceId: string, steps: ScenarioStep[]) {
+export function getResourceRunner<T = HydraResource> (
+    resource: T,
+    steps: ScenarioStep[]) {
+    return async function checkResource (this: E2eContext) {
+        return processResource(resource, steps, this.scenarios)
+    }
+}
+
+export function getResponseRunner (
+    responseOrId: string | IHydraResponse,
+    steps: ScenarioStep[]) {
     return async function checkResourceResponse (this: E2eContext) {
-        const response = await Hydra.loadResource(resourceId)
-        return processResponse(response, steps, this.scenarios)
+        if (typeof responseOrId === 'string') {
+            const response = await Hydra.loadResource(responseOrId)
+            return processResponse(response, steps, this.scenarios)
+        }
+
+        return processResponse(responseOrId, steps, this.scenarios)
     }
 }

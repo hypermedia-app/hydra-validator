@@ -4,6 +4,7 @@ import { checkChain, CheckResult, Result } from 'hydra-validator-core'
 import { ScenarioStep } from '../../'
 import { expand } from '@zazuko/rdf-vocabularies'
 import areEqual from '../../../comparison'
+import { getResourceRunner } from '../../../processResponse'
 
 interface PropertyStepInit {
     propertyId: string;
@@ -11,7 +12,7 @@ interface PropertyStepInit {
     strict: boolean;
 }
 
-export class PropertyStep extends ScenarioStep {
+export class PropertyStep extends ScenarioStep<HydraResource> {
     public propertyId: string
     public strict: boolean
     public expectedValue?: unknown
@@ -48,11 +49,11 @@ export class PropertyStep extends ScenarioStep {
                 return step.__getMissingPropertyResult(resource)
             }
 
-            return step.__checkValues(resource[step.propertyId], this)
+            return step.__checkValues(resource[step.propertyId] as any, this)
         }
     }
 
-    private __checkValues (value: unknown | unknown[], context: E2eContext, arrayItem = false): CheckResult<E2eContext> {
+    private __checkValues (value: HydraResource | HydraResource[], context: E2eContext, arrayItem = false): CheckResult<E2eContext> {
         if (Array.isArray(value)) {
             return {
                 result: Result.Informational(`Stepping into members of array ${this.propertyId}`),
@@ -114,7 +115,7 @@ export class PropertyStep extends ScenarioStep {
 
     private __executeBlock (value: HydraResource, context: E2eContext, arrayItem: boolean): CheckResult<E2eContext> {
         const result = Result.Informational(`Stepping into property ${this.propertyId}`)
-        const nextChecks = this._getChildChecks(value, context.scenarios)
+        const nextChecks = [ getResourceRunner(value, this.children) ]
 
         if (arrayItem) {
             return { nextChecks }
@@ -123,7 +124,7 @@ export class PropertyStep extends ScenarioStep {
         return { result, nextChecks }
     }
 
-    private __checkArrayItem (value: unknown, index: number): checkChain<E2eContext> {
+    private __checkArrayItem (value: HydraResource, index: number): checkChain<E2eContext> {
         const step = this
         if (Array.isArray(value)) {
             return () => ({

@@ -1,4 +1,4 @@
-import { getResourceRunner } from '../../../processResponse'
+import { getResponseRunner } from '../../../processResponse'
 import { LinkStep } from './'
 import { E2eContext } from '../../../../types'
 
@@ -22,7 +22,7 @@ describe('link', () => {
         // when
         const applies = step.appliesTo({
             id: 'whatever',
-        })
+        } as any)
 
         // then
         expect(applies).toBeTruthy()
@@ -93,8 +93,8 @@ describe('link', () => {
 
             // then
             expect(nextChecks).toHaveLength(2)
-            expect(getResourceRunner).toHaveBeenCalledWith('urn:resource:one', [])
-            expect(getResourceRunner).toHaveBeenCalledWith('urn:resource:two', [])
+            expect(getResponseRunner).toHaveBeenCalledWith('urn:resource:one', [])
+            expect(getResponseRunner).toHaveBeenCalledWith('urn:resource:two', [])
         })
     })
 })

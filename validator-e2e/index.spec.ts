@@ -73,7 +73,7 @@ describe('validator-e2e', () => {
             (docsLoader.load as any).mockReturnValue({
                 steps: [],
             })
-            jest.spyOn(responseChecks, 'getResourceRunner')
+            jest.spyOn(responseChecks, 'getResponseRunner')
 
             // when
             await check('urn:irrelevant', {
@@ -82,7 +82,7 @@ describe('validator-e2e', () => {
             }).call(context)
 
             // then
-            expect(responseChecks.getResourceRunner).toHaveBeenCalledWith('urn:irrelevant', [])
+            expect(responseChecks.getResponseRunner).toHaveBeenCalledWith('urn:irrelevant', [])
         })
     })
 })
