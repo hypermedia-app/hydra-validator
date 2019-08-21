@@ -5,7 +5,7 @@ jest.mock('')
 import * as docsLoader from './lib/docsLoader'
 import createSteps from './lib/steps/factory'
 import { check } from './'
-import * as responseChecks from './lib/processResponse'
+import * as responseChecks from './lib/checkRunner'
 import { E2eContext } from './types'
 
 describe('validator-e2e', () => {
@@ -82,7 +82,7 @@ describe('validator-e2e', () => {
             }).call(context)
 
             // then
-            expect(responseChecks.getResponseRunner).toHaveBeenCalledWith('urn:irrelevant', [])
+            expect(responseChecks.getResponseRunner).toHaveBeenCalledWith('urn:irrelevant')
         })
     })
 })

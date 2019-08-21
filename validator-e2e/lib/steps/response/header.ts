@@ -1,5 +1,5 @@
 import { IResult, Result, Context } from 'hydra-validator-core'
-import { ScenarioStep } from '../'
+import { ResponseStep } from '../'
 import escapeStringRegexp from 'escape-string-regexp'
 
 interface ExpectationStepInit {
@@ -9,7 +9,7 @@ interface ExpectationStepInit {
     pattern?: string;
 }
 
-export class HeaderStep extends ScenarioStep {
+export class HeaderStep extends ResponseStep {
     public header: string;
     public captureAs: string | null;
     public pattern: string | null;

@@ -1,11 +1,11 @@
 import { E2eContext } from '../../../../types'
 import { InvocationStep } from './invocation'
 import { StepStub } from '../../stub'
-import { getResponseRunner } from '../../../processResponse'
+import { getResponseRunner } from '../../../checkRunner'
 import { readFileSync } from 'fs'
 
 jest.mock('fs')
-jest.mock('../../../processResponse')
+jest.mock('../../../checkRunner')
 
 describe('Invoke block', () => {
     let context: E2eContext
@@ -109,7 +109,7 @@ describe('Invoke block', () => {
         await execute.call(context)
 
         // then
-        expect(getResponseRunner).toHaveBeenCalledWith(response, step.children)
+        expect(getResponseRunner).toHaveBeenCalledWith(response, step)
     })
 
     it('invokes operation with empty body when not given', async () => {

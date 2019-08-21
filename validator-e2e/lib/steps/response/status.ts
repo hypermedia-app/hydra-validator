@@ -1,11 +1,11 @@
 import { IResult, Result } from 'hydra-validator-core'
-import { ScenarioStep } from '../'
+import { ResponseStep } from '../'
 
 interface ExpectationStepInit {
     code: number;
 }
 
-export class StatusStep extends ScenarioStep {
+export class StatusStep extends ResponseStep {
     public code: number;
 
     public constructor (step: ExpectationStepInit) {

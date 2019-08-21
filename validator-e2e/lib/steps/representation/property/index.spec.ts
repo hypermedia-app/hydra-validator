@@ -1,6 +1,6 @@
 import { PropertyStep } from '.'
 import { E2eContext } from '../../../../types'
-import { StepStub, StepSpy } from '../../stub'
+import { StepStub, StepSpy, ConstraintMock } from '../../stub'
 import { expand } from '@zazuko/rdf-vocabularies'
 import { runAll } from '../../../testHelpers'
 
@@ -18,7 +18,23 @@ describe('property step', () => {
             propertyId: 'title',
             value: 'foo',
             strict: false,
-        }, [ {} as any ])
+        }, [ {} as any ], [])
+
+        // when
+        const execute = propertyStatement.getRunner({} as any)
+        const result = await execute.call(context)
+
+        // then
+        expect(result.result!.status).toBe('error')
+    })
+
+    it('returns error when step has both constraints and value', async () => {
+        // given
+        const propertyStatement = new PropertyStep({
+            propertyId: 'title',
+            value: 'foo',
+            strict: false,
+        }, [], [ {} as any ],)
 
         // when
         const execute = propertyStatement.getRunner({} as any)
@@ -34,7 +50,7 @@ describe('property step', () => {
             propertyId: 'title',
             value: 'foo',
             strict: false,
-        }, [ ])
+        }, [], [])
 
         // when
         const result = propertyStatement.appliesTo({
@@ -52,7 +68,7 @@ describe('property step', () => {
                 propertyId: 'title',
                 value: 'foo',
                 strict: false,
-            }, [])
+            }, [], [])
             const value: any = {
                 title: 'bar',
             }
@@ -71,7 +87,7 @@ describe('property step', () => {
                 propertyId: 'title',
                 value: 'foo',
                 strict: false,
-            }, [])
+            }, [], [])
             const value: any = {
                 title: 'foo',
             }
@@ -90,7 +106,7 @@ describe('property step', () => {
                 propertyId: 'active',
                 value: false,
                 strict: false,
-            }, [])
+            }, [], [])
             const value: any = {
                 active: false,
             }
@@ -109,7 +125,7 @@ describe('property step', () => {
                 propertyId: 'count',
                 value: 0,
                 strict: false,
-            }, [])
+            }, [], [])
             const value: any = {
                 count: 0,
             }
@@ -128,7 +144,7 @@ describe('property step', () => {
                 propertyId: 'count',
                 value: 0,
                 strict: false,
-            }, [])
+            }, [], [])
             const value: any = {
                 count: '0',
             }
@@ -147,7 +163,7 @@ describe('property step', () => {
                 propertyId: 'count',
                 value: false,
                 strict: false,
-            }, [])
+            }, [], [])
             const value: any = {
                 count: 'false',
             }
@@ -166,7 +182,7 @@ describe('property step', () => {
                 propertyId: 'count',
                 value: '',
                 strict: false,
-            }, [])
+            }, [], [])
             const value: any = {
                 count: '',
             }
@@ -185,7 +201,7 @@ describe('property step', () => {
                 propertyId: 'title',
                 value: 'foo',
                 strict: true,
-            }, [])
+            }, [], [])
             const value: any = {
             }
 
@@ -202,7 +218,7 @@ describe('property step', () => {
             const propertyStatement = new PropertyStep({
                 propertyId: 'title',
                 strict: false,
-            }, [])
+            }, [], [])
             const value: any = {}
 
             // when
@@ -219,7 +235,7 @@ describe('property step', () => {
                 propertyId: expand('rdf:type'),
                 value: 'http://example.com/Class',
                 strict: true,
-            }, [])
+            }, [], [])
             const value = {
                 types: {
                     contains: () => true,
@@ -240,7 +256,7 @@ describe('property step', () => {
                 propertyId: expand('rdf:type'),
                 value: 'http://example.com/Class',
                 strict: true,
-            }, [])
+            }, [], [])
             const value = {
                 types: {
                     contains: () => false,
@@ -261,7 +277,7 @@ describe('property step', () => {
                 propertyId: expand('rdf:type'),
                 value: 'http://example.com/Class',
                 strict: false,
-            }, [])
+            }, [], [])
             const value = {
                 types: {
                     contains: () => false,
@@ -282,7 +298,7 @@ describe('property step', () => {
                 propertyId: 'title',
                 value: 'foo',
                 strict: false,
-            }, [])
+            }, [], [])
             const value: any = {
                 title: [ 'foo', 'bar' ],
             }
@@ -302,7 +318,7 @@ describe('property step', () => {
             const propertyStatement = new PropertyStep({
                 propertyId: 'count',
                 strict: false,
-            }, [])
+            }, [], [])
             const value: any = {
                 count: '',
             }
@@ -324,7 +340,7 @@ describe('property step', () => {
                 strict: true,
             }, [
                 new StepStub('foo'),
-            ])
+            ], [])
             const value: any = {}
 
             // when
@@ -342,7 +358,7 @@ describe('property step', () => {
                 strict: false,
             }, [
                 new StepStub('foo'),
-            ])
+            ], [])
             const value: any = {}
 
             // when
@@ -364,7 +380,7 @@ describe('property step', () => {
             const propertyBlock = new PropertyStep({
                 propertyId: 'title',
                 strict: false,
-            }, childSteps)
+            }, childSteps, [])
 
             // when
             const execute = propertyBlock.getRunner({ title: 'hello' } as any)
@@ -386,7 +402,7 @@ describe('property step', () => {
             const propertyStatement = new PropertyStep({
                 propertyId: 'friend',
                 strict: false,
-            }, children)
+            }, children, [])
             const value: any = {
                 friend: [ 'foo', 'bar' ],
             }
@@ -397,6 +413,81 @@ describe('property step', () => {
 
             // then
             children.forEach(childStep => {
+                expect(childStep.getRunner()).toHaveBeenCalledTimes(2)
+            })
+        })
+
+        describe('when constrained', () => {
+            it('does not run when any constraint fails', async () => {
+                // given
+                const childStep = new StepSpy()
+                const propertyBlock = new PropertyStep({
+                    propertyId: 'title',
+                    strict: false,
+                }, [
+                    childStep,
+                ], [
+                    new ConstraintMock(true),
+                    new ConstraintMock(false),
+                ])
+                const value: any = {
+                    title: [ 'Rocky IV', 'Rocky V' ],
+                }
+
+                // when
+                const execute = propertyBlock.getRunner(value)
+                const result = await execute.call(context)
+
+                // then
+                expect(result.result!.status).toBe('informational')
+                expect(childStep.getRunner()).not.toHaveBeenCalled()
+            })
+
+            it('do run when all constraint succeed', async () => {
+                // given
+                const childStep = new StepSpy()
+                const propertyBlock = new PropertyStep({
+                    propertyId: 'title',
+                    strict: false,
+                }, [
+                    childStep,
+                ], [
+                    new ConstraintMock(true),
+                    new ConstraintMock(true),
+                ])
+                const value: any = {
+                    title: 'Rocky IV',
+                }
+
+                // when
+                const execute = propertyBlock.getRunner(value)
+                await runAll(execute)
+
+                // then
+                expect(childStep.getRunner()).toHaveBeenCalled()
+            })
+
+            it('do run for array when all constraint succeed', async () => {
+                // given
+                const childStep = new StepSpy()
+                const propertyBlock = new PropertyStep({
+                    propertyId: 'title',
+                    strict: false,
+                }, [
+                    childStep,
+                ], [
+                    new ConstraintMock(true),
+                    new ConstraintMock(true),
+                ])
+                const value: any = {
+                    title: [ 'Rocky IV', 'Rocky V' ],
+                }
+
+                // when
+                const execute = propertyBlock.getRunner(value)
+                await runAll(execute)
+
+                // then
                 expect(childStep.getRunner()).toHaveBeenCalledTimes(2)
             })
         })

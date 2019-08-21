@@ -1,5 +1,6 @@
 import { ScenarioStep } from './index'
 import { checkChain } from 'hydra-validator-core'
+import { Constraint } from './constraints/Constraint'
 
 export class StepStub extends ScenarioStep {
     private readonly runner: checkChain
@@ -23,15 +24,43 @@ export class StepStub extends ScenarioStep {
 }
 
 export class StepSpy extends ScenarioStep {
-    private readonly runner: jest.Mock
+    public readonly runner: jest.Mock
+    public readonly realAppliesTo: jest.Mock
 
     public constructor () {
         super([])
+        this.realAppliesTo = jest.fn().mockReturnValue(true)
         this.runner = jest.fn()
         this.runner.mockReturnValue({ })
     }
 
+    public appliesTo (obj: unknown): boolean {
+        return this.realAppliesTo(obj)
+    }
+
     public getRunner () {
         return this.runner
+    }
+
+    protected appliesToInternal (): boolean {
+        throw new Error('Not implemented')
+    }
+}
+
+export class ConstraintMock extends Constraint<unknown> {
+    public constructor (mockResult: boolean = true) {
+        super(() => mockResult, false)
+    }
+
+    protected getValue (subject: unknown): unknown {
+        return undefined
+    }
+
+    protected sanityCheckValue (value: unknown): boolean {
+        return true
+    }
+
+    public get type (): 'Representation' | 'Response' | null {
+        return null
     }
 }

@@ -1,12 +1,15 @@
 import { checkChain, Context } from 'hydra-validator-core'
 import { E2eContext } from '../../types'
+import { Constraint } from './constraints/Constraint'
 
 export abstract class ScenarioStep<T = unknown> {
     public children: ScenarioStep[];
+    public constraints: Constraint[];
     private __executed = false
 
-    protected constructor (children: ScenarioStep[]) {
+    protected constructor (children: ScenarioStep[], constraints?: Constraint[]) {
         this.children = children
+        this.constraints = constraints || []
     }
 
     public get executed () {
@@ -22,7 +25,11 @@ export abstract class ScenarioStep<T = unknown> {
     }
 
     abstract getRunner(obj: T, localContext?: Context): checkChain<E2eContext>;
-    protected appliesToInternal (obj: T): boolean {
-        return true
+    protected abstract appliesToInternal (obj: T): boolean
+}
+
+export abstract class ResponseStep extends ScenarioStep<Response> {
+    protected appliesToInternal (obj: Response): boolean {
+        return obj instanceof Response
     }
 }

@@ -1,8 +1,9 @@
-import { getResponseRunner } from '../../../processResponse'
+import { getResponseRunner } from '../../../checkRunner'
 import { LinkStep } from './'
 import { E2eContext } from '../../../../types'
+import { ConstraintMock } from '../../stub'
 
-jest.mock('../../../processResponse')
+jest.mock('../../../checkRunner')
 
 describe('link', () => {
     let context: E2eContext & any
@@ -17,7 +18,7 @@ describe('link', () => {
         const step = new LinkStep({
             rel: 'self',
             strict: false,
-        }, [])
+        }, [], [])
 
         // when
         const applies = step.appliesTo({
@@ -34,7 +35,7 @@ describe('link', () => {
             const step = new LinkStep({
                 rel: 'self',
                 strict: false,
-            }, [])
+            }, [], [])
             const resource = {
                 getLinks: () => [],
             }
@@ -52,7 +53,7 @@ describe('link', () => {
             const step = new LinkStep({
                 rel: 'self',
                 strict: true,
-            }, [])
+            }, [], [])
             const resource = {
                 getLinks: () => [],
             }
@@ -70,7 +71,7 @@ describe('link', () => {
             const step = new LinkStep({
                 rel: 'urn:link:rel',
                 strict: true,
-            }, [])
+            }, [], [])
             const resource = {
                 getLinks: () => [
                     {
@@ -93,8 +94,8 @@ describe('link', () => {
 
             // then
             expect(nextChecks).toHaveLength(2)
-            expect(getResponseRunner).toHaveBeenCalledWith('urn:resource:one', [])
-            expect(getResponseRunner).toHaveBeenCalledWith('urn:resource:two', [])
+            expect(getResponseRunner).toHaveBeenCalledWith('urn:resource:one', step)
+            expect(getResponseRunner).toHaveBeenCalledWith('urn:resource:two', step)
         })
     })
 })

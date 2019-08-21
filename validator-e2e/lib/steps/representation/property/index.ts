@@ -4,7 +4,8 @@ import { checkChain, CheckResult, Result } from 'hydra-validator-core'
 import { ScenarioStep } from '../../'
 import { expand } from '@zazuko/rdf-vocabularies'
 import areEqual from '../../../comparison'
-import { getResourceRunner } from '../../../processResponse'
+import { getResourceRunner } from '../../../checkRunner'
+import { Constraint } from '../../constraints/Constraint'
 
 interface PropertyStepInit {
     propertyId: string;
@@ -17,8 +18,8 @@ export class PropertyStep extends ScenarioStep<HydraResource> {
     public strict: boolean
     public expectedValue?: unknown
 
-    public constructor (init: PropertyStepInit, children: ScenarioStep[]) {
-        super(children)
+    public constructor (init: PropertyStepInit, children: ScenarioStep[], constraints: Constraint[]) {
+        super(children, constraints)
 
         this.propertyId = init.propertyId
         this.strict = init.strict
@@ -36,6 +37,14 @@ export class PropertyStep extends ScenarioStep<HydraResource> {
             return function (): CheckResult<E2eContext> {
                 return {
                     result: Result.Error("Property step cannot mix both 'value' and child steps"),
+                }
+            }
+        }
+
+        if (step.constraints.length > 0 && !!step.expectedValue) {
+            return function (): CheckResult<E2eContext> {
+                return {
+                    result: Result.Error('Property statement cannot have constraints'),
                 }
             }
         }
@@ -115,7 +124,7 @@ export class PropertyStep extends ScenarioStep<HydraResource> {
 
     private __executeBlock (value: HydraResource, context: E2eContext, arrayItem: boolean): CheckResult<E2eContext> {
         const result = Result.Informational(`Stepping into property ${this.propertyId}`)
-        const nextChecks = [ getResourceRunner(value, this.children) ]
+        const nextChecks = [ getResourceRunner(value, this) ]
 
         if (arrayItem) {
             return { nextChecks }
