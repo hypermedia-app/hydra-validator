@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 
-import * as program from 'commander'
+import program from 'commander'
 import runChecks from 'hydra-validator-core/run-checks'
 // @ts-ignore
-import * as deps from 'matchdep'
+import deps from 'matchdep'
 import debug from 'debug'
 import { ResultKind } from 'hydra-validator-core'
 

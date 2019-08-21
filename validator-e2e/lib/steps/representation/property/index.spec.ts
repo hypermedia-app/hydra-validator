@@ -368,7 +368,7 @@ describe('property step', () => {
 
             // when
             const execute = propertyBlock.getRunner({ title: 'hello' } as any)
-            const result = await runAll(execute)
+            const result = await runAll(execute, context)
 
             // then
             expect(result.checkNames).toContain('step1')

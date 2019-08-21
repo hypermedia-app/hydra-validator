@@ -1,9 +1,9 @@
 jest.mock('./ensure-single-resource')
 
 // @ts-ignore
-import * as clownface from 'clownface'
+import clownface from 'clownface'
 // @ts-ignore
-import * as $rdf from 'rdf-ext'
+import $rdf from 'rdf-ext'
 import { Hydra, rdf } from 'hydra-validator-core/namespace'
 import check from './index'
 import ensureSingleNode from './ensure-single-resource'

@@ -1,9 +1,9 @@
 // @ts-ignore
-import * as fetch from '@rdfjs/fetch-lite'
+import fetch from '@rdfjs/fetch-lite'
 // @ts-ignore
-import * as formats from '@rdfjs/formats-common'
+import formats from '@rdfjs/formats-common'
 // @ts-ignore
-import * as rdf from 'rdf-ext'
+import rdf from 'rdf-ext'
 import { Context, Result } from 'hydra-validator-core'
 import statusCheck from './response/status-code'
 import apiDocLink from './response/api-doc-link'
