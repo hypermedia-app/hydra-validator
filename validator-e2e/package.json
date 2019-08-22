@@ -1,6 +1,6 @@
 {
   "name": "hydra-validator-e2e",
-  "version": "0.3.3",
+  "version": "0.4.0",
   "description": "A set of tools to execute E2E tests on a Hydra API",
   "main": "index.js",
   "scripts": {
@@ -28,10 +28,10 @@
   },
   "homepage": "https://github.com/hypermedia-app/hydra-validator#readme",
   "devDependencies": {
-    "@babel/preset-env": "^7.5.5",
-    "@babel/preset-typescript": "^7.3.3",
     "@babel/plugin-proposal-class-properties": "^7.5.5",
     "@babel/plugin-proposal-object-rest-spread": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
+    "@babel/preset-typescript": "^7.3.3",
     "@hydrofoil/hypertest": "^0.5.0",
     "@types/jest": "^24.0.12",
     "@types/node": "^11.13.9",
@@ -49,7 +49,7 @@
     "@zazuko/rdf-vocabularies": "^2019.7.9-2",
     "alcaeus": "^0.9.1",
     "escape-string-regexp": "^2.0.0",
-    "hydra-validator-core": "^0.3.2"
+    "hydra-validator-core": "^0.3.3"
   },
   "peerDependencies": {
     "@hydrofoil/hypertest": ">= 0.4.0"

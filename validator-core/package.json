@@ -1,6 +1,6 @@
 {
   "name": "hydra-validator-core",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "Shared package for hydra-validator",
   "main": "index.js",
   "scripts": {
@@ -25,10 +25,10 @@
   },
   "homepage": "https://github.com/hypermedia-app/hydra-validator#readme",
   "devDependencies": {
-    "@babel/preset-env": "^7.5.5",
-    "@babel/preset-typescript": "^7.3.3",
     "@babel/plugin-proposal-class-properties": "^7.5.5",
     "@babel/plugin-proposal-object-rest-spread": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
+    "@babel/preset-typescript": "^7.3.3",
     "@types/jest": "^24.0.12",
     "@types/node": "^11.13.9",
     "@types/node-fetch": "^2.3.3",

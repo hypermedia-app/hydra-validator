@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.4.0](https://github.com/hypermedia-app/hydra-validator/compare/hydra-validator-e2e@0.3.3...hydra-validator-e2e@0.4.0) (2019-08-22)
+
+
+### Bug Fixes
+
+* don't log duplicate message when processing array of values ([009291b](https://github.com/hypermedia-app/hydra-validator/commit/009291b))
+
+
+### Features
+
+* add constraints to class, property and link blocks ([94d77ef](https://github.com/hypermedia-app/hydra-validator/commit/94d77ef))
+
+
+
+
+
 ## [0.3.3](https://github.com/hypermedia-app/hydra-validator/compare/hydra-validator-e2e@0.3.2...hydra-validator-e2e@0.3.3) (2019-08-19)
 
 
