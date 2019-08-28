@@ -4,6 +4,7 @@ import { getResponseRunner } from '../../../checkRunner'
 import { ScenarioStep } from '../../index'
 import { Constraint } from '../../constraints/Constraint'
 import { E2eContext } from '../../../../types'
+import { IResource } from 'alcaeus/types/Resources/Resource'
 
 interface LinkStepInit {
     rel: string;
@@ -36,24 +37,36 @@ export class LinkStep extends ScenarioStep<HydraResource> {
             const linkValue = resource.getLinks()
                 .find(link => link.supportedProperty.property.id === step.relation)
 
-            if (!linkValue) {
-                if (step.strict) {
+            // found supportedProperty which is a hydra:Link
+            if (linkValue) {
+                return {
+                    result: Result.Informational(`Stepping into link ${step.relation}`),
+                    nextChecks: linkValue.resources.map(resource => getResponseRunner(resource.id, step)),
+                }
+            }
+
+            // the resource may have a matching key, but not a supportedProperty hydra:Links
+            if (step.relation in resource) {
+                const potentialLinks = resource.getArray(step.relation)
+                    .filter((r: any) => typeof r === 'object' && 'id' in r) as IResource[]
+
+                if (potentialLinks.length > 0) {
                     return {
-                        result: Result.Failure(`Link ${step.relation} missing on resource ${resource.id}`),
+                        result: Result.Warning(
+                            `Stepping into link ${step.relation}`,
+                            `Resources found but ${step.relation} is not a SupportedProperty of hydra:Link type.`),
+                        nextChecks: potentialLinks.map(resource => getResponseRunner(resource.id, step)),
                     }
                 }
-
-                return {}
             }
 
-            const nextChecks = linkValue.resources.map(resource => getResponseRunner(resource.id, step))
-
-            step.markExecuted()
-
-            return {
-                result: Result.Informational(`Stepping into link ${step.relation}`),
-                nextChecks,
+            if (step.strict) {
+                return {
+                    result: Result.Failure(`No resources found on resource ${resource.id} linked with ${step.relation}`),
+                }
             }
+
+            return {}
         }
     }
 }

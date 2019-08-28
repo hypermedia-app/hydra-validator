@@ -1,7 +1,6 @@
 import { getResponseRunner } from '../../../checkRunner'
 import { LinkStep } from './'
 import { E2eContext } from '../../../../types'
-import { ConstraintMock } from '../../stub'
 
 jest.mock('../../../checkRunner')
 
@@ -11,6 +10,7 @@ describe('link', () => {
         context = {
             scenarios: [],
         }
+        jest.resetAllMocks()
     })
 
     it('applies to identified resource', () => {
@@ -64,6 +64,49 @@ describe('link', () => {
 
             // then
             expect(result!.status).toBe('failure')
+        })
+
+        it('when strict and link not found but exists on resource; returns warning, follows link', async () => {
+            // given
+            const step = new LinkStep({
+                rel: 'urn:not:link',
+                strict: true,
+            }, [], [])
+            const linked = { id: 'urn:resource:linked' }
+            const resource = {
+                getLinks: () => [],
+                getArray: jest.fn().mockReturnValue([ linked ]),
+                'urn:not:link': linked,
+            }
+
+            // when
+            const execute = step.getRunner(resource as any)
+            const { result } = await execute.call(context)
+
+            // then
+            expect(result!.status).toBe('warning')
+            expect(getResponseRunner).toHaveBeenCalledWith('urn:resource:linked', step)
+        })
+
+        it('when strict and link not found but exists on resource; ignores non-resource values', async () => {
+            // given
+            const step = new LinkStep({
+                rel: 'urn:not:link',
+                strict: true,
+            }, [], [])
+            const linked = { id: 'urn:resource:linked' }
+            const resource = {
+                getLinks: () => [],
+                getArray: jest.fn().mockReturnValue([ 10, 'whatever' ]),
+                'urn:not:link': linked,
+            }
+
+            // when
+            const execute = step.getRunner(resource as any)
+            await execute.call(context)
+
+            // then
+            expect(getResponseRunner).toHaveBeenCalledTimes(0)
         })
 
         it('follows all links', async () => {
