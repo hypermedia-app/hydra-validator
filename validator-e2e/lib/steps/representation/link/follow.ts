@@ -1,6 +1,6 @@
 import { E2eContext } from '../../../../types'
 import { Context, checkChain, IResult, Result } from 'hydra-validator-core'
-import { getResourceRunner } from '../../../checkRunner'
+import { getResponseRunner } from '../../../checkRunner'
 import { ScenarioStep } from '../../'
 
 interface FollowStepInit {
@@ -16,14 +16,20 @@ export class FollowStep extends ScenarioStep {
         this.variable = init.variable
     }
 
-    public getRunner (obj: never, scope: Context) {
+    public getRunner (obj: unknown, scope: Context) {
         const step = this
         return async function checkLink () {
             if (step.executed) {
                 return {}
             }
 
-            const resourceId = scope[step.variable]
+            const resourceId: string | unknown = scope[step.variable]
+
+            if (typeof resourceId !== 'string') {
+                return {
+                    result: Result.Error(`Cannot fetch resource. Value of variable ${step.variable} must be a string`),
+                }
+            }
 
             const result: IResult = resourceId
                 ? Result.Informational(`Fetching resource ${resourceId}`)
@@ -31,7 +37,7 @@ export class FollowStep extends ScenarioStep {
 
             let nextChecks: checkChain<E2eContext>[] = []
             if (result.status !== 'failure') {
-                nextChecks.push(getResourceRunner(resourceId, step))
+                nextChecks.push(getResponseRunner(resourceId, step))
 
                 step.markExecuted()
             }
