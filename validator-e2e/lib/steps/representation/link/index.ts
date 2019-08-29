@@ -39,6 +39,8 @@ export class LinkStep extends ScenarioStep<HydraResource> {
 
             // found supportedProperty which is a hydra:Link
             if (linkValue) {
+                step.markExecuted()
+
                 return {
                     result: Result.Informational(`Stepping into link ${step.relation}`),
                     nextChecks: linkValue.resources.map(resource => getResponseRunner(resource.id, step)),
@@ -51,6 +53,8 @@ export class LinkStep extends ScenarioStep<HydraResource> {
                     .filter((r: any) => typeof r === 'object' && 'id' in r) as IResource[]
 
                 if (potentialLinks.length > 0) {
+                    step.markExecuted()
+
                     return {
                         result: Result.Warning(
                             `Stepping into link ${step.relation}`,
