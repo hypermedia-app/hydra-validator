@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.2](https://github.com/hypermedia-app/hydra-validator/compare/hydra-validator-e2e@0.4.1...hydra-validator-e2e@0.4.2) (2019-08-29)
+
+
+### Bug Fixes
+
+* keep the link from being followed multiple times ([ae2bc37](https://github.com/hypermedia-app/hydra-validator/commit/ae2bc37))
+
+
+
+
+
 ## [0.4.1](https://github.com/hypermedia-app/hydra-validator/compare/hydra-validator-e2e@0.4.0...hydra-validator-e2e@0.4.1) (2019-08-29)
 
 
