@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.1](https://github.com/hypermedia-app/hydra-validator/compare/hydra-validator-e2e@0.4.0...hydra-validator-e2e@0.4.1) (2019-08-29)
+
+
+### Bug Fixes
+
+* fallback in case of not annotated links ([2068a5b](https://github.com/hypermedia-app/hydra-validator/commit/2068a5b))
+* prevent non-string variable from being dereferneced ([ec6b31d](https://github.com/hypermedia-app/hydra-validator/commit/ec6b31d))
+
+
+
+
+
 # [0.4.0](https://github.com/hypermedia-app/hydra-validator/compare/hydra-validator-e2e@0.3.3...hydra-validator-e2e@0.4.0) (2019-08-22)
 
 
