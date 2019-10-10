@@ -9,6 +9,7 @@ import { InvocationStep } from './representation/operation/invocation'
 import { OperationStep } from './representation/operation'
 import { LinkStep } from './representation/link'
 import { FollowStep } from './representation/link/follow'
+import { IdentifierStep } from './representation/identifier'
 
 interface StepDescription {
     type: string;
@@ -33,6 +34,7 @@ stepConstructors.set('ResponseHeader', HeaderStep)
 stepConstructors.set('Invocation', InvocationStep)
 stepConstructors.set('Follow', FollowStep)
 stepConstructors.set('Operation', OperationStep)
+stepConstructors.set('Identifier', IdentifierStep)
 
 function create (step: StepDescription): ScenarioStep {
     const children = (step.children || []).map(create)
