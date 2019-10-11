@@ -1,6 +1,6 @@
 import { E2eContext } from '../../../../types'
 import { Context, checkChain, IResult, Result } from 'hydra-validator-core'
-import { getResponseRunner } from '../../../checkRunner'
+import { getUrlRunner } from '../../../checkRunner'
 import { ScenarioStep } from '../../'
 
 interface FollowStepInit {
@@ -37,7 +37,7 @@ export class FollowStep extends ScenarioStep {
 
             let nextChecks: checkChain<E2eContext>[] = []
             if (result.status !== 'failure') {
-                nextChecks.push(getResponseRunner(resourceId, step))
+                nextChecks.push(getUrlRunner(resourceId, step))
 
                 step.markExecuted()
             }

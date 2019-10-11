@@ -5,6 +5,7 @@ import { checkChain, CheckResult, Result } from 'hydra-validator-core'
 import { ScenarioStep } from './steps'
 import { HydraResource } from 'alcaeus/types/Resources'
 import { Constraint, RepresentationConstraint, ResponseConstraint } from './steps/constraints/Constraint'
+import { IResource } from 'alcaeus/types/Resources/Resource'
 
 function processResource<T> (resource: T, steps: ScenarioStep[], constraints: Constraint[]): CheckResult<E2eContext> {
     const localContext = {}
@@ -70,6 +71,16 @@ function processResponse (response: IHydraResponse, steps: ScenarioStep[], const
     }
 }
 
+function dereferenceAndProcess (id: string, steps: ScenarioStep[], constraints: Constraint[]) {
+    return Hydra.loadResource(id)
+        .then(response => {
+            return processResponse(response, steps, constraints)
+        })
+        .catch(e => ({
+            result: Result.Warning(`Failed to dereference ${id}`, e),
+        }))
+}
+
 export function getResourceRunner<T> (
     resource: T,
     currentStep: ScenarioStep) {
@@ -79,8 +90,19 @@ export function getResourceRunner<T> (
     }
 }
 
+export function getUrlRunner (id: string, currentStep?: ScenarioStep) {
+    const childSteps = currentStep ? currentStep.children : []
+    const constraints = currentStep ? currentStep.constraints : []
+
+    return async function checkResourceResponse (this: E2eContext) {
+        const steps = [...childSteps, ...this.scenarios]
+
+        return dereferenceAndProcess(id, steps, constraints)
+    }
+}
+
 export function getResponseRunner (
-    responseOrId: string | IHydraResponse,
+    resourceOrResponse: IResource | IHydraResponse,
     currentStep?: ScenarioStep) {
     const childSteps = currentStep ? currentStep.children : []
     const constraints = currentStep ? currentStep.constraints : []
@@ -88,11 +110,15 @@ export function getResponseRunner (
     return async function checkResourceResponse (this: E2eContext) {
         const steps = [...childSteps, ...this.scenarios]
 
-        if (typeof responseOrId === 'string') {
-            const response = await Hydra.loadResource(responseOrId)
-            return processResponse(response, steps, constraints)
+        if (typeof resourceOrResponse === 'object') {
+            if ('id' in resourceOrResponse) {
+                return dereferenceAndProcess((resourceOrResponse as HydraResource).id, steps, constraints)
+            }
+            return processResponse(resourceOrResponse, steps, constraints)
         }
 
-        return processResponse(responseOrId, steps, constraints)
+        return {
+            result: Result.Failure(`Could not dereference resource. Value ${resourceOrResponse} does not appear to be a link`),
+        }
     }
 }

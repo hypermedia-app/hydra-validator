@@ -1,6 +1,7 @@
 import { getResponseRunner } from '../../../checkRunner'
 import { LinkStep } from './'
 import { E2eContext } from '../../../../types'
+import { StepStub } from '../../stub'
 
 jest.mock('../../../checkRunner')
 
@@ -85,7 +86,7 @@ describe('link', () => {
 
             // then
             expect(result!.status).toBe('warning')
-            expect(getResponseRunner).toHaveBeenCalledWith('urn:resource:linked', step)
+            expect(getResponseRunner).toHaveBeenCalledWith(linked, step)
         })
 
         it('when strict and link not found but exists on resource; ignores non-resource values', async () => {
@@ -109,7 +110,7 @@ describe('link', () => {
             expect(getResponseRunner).toHaveBeenCalledTimes(0)
         })
 
-        it('follows all links', async () => {
+        it('dereferences linked resources when child steps exist', async () => {
             // given
             const step = new LinkStep({
                 rel: 'urn:link:rel',
@@ -137,8 +138,8 @@ describe('link', () => {
 
             // then
             expect(nextChecks).toHaveLength(2)
-            expect(getResponseRunner).toHaveBeenCalledWith('urn:resource:one', step)
-            expect(getResponseRunner).toHaveBeenCalledWith('urn:resource:two', step)
+            expect(getResponseRunner).toHaveBeenCalledWith({ id: 'urn:resource:one' }, step)
+            expect(getResponseRunner).toHaveBeenCalledWith({ id: 'urn:resource:two' }, step)
         })
     })
 })

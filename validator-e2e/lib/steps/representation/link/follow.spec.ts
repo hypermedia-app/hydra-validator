@@ -1,4 +1,4 @@
-import { getResponseRunner } from '../../../checkRunner'
+import { getUrlRunner } from '../../../checkRunner'
 import { E2eContext } from '../../../../types'
 import { FollowStep } from './follow'
 
@@ -26,7 +26,7 @@ describe('follow', () => {
             await execute.call(context)
 
             // then
-            expect(getResponseRunner)
+            expect(getUrlRunner)
                 .toHaveBeenCalledWith('http://example.com/', step)
         })
     })
