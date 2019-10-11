@@ -43,7 +43,7 @@ export class LinkStep extends ScenarioStep<HydraResource> {
 
                 return {
                     result: Result.Informational(`Stepping into link ${step.relation}`),
-                    nextChecks: linkValue.resources.map(resource => getResponseRunner(resource.id, step)),
+                    nextChecks: linkValue.resources.map(resource => getResponseRunner(resource, step)),
                 }
             }
 
@@ -59,7 +59,7 @@ export class LinkStep extends ScenarioStep<HydraResource> {
                         result: Result.Warning(
                             `Stepping into link ${step.relation}`,
                             `Resources found but ${step.relation} is not a SupportedProperty of hydra:Link type.`),
-                        nextChecks: potentialLinks.map(resource => getResponseRunner(resource.id, step)),
+                        nextChecks: potentialLinks.map(resource => getResponseRunner(resource, step)),
                     }
                 }
             }

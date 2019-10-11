@@ -1,11 +1,12 @@
 import { Hydra } from 'alcaeus'
-import { getResponseRunner, getResourceRunner } from './checkRunner'
+import { getResponseRunner, getResourceRunner, getUrlRunner } from './checkRunner'
 import { E2eContext } from '../types'
 import { ScenarioStep } from './steps'
 import { HydraResource } from 'alcaeus/types/Resources'
-import { ConstraintMock, StepSpy } from './steps/stub'
+import { ConstraintMock, StepSpy, StepStub } from './steps/stub'
 import { IHydraResponse } from 'alcaeus/types/HydraResponse'
 import { runAll } from './testHelpers'
+import { IResource } from 'alcaeus/types/Resources/Resource'
 
 jest.mock('alcaeus')
 
@@ -21,14 +22,14 @@ describe('processResponse', () => {
         }
     })
 
-    describe('response runner', () => {
+    describe('url runner', () => {
         it('fetches representation with alcaeus', async () => {
             // given
             const step: ScenarioStep = {
                 children: [ ],
                 constraints: [],
             } as any
-            const runner = getResponseRunner('urn:resource:id', step)
+            const runner = getUrlRunner('urn:resource:id', step)
             loadResource.mockResolvedValue({
                 xhr: {
                     url: 'x:y:z',
@@ -40,6 +41,73 @@ describe('processResponse', () => {
 
             // then
             expect(loadResource).toHaveBeenCalledWith('urn:resource:id')
+        })
+
+        it('fails when request fails', async () => {
+            // given
+            loadResource.mockRejectedValue(new Error('Failed to dereference link'))
+            const runner = getUrlRunner('urn:resource:id', new StepStub('ignored'))
+
+            // when
+            const { result } = await runner.call(context)
+
+            // then
+            expect(result!.status).toBe('warning')
+        })
+    })
+
+    describe('response runner', () => {
+        it('fails when the parameter is undefined', async () => {
+            // given
+            const step: ScenarioStep = {
+                children: [ ],
+                constraints: [],
+            } as any
+            const runner = getResponseRunner(undefined as any, step)
+
+            // when
+            const { result } = await runner.call(context)
+
+            // then
+            expect(result!.status).toBe('failure')
+        })
+
+        it('fails when the parameter is a literal', async () => {
+            // given
+            const step: ScenarioStep = {
+                children: [ ],
+                constraints: [],
+            } as any
+            const runner = getResponseRunner('not a link somehow' as any, step)
+
+            // when
+            const { result } = await runner.call(context)
+
+            // then
+            expect(result!.status).toBe('failure')
+        })
+
+        it('dereferences a resource', async () => {
+            // given
+            const step: ScenarioStep = {
+                children: [ ],
+                constraints: [],
+            } as any
+            const resource = {
+                id: 'foo',
+            }
+            loadResource.mockResolvedValue({
+                xhr: {
+                    url: 'x:y:z',
+                },
+            })
+            const runner = getResponseRunner(resource as IResource, step)
+
+            // when
+            await runner.call(context)
+
+            // then
+            expect(Hydra.loadResource).toHaveBeenCalledWith('foo')
         })
 
         it('does not perform request when passed a response object', async () => {
@@ -59,6 +127,7 @@ describe('processResponse', () => {
             // then
             expect(Hydra.loadResource).not.toHaveBeenCalled()
         })
+
         it('runs steps on representation', async () => {
             // given
             const spy = new StepSpy()
