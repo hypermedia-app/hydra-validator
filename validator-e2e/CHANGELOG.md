@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.5.0](https://github.com/hypermedia-app/hydra-validator/compare/hydra-validator-e2e@0.4.2...hydra-validator-e2e@0.5.0) (2019-10-11)
+
+
+### Bug Fixes
+
+* handling literals for links and broken links ([39a67f7](https://github.com/hypermedia-app/hydra-validator/commit/39a67f7)), closes [#46](https://github.com/hypermedia-app/hydra-validator/issues/46)
+
+
+### Features
+
+* **e2e:** add support for Expect Id statement ([f310d8c](https://github.com/hypermedia-app/hydra-validator/commit/f310d8c))
+
+
+
+
+
 ## [0.4.2](https://github.com/hypermedia-app/hydra-validator/compare/hydra-validator-e2e@0.4.1...hydra-validator-e2e@0.4.2) (2019-08-29)
 
 
