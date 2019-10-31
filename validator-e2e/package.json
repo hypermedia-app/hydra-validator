@@ -47,7 +47,7 @@
   "dependencies": {
     "@hydrofoil/hypertest": "^0.6.0",
     "@zazuko/rdf-vocabularies": "^2019.7.9-2",
-    "alcaeus": "^0.9.1",
+    "alcaeus": "^0.10",
     "escape-string-regexp": "^2.0.0",
     "hydra-validator-core": "^0.3.4"
   },
