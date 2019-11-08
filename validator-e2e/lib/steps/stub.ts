@@ -4,6 +4,7 @@ import { Constraint } from './constraints/Constraint'
 
 export class StepStub extends ScenarioStep {
     private readonly runner: checkChain
+    public visited = false
 
     public constructor (name: string) {
         super([])
