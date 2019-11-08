@@ -4,6 +4,7 @@ import { ScenarioStep } from './lib/steps'
 export interface E2eOptions {
     docs: string;
     cwd: string;
+    strict: boolean;
 }
 
 export interface E2eContext extends Context {

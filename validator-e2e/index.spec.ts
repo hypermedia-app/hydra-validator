@@ -29,6 +29,7 @@ describe('validator-e2e', () => {
             const { result } = await check('urn:irrelevant', {
                 docs: '/no/such/file',
                 cwd: '/',
+                strict: false,
             }).call(context)
 
             // then
@@ -43,6 +44,7 @@ describe('validator-e2e', () => {
             await check('urn:irrelevant', {
                 docs: '/base/path/docs.api',
                 cwd: '/',
+                strict: false,
             }).call(context)
 
             // then
@@ -62,6 +64,7 @@ describe('validator-e2e', () => {
             await check('urn:irrelevant', {
                 docs: '/no/such/file',
                 cwd: '/',
+                strict: false,
             }).call(context)
 
             // then
@@ -79,6 +82,7 @@ describe('validator-e2e', () => {
             await check('urn:irrelevant', {
                 docs: '/no/such/file',
                 cwd: '/',
+                strict: false,
             }).call(context)
 
             // then

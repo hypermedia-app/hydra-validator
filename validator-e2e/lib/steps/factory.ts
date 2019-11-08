@@ -10,6 +10,7 @@ import { OperationStep } from './representation/operation'
 import { LinkStep } from './representation/link'
 import { FollowStep } from './representation/link/follow'
 import { IdentifierStep } from './representation/identifier'
+import { SpyMixin } from './StepSpyMixin'
 
 interface StepDescription {
     type: string;
@@ -17,26 +18,34 @@ interface StepDescription {
     constraints?: StepConstraintInit[];
 }
 
+export type RuntimeStep = ScenarioStep & {
+    visited: boolean;
+}
+
 export interface ApiTestScenarios {
-    steps: StepDescription[];
+    steps: RuntimeStep[];
 }
 
-interface StepConstructor {
-    new(stepInit: any, children: ScenarioStep[], constraints: Constraint<unknown>[]): ScenarioStep;
+interface StepConstructor<T> {
+    new(stepInit: any, children: ScenarioStep[], constraints: Constraint<unknown>[]): T;
 }
 
-const stepConstructors = new Map<string, StepConstructor>()
-stepConstructors.set('Class', ClassStep)
-stepConstructors.set('Link', LinkStep)
-stepConstructors.set('Property', PropertyStep)
-stepConstructors.set('ResponseStatus', StatusStep)
-stepConstructors.set('ResponseHeader', HeaderStep)
-stepConstructors.set('Invocation', InvocationStep)
-stepConstructors.set('Follow', FollowStep)
-stepConstructors.set('Operation', OperationStep)
-stepConstructors.set('Identifier', IdentifierStep)
+const stepConstructors = new Map<string, StepConstructor<RuntimeStep>>()
+function registerStep<T> (name: string, ctor: StepConstructor<ScenarioStep>) {
+    stepConstructors.set(name, SpyMixin(ctor))
+}
 
-function create (step: StepDescription): ScenarioStep {
+registerStep('Class', ClassStep)
+registerStep('Link', LinkStep)
+registerStep('Property', PropertyStep)
+registerStep('ResponseStatus', StatusStep)
+registerStep('ResponseHeader', HeaderStep)
+registerStep('Invocation', InvocationStep)
+registerStep('Follow', FollowStep)
+registerStep('Operation', OperationStep)
+registerStep('Identifier', IdentifierStep)
+
+function create (step: StepDescription): RuntimeStep {
     const children = (step.children || []).map(create)
     const constraints = (step.constraints || []).map(createConstraint)
 
