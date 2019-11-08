@@ -1,6 +1,6 @@
 {
   "name": "hydra-validator",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "description": "CLI tool to run checks against a Hydra API",
   "main": "index.js",
   "bin": {
@@ -44,7 +44,7 @@
     "eslint": "^5.16.0",
     "eslint-plugin-jest": "^22.5.1",
     "hydra-validator-analyse": "^0.1.6",
-    "hydra-validator-e2e": "^0.5.1",
+    "hydra-validator-e2e": "^0.6.0",
     "isomorphic-fetch": "^2.2.1",
     "jest": "^24.7.1",
     "lint-staged": "^8.2.1",

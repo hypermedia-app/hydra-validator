@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.6.0](https://github.com/hypermedia-app/hydra-validator/compare/hydra-validator-e2e@0.5.1...hydra-validator-e2e@0.6.0) (2019-11-08)
+
+
+### Features
+
+* add strict option to verify all steps have been visited ([#48](https://github.com/hypermedia-app/hydra-validator/issues/48)) ([34dc650](https://github.com/hypermedia-app/hydra-validator/commit/34dc650))
+
+
+
+
+
 ## [0.5.1](https://github.com/hypermedia-app/hydra-validator/compare/hydra-validator-e2e@0.5.0...hydra-validator-e2e@0.5.1) (2019-10-31)
 
 **Note:** Version bump only for package hydra-validator-e2e
