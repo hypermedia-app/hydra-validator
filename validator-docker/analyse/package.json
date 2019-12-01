@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "hydra-validator": "^1.0.11",
+    "hydra-validator-analyse": "^0.1.6"
+  }
+}
