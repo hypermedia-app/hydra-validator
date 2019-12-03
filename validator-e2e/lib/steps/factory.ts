@@ -22,10 +22,6 @@ export type RuntimeStep = ScenarioStep & {
     visited: boolean;
 }
 
-export interface ApiTestScenarios {
-    steps: RuntimeStep[];
-}
-
 interface StepConstructor<T> {
     new(stepInit: any, children: ScenarioStep[], constraints: Constraint<unknown>[]): T;
 }
@@ -57,6 +53,6 @@ function create (step: StepDescription): RuntimeStep {
     throw new Error(`Unexpected step ${step.type}`)
 }
 
-export default function (scenarios: ApiTestScenarios) {
-    return scenarios.steps.map(step => create(step as any))
+export default function (steps: any[]): RuntimeStep[] {
+    return steps.map(step => create(step))
 }

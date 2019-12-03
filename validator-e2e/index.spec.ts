@@ -39,6 +39,7 @@ describe('validator-e2e', () => {
         it('sets base path', async () => {
             // given
             (docsLoader.load as any).mockImplementationOnce(() => ({}))
+            ;(createSteps as any).mockReturnValue({ steps: [{}, {}, {}] })
 
             // when
             await check('urn:irrelevant', {
@@ -73,7 +74,7 @@ describe('validator-e2e', () => {
 
         it('passes the loaded response to response checks', async () => {
             // given
-            (docsLoader.load as any).mockReturnValue({
+            (docsLoader.load as any).mockReturnValueOnce({
                 steps: [],
             })
             jest.spyOn(responseChecks, 'getUrlRunner')
@@ -87,6 +88,26 @@ describe('validator-e2e', () => {
 
             // then
             expect(responseChecks.getUrlRunner).toHaveBeenCalledWith('urn:irrelevant')
+        })
+
+        it('appends entrypoint path to the base URL', async () => {
+            // given
+            (docsLoader.load as any).mockReturnValueOnce({
+                entrypoint: 'some/resource',
+                steps: [],
+            })
+            ;(createSteps as any).mockReturnValue([{}, {}, {}])
+            jest.spyOn(responseChecks, 'getUrlRunner')
+
+            // when
+            await check('http://base.url/api/', {
+                docs: '/no/such/file',
+                cwd: '/',
+                strict: false,
+            }).call(context)
+
+            // then
+            expect(responseChecks.getUrlRunner).toHaveBeenCalledWith('http://base.url/api/some/resource')
         })
     })
 })

@@ -8,10 +8,13 @@ import { verifyAllScenariosExecuted } from './lib/strictRunVerification'
 
 export function check (url: string, { docs, cwd, strict }: E2eOptions): checkChain<E2eContext> {
     const docsPath = join(cwd, docs)
-    let apiTestSettings: RuntimeStep[]
+    let steps: RuntimeStep[]
+    let resourcePath: string
 
     try {
-        apiTestSettings = createSteps(load(docsPath))
+        const scenario = load(docsPath)
+        steps = createSteps(scenario.steps)
+        resourcePath = scenario.entrypoint || ''
     } catch (e) {
         return () => ({
             result: Result.Failure('Failed to load test scenarios', e),
@@ -19,13 +22,13 @@ export function check (url: string, { docs, cwd, strict }: E2eOptions): checkCha
     }
 
     return async function tryFetch (this: E2eContext) {
-        this.scenarios = apiTestSettings
+        this.scenarios = steps
         this.basePath = dirname(docsPath)
 
         return {
             nextChecks: [
-                getUrlRunner(url),
-                verifyAllScenariosExecuted(strict, apiTestSettings),
+                getUrlRunner(url + resourcePath),
+                verifyAllScenariosExecuted(strict, steps),
             ],
             sameLevel: true,
         }
