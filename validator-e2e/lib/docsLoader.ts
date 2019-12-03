@@ -1,6 +1,11 @@
 import { readFileSync, statSync } from 'fs'
 
-export function load (docsPath: string) {
+interface ScenarioJson {
+    entrypoint?: string;
+    steps: unknown[];
+}
+
+export function load (docsPath: string): ScenarioJson {
     const docsFileStats = statSync(docsPath)
     if (!docsFileStats.isFile()) {
         throw new Error()
