@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.7.0](https://github.com/hypermedia-app/hydra-validator/compare/hydra-validator-e2e@0.6.0...hydra-validator-e2e@0.7.0) (2019-12-03)
+
+
+### Features
+
+* append to entrypoint to base URI ([acb8fe1](https://github.com/hypermedia-app/hydra-validator/commit/acb8fe1))
+
+
+
+
+
 # [0.6.0](https://github.com/hypermedia-app/hydra-validator/compare/hydra-validator-e2e@0.5.1...hydra-validator-e2e@0.6.0) (2019-11-08)
 
 
