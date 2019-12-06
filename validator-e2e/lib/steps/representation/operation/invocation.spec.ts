@@ -13,7 +13,7 @@ describe('Invoke block', () => {
         context = {
             scenarios: [],
             basePath: '/some/path/with/tests',
-        }
+        } as any
     })
 
     it('invokes operation with provided headers', async () => {
@@ -35,10 +35,65 @@ describe('Invoke block', () => {
 
         // then
         expect(operation.invoke).toHaveBeenCalledWith(
-            'Test', {
+            'Test', new Headers({
                 'content-type': 'text/csv',
                 'accept': 'application/rdf+xml',
-            })
+            }))
+    })
+
+    it('invokes operation with default headers', async () => {
+        // given
+        const step = new InvocationStep({
+            body: 'Test',
+        }, [ ])
+        const operation = {
+            invoke: jest.fn(),
+        }
+        context.headers = new Headers({
+            'Content-Type': 'text/csv',
+            'accept': 'application/rdf+xml',
+        })
+
+        // when
+        const execute = step.getRunner(operation as any)
+        await execute.call(context)
+
+        // then
+        expect(operation.invoke).toHaveBeenCalledWith(
+            'Test', new Headers({
+                'content-type': 'text/csv',
+                'accept': 'application/rdf+xml',
+            }))
+    })
+
+    it('invokes operation with default headers merged with invocation headers', async () => {
+        // given
+        const step = new InvocationStep({
+            body: 'Test',
+            headers: {
+                'User-Agent': 'curl',
+                'Content-Type': 'text/csv',
+            },
+        }, [ ])
+        const operation = {
+            invoke: jest.fn(),
+        }
+        context.headers = new Headers({
+            'Content-Type': 'application/ld+json',
+            'accept': 'application/rdf+xml',
+        })
+
+        // when
+        const execute = step.getRunner(operation as any)
+        await execute.call(context)
+
+        // then
+        expect(operation.invoke).toHaveBeenCalledWith(
+            'Test', new Headers({
+                'User-Agent': 'curl',
+                'content-type': 'text/csv',
+                'accept': 'application/rdf+xml',
+            }))
     })
 
     it('resolves relative path for referenced body', async () => {
@@ -124,6 +179,6 @@ describe('Invoke block', () => {
         await execute.call(context)
 
         // then
-        expect(operation.invoke).toHaveBeenCalledWith('', {})
+        expect(operation.invoke).toHaveBeenCalledWith('', new Headers({}))
     })
 })

@@ -1,7 +1,8 @@
 import { readFileSync, statSync } from 'fs'
 
-interface ScenarioJson {
+export interface ScenarioJson {
     entrypoint?: string;
+    defaultHeaders?: Record<string, string[]>;
     steps: unknown[];
 }
 

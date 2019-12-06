@@ -51,12 +51,21 @@ export class InvocationStep extends ScenarioStep {
                     }
                 }
             }
-            const headers = [...step.headers.entries()].reduce((obj, [header, value]) => {
-                return {
-                    ...obj,
-                    [header]: value,
-                }
-            }, {})
+            const headers = [...step.headers.entries()].reduce((headers, [header, value]) => {
+                headers.set(header, value)
+                return headers
+            }, new Headers())
+
+            if (this.headers) {
+                this.headers.forEach((value, name) => {
+                    console.log(value, name)
+
+                    if (!headers.has(name)) {
+                        console.log(`appending`)
+                        headers.append(name, value)
+                    }
+                })
+            }
 
             const response: IHydraResponse = await operation.invoke(body, headers)
 
