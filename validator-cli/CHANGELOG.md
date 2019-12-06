@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.1.0](https://github.com/hypermedia-app/hydra-validator/compare/hydra-validator@1.0.12...hydra-validator@1.1.0) (2019-12-06)
+
+
+### Features
+
+* apply default scenario headers when performing requests ([db260d8](https://github.com/hypermedia-app/hydra-validator/commit/db260d8))
+
+
+
+
+
 ## [1.0.12](https://github.com/hypermedia-app/hydra-validator/compare/hydra-validator@1.0.11...hydra-validator@1.0.12) (2019-12-03)
 
 **Note:** Version bump only for package hydra-validator

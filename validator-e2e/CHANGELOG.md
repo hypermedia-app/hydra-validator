@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.8.0](https://github.com/hypermedia-app/hydra-validator/compare/hydra-validator-e2e@0.7.0...hydra-validator-e2e@0.8.0) (2019-12-06)
+
+
+### Bug Fixes
+
+* make the log on E2eContext optional ([40b72a8](https://github.com/hypermedia-app/hydra-validator/commit/40b72a8))
+
+
+### Features
+
+* apply default scenario headers when performing requests ([db260d8](https://github.com/hypermedia-app/hydra-validator/commit/db260d8))
+
+
+
+
+
 # [0.7.0](https://github.com/hypermedia-app/hydra-validator/compare/hydra-validator-e2e@0.6.0...hydra-validator-e2e@0.7.0) (2019-12-03)
 
 
