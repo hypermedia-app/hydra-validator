@@ -2,10 +2,14 @@ language: node_js
 node_js:
 - "11"
 - "10"
+- "13"
 
 before_install:
 - export CXX="g++-4.9" CC="gcc-4.9"
 - npm install -g codecov
+
+after_script:
+  - lerna run prepublishOnly
 
 after_success:
   - codecov
