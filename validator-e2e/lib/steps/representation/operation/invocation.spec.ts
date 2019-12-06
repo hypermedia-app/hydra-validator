@@ -13,7 +13,7 @@ describe('Invoke block', () => {
         context = {
             scenarios: [],
             basePath: '/some/path/with/tests',
-        } as any
+        }
     })
 
     it('invokes operation with provided headers', async () => {

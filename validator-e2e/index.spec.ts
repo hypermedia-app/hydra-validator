@@ -15,7 +15,7 @@ describe('validator-e2e', () => {
         context = {
             scenarios: [],
             basePath: '',
-        } as any
+        }
     })
 
     describe('factory method', () => {
