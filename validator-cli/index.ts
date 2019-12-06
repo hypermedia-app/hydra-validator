@@ -7,7 +7,7 @@ import deps from 'matchdep'
 import debug from 'debug'
 import { ResultKind } from 'hydra-validator-core'
 
-type Loggers = { [ key in ResultKind ]: (...args: unknown[]) => unknown }
+export type Loggers = { [ key in ResultKind ]: (...args: unknown[]) => unknown }
 const loggers: Loggers = {
     success: debug('SUCCESS'),
     informational: debug('INFO'),
@@ -61,7 +61,7 @@ for (let plugin of plugins) {
         Promise.resolve()
             .then(async () => {
                 let unsucessfulCount = 0
-                const firstCheck = check(url, { ...commandParams, cwd: process.cwd() })
+                const firstCheck = check(url, { ...commandParams, cwd: process.cwd(), log: loggers })
 
                 const checkGenerator = runChecks(firstCheck)
 

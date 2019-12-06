@@ -71,8 +71,12 @@ function processResponse (response: IHydraResponse, steps: ScenarioStep[], const
     }
 }
 
-function dereferenceAndProcess (id: string, steps: ScenarioStep[], constraints: Constraint[]) {
-    return Hydra.loadResource(id)
+function dereferenceAndProcess (id: string, steps: ScenarioStep[], constraints: Constraint[], headers: HeadersInit | null) {
+    const loadResource = headers
+        ? Hydra.loadResource(id, headers)
+        : Hydra.loadResource(id)
+
+    return loadResource
         .then(response => {
             return processResponse(response, steps, constraints)
         })
@@ -97,7 +101,7 @@ export function getUrlRunner (id: string, currentStep?: ScenarioStep) {
     return async function checkResourceResponse (this: E2eContext) {
         const steps = [...childSteps, ...this.scenarios]
 
-        return dereferenceAndProcess(id, steps, constraints)
+        return dereferenceAndProcess(id, steps, constraints, this.headers || null)
     }
 }
 
@@ -112,7 +116,7 @@ export function getResponseRunner (
 
         if (typeof resourceOrResponse === 'object') {
             if ('id' in resourceOrResponse) {
-                return dereferenceAndProcess((resourceOrResponse as HydraResource).id, steps, constraints)
+                return dereferenceAndProcess((resourceOrResponse as HydraResource).id, steps, constraints, this.headers || null)
             }
             return processResponse(resourceOrResponse, steps, constraints)
         }

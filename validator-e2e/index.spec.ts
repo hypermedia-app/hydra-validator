@@ -15,7 +15,7 @@ describe('validator-e2e', () => {
         context = {
             scenarios: [],
             basePath: '',
-        }
+        } as any
     })
 
     describe('factory method', () => {
@@ -108,6 +108,30 @@ describe('validator-e2e', () => {
 
             // then
             expect(responseChecks.getUrlRunner).toHaveBeenCalledWith('http://base.url/api/some/resource')
+        })
+
+        it('sets default headers to context', async () => {
+            // given
+            (docsLoader.load as any).mockReturnValueOnce({
+                defaultHeaders: {
+                    'Authorization': ['Basic 12345=='],
+                },
+                steps: [],
+            })
+            ;(createSteps as any).mockReturnValue([{}, {}, {}])
+            jest.spyOn(responseChecks, 'getUrlRunner')
+
+            // when
+            await check('http://base.url/api/', {
+                docs: '/no/such/file',
+                cwd: '/',
+                strict: false,
+            }).call(context)
+
+            // then
+            expect(context.headers).toMatchObject(new Headers({
+                Authorization: 'Basic 12345==',
+            }))
         })
     })
 })

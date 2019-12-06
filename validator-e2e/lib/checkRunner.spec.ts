@@ -43,6 +43,30 @@ describe('processResponse', () => {
             expect(loadResource).toHaveBeenCalledWith('urn:resource:id')
         })
 
+        it('passes default headers to request', async () => {
+            // given
+            const step: ScenarioStep = {
+                children: [ ],
+                constraints: [],
+            } as any
+            const runner = getUrlRunner('urn:resource:id', step)
+            loadResource.mockResolvedValue({
+                xhr: {
+                    url: 'x:y:z',
+                },
+            })
+            const headersInit = new Headers({
+                'Authorization': 'Bearer jwt',
+            })
+            context.headers = headersInit
+
+            // when
+            await runner.call(context)
+
+            // then
+            expect(loadResource).toHaveBeenCalledWith('urn:resource:id', headersInit)
+        })
+
         it('fails when request fails', async () => {
             // given
             loadResource.mockRejectedValue(new Error('Failed to dereference link'))
