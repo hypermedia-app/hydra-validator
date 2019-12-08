@@ -3,7 +3,7 @@ import './validator-shell'
 import * as item from './views/icon-items'
 
 class HydraValidatorUi extends LitElement {
-  static get styles () {
+  static get styles() {
     return css`
 validator-shell {
   max-width: 750px;
@@ -11,7 +11,7 @@ validator-shell {
 }`
   }
 
-  render () {
+  render() {
     return html`
 <validator-shell use-hash-urls>
   <h1>Hydra validator</h1>

@@ -12,17 +12,17 @@ import fireNavigation from 'ld-navigation/fireNavigation'
 import './views'
 import { css } from 'lit-element'
 
-function navigate (e) {
+function navigate(e) {
   fireNavigation(this, e.target.url)
 }
 
 export default class ValidatorShell extends HydrofoilShell {
-  constructor () {
+  constructor() {
     super()
     this.url = ''
   }
 
-  static get styles () {
+  static get styles() {
     return css`
         app-toolbar, ::slotted(app-toolbar) {
           background: var(--paper-indigo-400);
@@ -30,12 +30,12 @@ export default class ValidatorShell extends HydrofoilShell {
         }`
   }
 
-  home () {
+  home() {
     this.url = ''
     this.state = 'ready'
   }
 
-  renderTop () {
+  renderTop() {
     return html`
 <app-header-layout>
     <app-header slot="header" fixed condenses effects="waterfall">
@@ -52,7 +52,7 @@ export default class ValidatorShell extends HydrofoilShell {
 </app-header-layout>`
   }
 
-  renderMain () {
+  renderMain() {
     if (this.state === 'ready') {
       return html`${this.renderTop()}<slot></slot>`
     }
@@ -66,10 +66,10 @@ ${this.renderTop()}
 ${super.renderMain()}`
   }
 
-  async loadResourceInternal (url) {
+  async loadResourceInternal(url) {
     const [runChecks, firstCheck] = await Promise.all([
             import('hydra-validator-core/run-checks'),
-            import('hydra-validator-analyse/checks/url-resolvable')
+            import('hydra-validator-analyse/checks/url-resolvable'),
     ])
 
     return runChecks.default(firstCheck.default(url))

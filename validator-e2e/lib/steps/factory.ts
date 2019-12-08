@@ -13,22 +13,22 @@ import { IdentifierStep } from './representation/identifier'
 import { SpyMixin } from './StepSpyMixin'
 
 interface StepDescription {
-    type: string;
-    children: StepDescription[];
-    constraints?: StepConstraintInit[];
+  type: string
+  children: StepDescription[]
+  constraints?: StepConstraintInit[]
 }
 
 export type RuntimeStep = ScenarioStep & {
-    visited: boolean;
+  visited: boolean
 }
 
 interface StepConstructor<T> {
-    new(stepInit: any, children: ScenarioStep[], constraints: Constraint<unknown>[]): T;
+  new(stepInit: any, children: ScenarioStep[], constraints: Constraint<unknown>[]): T
 }
 
 const stepConstructors = new Map<string, StepConstructor<RuntimeStep>>()
-function registerStep<T> (name: string, ctor: StepConstructor<ScenarioStep>) {
-    stepConstructors.set(name, SpyMixin(ctor))
+function registerStep<T>(name: string, ctor: StepConstructor<ScenarioStep>) {
+  stepConstructors.set(name, SpyMixin(ctor))
 }
 
 registerStep('Class', ClassStep)
@@ -41,18 +41,18 @@ registerStep('Follow', FollowStep)
 registerStep('Operation', OperationStep)
 registerStep('Identifier', IdentifierStep)
 
-function create (step: StepDescription): RuntimeStep {
-    const children = (step.children || []).map(create)
-    const constraints = (step.constraints || []).map(createConstraint)
+function create(step: StepDescription): RuntimeStep {
+  const children = (step.children || []).map(create)
+  const constraints = (step.constraints || []).map(createConstraint)
 
-    const Step = stepConstructors.get(step.type)
-    if (Step) {
-        return new Step(step, children, constraints)
-    }
+  const Step = stepConstructors.get(step.type)
+  if (Step) {
+    return new Step(step, children, constraints)
+  }
 
-    throw new Error(`Unexpected step ${step.type}`)
+  throw new Error(`Unexpected step ${step.type}`)
 }
 
 export default function (steps: any[]): RuntimeStep[] {
-    return steps.map(step => create(step))
+  return steps.map(step => create(step))
 }

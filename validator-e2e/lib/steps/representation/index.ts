@@ -6,29 +6,29 @@ import { getResourceRunner } from '../../checkRunner'
 import { Constraint } from '../constraints/Constraint'
 
 interface ClassStepInit {
-    classId: string;
+  classId: string
 }
 
 export class ClassStep extends ScenarioStep {
-    public classId: string
+  public classId: string
 
-    public constructor (init: ClassStepInit, children: ScenarioStep[], constraints: Constraint[]) {
-        super(children, constraints)
+  public constructor(init: ClassStepInit, children: ScenarioStep[], constraints: Constraint[]) {
+    super(children, constraints)
 
-        this.classId = init.classId
+    this.classId = init.classId
+  }
+
+  protected appliesToInternal(obj: HydraResource): boolean {
+    return 'id' in obj && obj.types.contains(this.classId)
+  }
+
+  public getRunner(resource: HydraResource): checkChain<E2eContext> {
+    const step = this
+
+    return function checkRepresentation() {
+      return {
+        nextChecks: [ getResourceRunner(resource, step) ],
+      }
     }
-
-    protected appliesToInternal (obj: HydraResource): boolean {
-        return 'id' in obj && obj.types.contains(this.classId)
-    }
-
-    public getRunner (resource: HydraResource): checkChain<E2eContext> {
-        const step = this
-
-        return function checkRepresentation () {
-            return {
-                nextChecks: [ getResourceRunner(resource, step) ],
-            }
-        }
-    }
+  }
 }

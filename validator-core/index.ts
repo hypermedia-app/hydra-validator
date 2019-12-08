@@ -2,92 +2,92 @@ export type ResultKind = 'success' | 'failure' | 'informational' | 'warning' | '
 
 // eslint-disable-next-line @typescript-eslint/interface-name-prefix
 export interface IResult {
-    description: string;
-    status: ResultKind;
+  description: string
+  status: ResultKind
 }
 
 class ErrorResult implements IResult {
-    public description: string;
-    public status: ResultKind;
-    public details: string | Error
+  public description: string;
+  public status: ResultKind;
+  public details: string | Error
 
-    public constructor (description: string, details: string | Error) {
-        this.status = 'error'
-        this.description = description
-        this.details = details
-    }
+  public constructor(description: string, details: string | Error) {
+    this.status = 'error'
+    this.description = description
+    this.details = details
+  }
 }
 
 class Failure implements IResult {
-    public details: string | Error
-    public description: string;
-    public status: ResultKind;
+  public details: string | Error
+  public description: string;
+  public status: ResultKind;
 
-    public constructor (kind: FailureKind, description: string, details: string | Error = '') {
-        this.description = description
-        this.status = 'failure'
-        this.details = details
-    }
+  public constructor(kind: FailureKind, description: string, details: string | Error = '') {
+    this.description = description
+    this.status = 'failure'
+    this.details = details
+  }
 }
 
 export class Result implements IResult {
-    public description: string
-    public status: ResultKind
-    public details?: string
+  public description: string
+  public status: ResultKind
+  public details?: string
 
-    protected constructor (descrition: string, status: ResultKind, details?: string) {
-        this.description = descrition
-        this.status = status
-        this.details = details
-    }
+  protected constructor(descrition: string, status: ResultKind, details?: string) {
+    this.description = descrition
+    this.status = status
+    this.details = details
+  }
 
-    public static Success (description: string = '', details?: string) {
-        return new Result(description, 'success', details)
-    }
+  public static Success(description: string = '', details?: string) {
+    return new Result(description, 'success', details)
+  }
 
-    public static Failure (reason: string, details?: string | Error): IResult {
-        return new Failure('failed', reason, details)
-    }
+  public static Failure(reason: string, details?: string | Error): IResult {
+    return new Failure('failed', reason, details)
+  }
 
-    public static Warning (description: string, details?: string) {
-        return new Result(description, 'warning', details)
-    }
+  public static Warning(description: string, details?: string) {
+    return new Result(description, 'warning', details)
+  }
 
-    public static Informational (description: string, details?: string) {
-        return new Result(description, 'informational', details)
-    }
+  public static Informational(description: string, details?: string) {
+    return new Result(description, 'informational', details)
+  }
 
-    public static Error (description: string, details: string | Error = ''): IResult {
-        return new ErrorResult(description, details)
-    }
+  public static Error(description: string, details: string | Error = ''): IResult {
+    return new ErrorResult(description, details)
+  }
 }
 
 type FailureKind = 'failed' | 'inconclusive'
 
 export interface Context {
-    [s: string]: any;
+  [s: string]: any
 }
 
 /**
  * Return type of check functions. Either results, or result will be reported
  */
 export interface CheckResult<T extends Context = Context> {
-    /**
+  /**
      * Results to be reported
      */
-    result?: IResult;
-    /**
+  result?: IResult
+  /**
      * Results to be reported
      */
-    results?: IResult[];
-    /**
+  results?: IResult[]
+  /**
      * Checks to add to queue
      */
-    nextChecks?: checkChain<T>[];
-    /**
+  nextChecks?: checkChain<T>[]
+  /**
      * If true, does not nest nextChecks
      */
-    sameLevel?: boolean;
+  sameLevel?: boolean
 }
 
 /**

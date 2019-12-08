@@ -4,69 +4,69 @@ import { E2eContext } from '../../../../types'
 jest.mock('../../../checkRunner')
 
 describe('Identifier', () => {
-    let context: E2eContext
+  let context: E2eContext
 
-    it('applies to identified resource', () => {
-        // given
-        const step = new IdentifierStep({
-            value: 'http://foo/bar',
-        })
-
-        // when
-        const applies = step.appliesTo({
-            id: 'whatever',
-        } as any)
-
-        // then
-        expect(applies).toBeTruthy()
+  it('applies to identified resource', () => {
+    // given
+    const step = new IdentifierStep({
+      value: 'http://foo/bar',
     })
 
-    it('returns success when the resource identifier matches', async () => {
-        // given
-        const step = new IdentifierStep({
-            value: 'http://foo/bar',
-        })
-        const resource = {
-            id: 'http://foo/bar',
-        }
+    // when
+    const applies = step.appliesTo({
+      id: 'whatever',
+    } as any)
 
-        // when
-        const execute = step.getRunner(resource as any)
-        const { result } = await execute.call(context)
+    // then
+    expect(applies).toBeTruthy()
+  })
 
-        // then
-        expect(result!.status).toBe('success')
+  it('returns success when the resource identifier matches', async () => {
+    // given
+    const step = new IdentifierStep({
+      value: 'http://foo/bar',
     })
+    const resource = {
+      id: 'http://foo/bar',
+    }
 
-    it('returns failure when the resource has different identifier', async () => {
-        // given
-        const step = new IdentifierStep({
-            value: 'http://foo/bar',
-        })
-        const resource = {
-            id: 'http://something/else',
-        }
+    // when
+    const execute = step.getRunner(resource as any)
+    const { result } = await execute.call(context)
 
-        // when
-        const execute = step.getRunner(resource as any)
-        const { result } = await execute.call(context)
+    // then
+    expect(result!.status).toBe('success')
+  })
 
-        // then
-        expect(result!.status).toBe('failure')
+  it('returns failure when the resource has different identifier', async () => {
+    // given
+    const step = new IdentifierStep({
+      value: 'http://foo/bar',
     })
+    const resource = {
+      id: 'http://something/else',
+    }
 
-    it('returns failure when resource is not an object', async () => {
-        // given
-        const step = new IdentifierStep({
-            value: 'http://foo/bar',
-        })
-        const resource = 'foo bar'
+    // when
+    const execute = step.getRunner(resource as any)
+    const { result } = await execute.call(context)
 
-        // when
-        const execute = step.getRunner(resource as any)
-        const { result } = await execute.call(context)
+    // then
+    expect(result!.status).toBe('failure')
+  })
 
-        // then
-        expect(result!.status).toBe('failure')
+  it('returns failure when resource is not an object', async () => {
+    // given
+    const step = new IdentifierStep({
+      value: 'http://foo/bar',
     })
+    const resource = 'foo bar'
+
+    // when
+    const execute = step.getRunner(resource as any)
+    const { result } = await execute.call(context)
+
+    // then
+    expect(result!.status).toBe('failure')
+  })
 })

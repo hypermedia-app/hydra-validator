@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "pretest": "eslint --ext ts . --quiet",
+    "eslint:fix": "eslint --ext ts . --quiet --fix",
     "test": "jest",
     "prepublishOnly": "tsc",
     "precommit": "lint-staged"
@@ -29,6 +30,7 @@
     "@babel/plugin-proposal-object-rest-spread": "^7.5.5",
     "@babel/preset-env": "^7.5.5",
     "@babel/preset-typescript": "^7.3.3",
+    "@tpluscode/eslint-config": "^0.0.4",
     "@types/jest": "^24.0.12",
     "@types/node": "^11.13.9",
     "@types/node-fetch": "^2.3.3",

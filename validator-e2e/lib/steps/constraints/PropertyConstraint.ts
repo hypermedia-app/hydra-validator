@@ -3,23 +3,23 @@ import { HydraResource } from 'alcaeus/types/Resources'
 import { StepConstraintInit } from './'
 
 export class PropertyConstraint extends RepresentationConstraint {
-    private readonly __propertyName: string
+  private readonly __propertyName: string
 
-    public constructor (init: StepConstraintInit, predicate: (value: any) => boolean, negated: boolean) {
-        super(predicate, negated)
+  public constructor(init: StepConstraintInit, predicate: (value: any) => boolean, negated: boolean) {
+    super(predicate, negated)
 
-        if (!init.left) {
-            throw new Error('Missing property name')
-        }
-
-        this.__propertyName = init.left
+    if (!init.left) {
+      throw new Error('Missing property name')
     }
 
-    protected getValue (subject: HydraResource) {
-        return subject[this.__propertyName]
-    }
+    this.__propertyName = init.left
+  }
 
-    protected sanityCheckValue (value?: unknown): boolean {
-        return !!value
-    }
+  protected getValue(subject: HydraResource) {
+    return subject[this.__propertyName]
+  }
+
+  protected sanityCheckValue(value?: unknown): boolean {
+    return !!value
+  }
 }

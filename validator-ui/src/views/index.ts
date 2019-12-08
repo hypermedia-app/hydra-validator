@@ -29,8 +29,4 @@ ViewTemplates.default.when
 ViewTemplates.default.when
   .scopeMatches('result')
   .valueMatches(v => v.result && (v.result.status === 'failure' || v.result.status === 'error'))
-  .renders(check => {
-    console.error(check.result.details)
-
-    return item.failure(check.result.description, check.result.details)
-  })
+  .renders(check => item.failure(check.result.description, check.result.details))

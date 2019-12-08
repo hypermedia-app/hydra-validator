@@ -8,177 +8,177 @@ jest.mock('fs')
 jest.mock('../../../checkRunner')
 
 describe('Invoke block', () => {
-    let context: E2eContext
-    beforeEach(() => {
-        context = {
-            scenarios: [],
-            basePath: '/some/path/with/tests',
-        }
+  let context: E2eContext
+  beforeEach(() => {
+    context = {
+      scenarios: [],
+      basePath: '/some/path/with/tests',
+    }
+  })
+
+  it('invokes operation with provided headers', async () => {
+    // given
+    const step = new InvocationStep({
+      body: 'Test',
+      headers: {
+        'Content-Type': 'text/csv',
+        'accept': 'application/rdf+xml',
+      },
+    }, [ ])
+    const operation = {
+      invoke: jest.fn(),
+    }
+
+    // when
+    const execute = step.getRunner(operation as any)
+    await execute.call(context)
+
+    // then
+    expect(operation.invoke).toHaveBeenCalledWith(
+      'Test', new Headers({
+        'content-type': 'text/csv',
+        'accept': 'application/rdf+xml',
+      }))
+  })
+
+  it('invokes operation with default headers', async () => {
+    // given
+    const step = new InvocationStep({
+      body: 'Test',
+    }, [ ])
+    const operation = {
+      invoke: jest.fn(),
+    }
+    context.headers = new Headers({
+      'Content-Type': 'text/csv',
+      'accept': 'application/rdf+xml',
     })
 
-    it('invokes operation with provided headers', async () => {
-        // given
-        const step = new InvocationStep({
-            body: 'Test',
-            headers: {
-                'Content-Type': 'text/csv',
-                'accept': 'application/rdf+xml',
-            },
-        }, [ ])
-        const operation = {
-            invoke: jest.fn(),
-        }
+    // when
+    const execute = step.getRunner(operation as any)
+    await execute.call(context)
 
-        // when
-        const execute = step.getRunner(operation as any)
-        await execute.call(context)
+    // then
+    expect(operation.invoke).toHaveBeenCalledWith(
+      'Test', new Headers({
+        'content-type': 'text/csv',
+        'accept': 'application/rdf+xml',
+      }))
+  })
 
-        // then
-        expect(operation.invoke).toHaveBeenCalledWith(
-            'Test', new Headers({
-                'content-type': 'text/csv',
-                'accept': 'application/rdf+xml',
-            }))
+  it('invokes operation with default headers merged with invocation headers', async () => {
+    // given
+    const step = new InvocationStep({
+      body: 'Test',
+      headers: {
+        'User-Agent': 'curl',
+        'Content-Type': 'text/csv',
+      },
+    }, [ ])
+    const operation = {
+      invoke: jest.fn(),
+    }
+    context.headers = new Headers({
+      'Content-Type': 'application/ld+json',
+      'accept': 'application/rdf+xml',
     })
 
-    it('invokes operation with default headers', async () => {
-        // given
-        const step = new InvocationStep({
-            body: 'Test',
-        }, [ ])
-        const operation = {
-            invoke: jest.fn(),
-        }
-        context.headers = new Headers({
-            'Content-Type': 'text/csv',
-            'accept': 'application/rdf+xml',
-        })
+    // when
+    const execute = step.getRunner(operation as any)
+    await execute.call(context)
 
-        // when
-        const execute = step.getRunner(operation as any)
-        await execute.call(context)
+    // then
+    expect(operation.invoke).toHaveBeenCalledWith(
+      'Test', new Headers({
+        'User-Agent': 'curl',
+        'content-type': 'text/csv',
+        'accept': 'application/rdf+xml',
+      }))
+  })
 
-        // then
-        expect(operation.invoke).toHaveBeenCalledWith(
-            'Test', new Headers({
-                'content-type': 'text/csv',
-                'accept': 'application/rdf+xml',
-            }))
-    })
+  it('resolves relative path for referenced body', async () => {
+    // given
+    const step = new InvocationStep({
+      body: {
+        path: '../../body/data.csv',
+      },
+      headers: {
+        'Content-Type': 'text/csv',
+      },
+    }, [ ])
+    const operation = {
+      invoke: jest.fn(),
+    }
 
-    it('invokes operation with default headers merged with invocation headers', async () => {
-        // given
-        const step = new InvocationStep({
-            body: 'Test',
-            headers: {
-                'User-Agent': 'curl',
-                'Content-Type': 'text/csv',
-            },
-        }, [ ])
-        const operation = {
-            invoke: jest.fn(),
-        }
-        context.headers = new Headers({
-            'Content-Type': 'application/ld+json',
-            'accept': 'application/rdf+xml',
-        })
+    // when
+    const execute = step.getRunner(operation as any)
+    await execute.call(context)
 
-        // when
-        const execute = step.getRunner(operation as any)
-        await execute.call(context)
+    // then
+    expect(readFileSync).toHaveBeenCalledWith('/some/path/body/data.csv')
+  })
 
-        // then
-        expect(operation.invoke).toHaveBeenCalledWith(
-            'Test', new Headers({
-                'User-Agent': 'curl',
-                'content-type': 'text/csv',
-                'accept': 'application/rdf+xml',
-            }))
-    })
-
-    it('resolves relative path for referenced body', async () => {
-        // given
-        const step = new InvocationStep({
-            body: {
-                path: '../../body/data.csv',
-            },
-            headers: {
-                'Content-Type': 'text/csv',
-            },
-        }, [ ])
-        const operation = {
-            invoke: jest.fn(),
-        }
-
-        // when
-        const execute = step.getRunner(operation as any)
-        await execute.call(context)
-
-        // then
-        expect(readFileSync).toHaveBeenCalledWith('/some/path/body/data.csv')
-    })
-
-    it('returns error when body file fails to load', async () => {
-        // given
-        const step = new InvocationStep({
-            body: {
-                path: '../../body/data.csv',
-            },
-            headers: {
-                'Content-Type': 'text/csv',
-            },
-        }, [ ])
-        const operation = {
-            invoke: jest.fn(),
-        }
+  it('returns error when body file fails to load', async () => {
+    // given
+    const step = new InvocationStep({
+      body: {
+        path: '../../body/data.csv',
+      },
+      headers: {
+        'Content-Type': 'text/csv',
+      },
+    }, [ ])
+    const operation = {
+      invoke: jest.fn(),
+    }
         ;(readFileSync as any).mockImplementationOnce(() => {
-            throw new Error('Fail to open file')
-        })
-
-        // when
-        const execute = step.getRunner(operation as any)
-        const { result } = await execute.call(context)
-
-        // then
-        expect(result!.status).toBe('error')
+      throw new Error('Fail to open file')
     })
 
-    it('enqueues child steps and top level steps', async () => {
-        // given
-        const step = new InvocationStep({
-            body: 'Test',
-            headers: {
-                'Content-Type': 'text/csv',
-            },
-        }, [
-            new StepStub('child'),
-        ])
-        const operation = {
-            invoke: jest.fn(),
-        }
-        const response = {}
-        operation.invoke.mockReturnValue(response)
+    // when
+    const execute = step.getRunner(operation as any)
+    const { result } = await execute.call(context)
 
-        // when
-        const execute = step.getRunner(operation as any)
-        await execute.call(context)
+    // then
+    expect(result!.status).toBe('error')
+  })
 
-        // then
-        expect(getResponseRunner).toHaveBeenCalledWith(response, step)
-    })
+  it('enqueues child steps and top level steps', async () => {
+    // given
+    const step = new InvocationStep({
+      body: 'Test',
+      headers: {
+        'Content-Type': 'text/csv',
+      },
+    }, [
+      new StepStub('child'),
+    ])
+    const operation = {
+      invoke: jest.fn(),
+    }
+    const response = {}
+    operation.invoke.mockReturnValue(response)
 
-    it('invokes operation with empty body when not given', async () => {
-        // given
-        const step = new InvocationStep({}, [ ])
-        const operation = {
-            invoke: jest.fn(),
-        }
+    // when
+    const execute = step.getRunner(operation as any)
+    await execute.call(context)
 
-        // when
-        const execute = step.getRunner(operation as any)
-        await execute.call(context)
+    // then
+    expect(getResponseRunner).toHaveBeenCalledWith(response, step)
+  })
 
-        // then
-        expect(operation.invoke).toHaveBeenCalledWith('', new Headers({}))
-    })
+  it('invokes operation with empty body when not given', async () => {
+    // given
+    const step = new InvocationStep({}, [ ])
+    const operation = {
+      invoke: jest.fn(),
+    }
+
+    // when
+    const execute = step.getRunner(operation as any)
+    await execute.call(context)
+
+    // then
+    expect(operation.invoke).toHaveBeenCalledWith('', new Headers({}))
+  })
 })

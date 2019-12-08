@@ -1,26 +1,18 @@
 {
   "extends": [
-    "standard",
-    "plugin:@typescript-eslint/recommended",
+    "@tpluscode",
     "plugin:jest/recommended"
   ],
   "env": {
     "browser": true,
     "jest/globals": true
   },
-  "parser": "@typescript-eslint/parser",
   "parserOptions": {
-    "ecmaVersion": 2017,
-    "sourceType": "module"
+    "project": "./tsconfig.json"
   },
   "plugins": [
-    "@typescript-eslint/eslint-plugin",
     "jest"
   ],
-  "rules": {
-    "@typescript-eslint/explicit-function-return-type": 0,
-    "comma-dangle": ["error", "always-multiline"]
-  },
   "overrides": [
     {
       "files": ["*.spec.ts"],

@@ -8,58 +8,58 @@ jest.mock('./PropertyConstraint')
 jest.mock('./StatusConstraint')
 
 describe('factory', () => {
-    const emptyInit: StepConstraintInit = {} as any
+  const emptyInit: StepConstraintInit = {} as any
 
-    it('throws when type is unsupported', () => {
-        // given
-        const init = {
-            ...emptyInit,
-            constrain: 'Collection' as any,
-        }
+  it('throws when type is unsupported', () => {
+    // given
+    const init = {
+      ...emptyInit,
+      constrain: 'Collection' as any,
+    }
 
-        // then
-        expect(() => factory(init)).toThrow()
-    })
+    // then
+    expect(() => factory(init)).toThrow()
+  })
 
-    it('throws when type is falsy', () => {
-        // then
-        expect(() => factory(emptyInit)).toThrow()
-    })
+  it('throws when type is falsy', () => {
+    // then
+    expect(() => factory(emptyInit)).toThrow()
+  })
 
-    it('calls conditionFactory', () => {
-        // given
-        const init: StepConstraintInit = { ...emptyInit, constrain: 'Property' }
+  it('calls conditionFactory', () => {
+    // given
+    const init: StepConstraintInit = { ...emptyInit, constrain: 'Property' }
 
-        // when
-        factory(init)
+    // when
+    factory(init)
 
-        // then
-        expect(conditionFactory).toHaveBeenCalledWith(init)
-    })
+    // then
+    expect(conditionFactory).toHaveBeenCalledWith(init)
+  })
 
-    it('creates PropertyConstraint', () => {
-        // given
-        const init: StepConstraintInit = {
-            ...emptyInit,
-            constrain: 'Property',
-            left: 'prop-name',
-        }
+  it('creates PropertyConstraint', () => {
+    // given
+    const init: StepConstraintInit = {
+      ...emptyInit,
+      constrain: 'Property',
+      left: 'prop-name',
+    }
 
-        // when
-        factory(init)
+    // when
+    factory(init)
 
-        // then
-        expect(PropertyConstraint).toHaveBeenCalled()
-    })
+    // then
+    expect(PropertyConstraint).toHaveBeenCalled()
+  })
 
-    it('calls StatusConstraint', () => {
-        // given
-        const init: StepConstraintInit = { ...emptyInit, constrain: 'Status' }
+  it('calls StatusConstraint', () => {
+    // given
+    const init: StepConstraintInit = { ...emptyInit, constrain: 'Status' }
 
-        // when
-        factory(init)
+    // when
+    factory(init)
 
-        // then
-        expect(StatusConstraint).toHaveBeenCalled()
-    })
+    // then
+    expect(StatusConstraint).toHaveBeenCalled()
+  })
 })

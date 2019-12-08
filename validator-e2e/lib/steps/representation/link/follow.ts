@@ -4,52 +4,52 @@ import { getUrlRunner } from '../../../checkRunner'
 import { ScenarioStep } from '../../'
 
 interface FollowStepInit {
-    variable: string;
+  variable: string
 }
 
 export class FollowStep extends ScenarioStep {
-    public variable: string
+  public variable: string
 
-    public constructor (init: FollowStepInit, children: ScenarioStep[]) {
-        super(children)
+  public constructor(init: FollowStepInit, children: ScenarioStep[]) {
+    super(children)
 
-        this.variable = init.variable
-    }
+    this.variable = init.variable
+  }
 
-    public getRunner (obj: unknown, scope: Context) {
-        const step = this
-        return async function checkLink () {
-            if (step.executed) {
-                return {}
-            }
+  public getRunner(obj: unknown, scope: Context) {
+    const step = this
+    return async function checkLink() {
+      if (step.executed) {
+        return {}
+      }
 
-            const resourceId: string | unknown = scope[step.variable]
+      const resourceId: string | unknown = scope[step.variable]
 
-            if (typeof resourceId !== 'string') {
-                return {
-                    result: Result.Error(`Cannot fetch resource. Value of variable ${step.variable} must be a string`),
-                }
-            }
-
-            const result: IResult = resourceId
-                ? Result.Informational(`Fetching resource ${resourceId}`)
-                : Result.Failure(`Variable ${step.variable} not found`)
-
-            let nextChecks: checkChain<E2eContext>[] = []
-            if (result.status !== 'failure') {
-                nextChecks.push(getUrlRunner(resourceId, step))
-
-                step.markExecuted()
-            }
-
-            return {
-                result,
-                nextChecks,
-            }
+      if (typeof resourceId !== 'string') {
+        return {
+          result: Result.Error(`Cannot fetch resource. Value of variable ${step.variable} must be a string`),
         }
-    }
+      }
 
-    protected appliesToInternal (): boolean {
-        return true
+      const result: IResult = resourceId
+        ? Result.Informational(`Fetching resource ${resourceId}`)
+        : Result.Failure(`Variable ${step.variable} not found`)
+
+      let nextChecks: checkChain<E2eContext>[] = []
+      if (result.status !== 'failure') {
+        nextChecks.push(getUrlRunner(resourceId, step))
+
+        step.markExecuted()
+      }
+
+      return {
+        result,
+        nextChecks,
+      }
     }
+  }
+
+  protected appliesToInternal(): boolean {
+    return true
+  }
 }
