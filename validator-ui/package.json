@@ -21,17 +21,17 @@
     "@polymer/paper-icon-button": "^3.0.2",
     "@polymer/paper-input": "^3.0.2",
     "@polymer/paper-item": "^3.0.1",
-    "hydra-validator-analyse": "^0.1.6",
-    "hydra-validator-core": "^0.3.4",
+    "hydra-validator-analyse": "^0.1.7",
+    "hydra-validator-core": "^0.3.5",
     "ld-navigation": "^0.5.2",
     "lit-element": "^2.0.1",
     "lit-html": "^1.0.0"
   },
   "devDependencies": {
     "@open-wc/building-webpack": "^1.3.5",
+    "@tpluscode/eslint-config": "^0.0.4",
     "@typescript-eslint/eslint-plugin": "^2.10.0",
     "@typescript-eslint/parser": "^2.10.0",
-    "@tpluscode/eslint-config": "^0.0.4",
     "babel-eslint": "^10.0.1",
     "eslint": "^5.16.0",
     "http-server": "^0.11.1",
@@ -46,5 +46,5 @@
     "webpack-merge": "^4.2.1"
   },
   "private": true,
-  "version": "0.2.5"
+  "version": "0.2.6"
 }
