@@ -2,7 +2,6 @@
 import fetch from '@rdfjs/fetch-lite'
 // @ts-ignore
 import formats from '@rdfjs/formats-common'
-// @ts-ignore
 import rdf from 'rdf-ext'
 import { Context, Result } from 'hydra-validator-core'
 import statusCheck from './response/status-code'

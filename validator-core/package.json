@@ -34,6 +34,7 @@
     "@types/jest": "^24.0.12",
     "@types/node": "^11.13.9",
     "@types/node-fetch": "^2.3.3",
+    "@types/rdfjs__namespace": "^1.1.1",
     "@typescript-eslint/eslint-plugin": "^1.7.0",
     "@typescript-eslint/parser": "^1.7.0",
     "eslint": "^5.16.0",
@@ -45,6 +46,6 @@
     "typescript": "^3.4.5"
   },
   "dependencies": {
-    "@rdfjs/namespace": "^1.0.0"
+    "@rdfjs/namespace": "^1.1.0"
   }
 }
