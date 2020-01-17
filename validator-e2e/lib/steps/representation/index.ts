@@ -19,7 +19,7 @@ export class ClassStep extends ScenarioStep {
   }
 
   protected appliesToInternal(obj: HydraResource): boolean {
-    return 'id' in obj && obj.types.contains(this.classId)
+    return 'id' in obj && obj.types.has(this.classId)
   }
 
   public getRunner(resource: HydraResource): checkChain<E2eContext> {

@@ -238,7 +238,7 @@ describe('property step', () => {
       }, [], [])
       const value = {
         types: {
-          contains: () => true,
+          has: () => true,
         },
       }
 
@@ -259,7 +259,7 @@ describe('property step', () => {
       }, [], [])
       const value = {
         types: {
-          contains: () => false,
+          has: () => false,
         },
       }
 

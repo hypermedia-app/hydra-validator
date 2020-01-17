@@ -6,7 +6,7 @@
   "scripts": {
     "pretest": "eslint --ext ts . --quiet",
     "eslint:fix": "eslint --ext ts . --quiet --fix",
-    "prepublishOnly": "tsc",
+    "prepack": "tsc",
     "precommit": "lint-staged",
     "test": "jest",
     "example:compile": "hypertest-compiler example"
@@ -48,8 +48,9 @@
   },
   "dependencies": {
     "@hydrofoil/hypertest": "^0.6.0",
+    "@rdfjs/data-model": "^1.1.2",
     "@zazuko/rdf-vocabularies": "^2019.7.9-2",
-    "alcaeus": "^0.10.5",
+    "alcaeus": "^1.0.0-alpha.1",
     "escape-string-regexp": "^2.0.0",
     "hydra-validator-core": "^0.3.5"
   },

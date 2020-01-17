@@ -1,3 +1,4 @@
+import { namedNode } from '@rdfjs/data-model'
 import { IdentifierStep } from './'
 import { E2eContext } from '../../../../types'
 
@@ -27,7 +28,7 @@ describe('Identifier', () => {
       value: 'http://foo/bar',
     })
     const resource = {
-      id: 'http://foo/bar',
+      id: namedNode('http://foo/bar'),
     }
 
     // when

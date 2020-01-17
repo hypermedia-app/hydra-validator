@@ -1,3 +1,4 @@
+import { blankNode, namedNode } from '@rdfjs/data-model'
 import { E2eContext } from '../../../../types'
 import { OperationStep } from './index'
 import { StepStub } from '../../stub'
@@ -57,7 +58,7 @@ describe('Operation block', () => {
       operations: [
         {
           supportedOperation: {
-            id: 'the-operation',
+            id: namedNode('the-operation'),
           },
         },
       ],
@@ -81,9 +82,9 @@ describe('Operation block', () => {
       operations: [
         {
           supportedOperation: {
-            id: '_:blank',
+            id: blankNode(),
             types: {
-              contains: () => true,
+              has: () => true,
             },
           },
         },

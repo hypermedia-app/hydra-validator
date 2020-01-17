@@ -89,7 +89,7 @@ export class PropertyStep extends ScenarioStep<HydraResource> {
     }
 
     let result
-    const hasType = resource.types.contains(this.expectedValue as string)
+    const hasType = resource.types.has(this.expectedValue as string)
     if (hasType) {
       result = Result.Success(`Found type ${this.expectedValue}`)
     } else {

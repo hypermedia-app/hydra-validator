@@ -4,7 +4,8 @@ import { getResponseRunner } from '../../../checkRunner'
 import { ScenarioStep } from '../../index'
 import { Constraint } from '../../constraints/Constraint'
 import { E2eContext } from '../../../../types'
-import { IResource } from 'alcaeus/types/Resources/Resource'
+import { namedNode } from '@rdfjs/data-model'
+import { NamedNode } from 'rdf-js'
 
 interface LinkStepInit {
   rel: string
@@ -12,13 +13,13 @@ interface LinkStepInit {
 }
 
 export class LinkStep extends ScenarioStep<HydraResource> {
-  private relation: string
+  private relation: NamedNode
   private strict: boolean
 
   public constructor(init: LinkStepInit, children: ScenarioStep[], constraints: Constraint[]) {
     super(children, constraints)
 
-    this.relation = init.rel
+    this.relation = namedNode(init.rel)
     this.strict = init.strict
   }
 
@@ -35,7 +36,7 @@ export class LinkStep extends ScenarioStep<HydraResource> {
       }
 
       const linkValue = resource.getLinks()
-        .find(link => link.supportedProperty.property.id === step.relation)
+        .find(link => link.supportedProperty.property.id.equals(step.relation))
 
       // found supportedProperty which is a hydra:Link
       if (linkValue) {
@@ -48,19 +49,16 @@ export class LinkStep extends ScenarioStep<HydraResource> {
       }
 
       // the resource may have a matching key, but not a supportedProperty hydra:Links
-      if (step.relation in resource) {
-        const potentialLinks = resource.getArray(step.relation)
-          .filter((r: any) => typeof r === 'object' && 'id' in r) as IResource[]
+      const potentialLinks = resource.getArray<HydraResource>(step.relation)
 
-        if (potentialLinks.length > 0) {
-          step.markExecuted()
+      if (potentialLinks.length > 0) {
+        step.markExecuted()
 
-          return {
-            result: Result.Warning(
-              `Stepping into link ${step.relation}`,
-              `Resources found but ${step.relation} is not a SupportedProperty of hydra:Link type.`),
-            nextChecks: potentialLinks.map(resource => getResponseRunner(resource, step)),
-          }
+        return {
+          result: Result.Warning(
+            `Stepping into link ${step.relation}`,
+            `Resources found but ${step.relation} is not a SupportedProperty of hydra:Link type.`),
+          nextChecks: potentialLinks.map(resource => getResponseRunner(resource, step)),
         }
       }
 

@@ -1,4 +1,4 @@
-import { Hydra } from 'alcaeus'
+import Hydra from 'alcaeus'
 import { IHydraResponse } from 'alcaeus/types/HydraResponse'
 import { E2eContext } from '../types'
 import { checkChain, CheckResult, Result } from 'hydra-validator-core'
@@ -6,6 +6,7 @@ import { ScenarioStep } from './steps'
 import { HydraResource } from 'alcaeus/types/Resources'
 import { Constraint, RepresentationConstraint, ResponseConstraint } from './steps/constraints/Constraint'
 import { IResource } from 'alcaeus/types/Resources/Resource'
+import { NamedNode } from 'rdf-js'
 
 function processResource<T>(resource: T, steps: ScenarioStep[], constraints: Constraint[]): CheckResult<E2eContext> {
   const localContext = {}
@@ -71,7 +72,7 @@ function processResponse(response: IHydraResponse, steps: ScenarioStep[], constr
   }
 }
 
-function dereferenceAndProcess(id: string, steps: ScenarioStep[], constraints: Constraint[], headers: HeadersInit | null) {
+function dereferenceAndProcess(id: string | NamedNode, steps: ScenarioStep[], constraints: Constraint[], headers: HeadersInit | null) {
   const loadResource = headers
     ? Hydra.loadResource(id, headers)
     : Hydra.loadResource(id)
@@ -116,7 +117,13 @@ export function getResponseRunner(
 
     if (typeof resourceOrResponse === 'object') {
       if ('id' in resourceOrResponse) {
-        return dereferenceAndProcess((resourceOrResponse as HydraResource).id, steps, constraints, this.headers || null)
+        if (resourceOrResponse.id.termType === 'BlankNode') {
+          return {
+            result: Result.Failure('Cannot dereference blank node identifier'),
+          }
+        }
+
+        return dereferenceAndProcess(resourceOrResponse.id, steps, constraints, this.headers || null)
       }
       return processResponse(resourceOrResponse, steps, constraints)
     }
