@@ -36,15 +36,15 @@
     "@types/jest": "^24.0.12",
     "@types/node": "^11.13.9",
     "@types/node-fetch": "^2.3.3",
-    "@typescript-eslint/eslint-plugin": "^1.7.0",
-    "@typescript-eslint/parser": "^1.7.0",
+    "@typescript-eslint/eslint-plugin": "^2.16.0",
+    "@typescript-eslint/parser": "^2.16.0",
     "eslint": "^5.16.0",
     "eslint-plugin-jest": "^22.5.1",
     "isomorphic-fetch": "^2.2.1",
     "jest": "^24.7.1",
     "lint-staged": "^8.2.1",
     "standard": "^12.0.1",
-    "typescript": "^3.4.5"
+    "typescript": "^3.7.5"
   },
   "dependencies": {
     "@rdfjs/fetch-lite": "^2.0.1",
