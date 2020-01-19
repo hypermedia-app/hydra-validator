@@ -1,11 +1,9 @@
-import Hydra from 'alcaeus'
-import { IHydraResponse } from 'alcaeus/types/HydraResponse'
+import Hydra, { HydraResource } from 'alcaeus'
+import { HydraResponse } from 'alcaeus/types/HydraResponse'
 import { E2eContext } from '../types'
 import { checkChain, CheckResult, Result } from 'hydra-validator-core'
 import { ScenarioStep } from './steps'
-import { HydraResource } from 'alcaeus/types/Resources'
 import { Constraint, RepresentationConstraint, ResponseConstraint } from './steps/constraints/Constraint'
-import { IResource } from 'alcaeus/types/Resources/Resource'
 import { NamedNode } from 'rdf-js'
 
 function processResource<T>(resource: T, steps: ScenarioStep[], constraints: Constraint[]): CheckResult<E2eContext> {
@@ -33,7 +31,7 @@ function processResource<T>(resource: T, steps: ScenarioStep[], constraints: Con
   }
 }
 
-function processResponse(response: IHydraResponse, steps: ScenarioStep[], constraints: Constraint[]): CheckResult<E2eContext> {
+function processResponse(response: HydraResponse, steps: ScenarioStep[], constraints: Constraint[]): CheckResult<E2eContext> {
   const localContext = {}
 
   const nextChecks: checkChain<E2eContext>[] = []
@@ -78,6 +76,10 @@ function dereferenceAndProcess(id: string | NamedNode, steps: ScenarioStep[], co
     : Hydra.loadResource(id)
 
   return loadResource
+    .then(async response => {
+      await Hydra.apiDocumentations
+      return response
+    })
     .then(response => {
       return processResponse(response, steps, constraints)
     })
@@ -107,7 +109,7 @@ export function getUrlRunner(id: string, currentStep?: ScenarioStep) {
 }
 
 export function getResponseRunner(
-  resourceOrResponse: IResource | IHydraResponse,
+  resourceOrResponse: HydraResource | HydraResponse,
   currentStep?: ScenarioStep) {
   const childSteps = currentStep ? currentStep.children : []
   const constraints = currentStep ? currentStep.constraints : []
@@ -125,7 +127,7 @@ export function getResponseRunner(
 
         return dereferenceAndProcess(resourceOrResponse.id, steps, constraints, this.headers || null)
       }
-      return processResponse(resourceOrResponse, steps, constraints)
+      return processResponse(resourceOrResponse as HydraResponse, steps, constraints)
     }
 
     return {

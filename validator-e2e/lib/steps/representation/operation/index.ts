@@ -30,7 +30,7 @@ export class OperationStep extends ScenarioStep {
     return async function invokeOperation(this: E2eContext) {
       const operation = resource.operations.find(op => op.supportedOperation.id.equals(step.operationId) || op.supportedOperation.types.has(step.operationId))
       if (!operation) {
-        const message = `Operation ${step.operationId} not found`
+        const message = `Operation ${step.operationId.value} not found`
         if (step.strict) {
           return {
             result: Result.Failure(message),

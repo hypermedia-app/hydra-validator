@@ -1,0 +1,32 @@
+{"steps": [{
+  "classId": "http://schema.org/EntryPoint",
+  "children": [
+    {
+      "children": [{
+        "children": [{
+          "children": [{
+            "code": 201,
+            "type": "ResponseStatus"
+          }],
+          "type": "Invocation"
+        }],
+        "operationId": "https://hydra-movies.herokuapp.com/doc#create-movie",
+        "strict": true,
+        "type": "Operation"
+      }],
+      "strict": true,
+      "type": "Property",
+      "propertyId": "http://www.w3.org/ns/hydra/core#collection"
+    },
+    {
+      "children": [{
+        "code": 200,
+        "type": "ResponseStatus"
+      }],
+      "rel": "http://www.w3.org/ns/hydra/core#collection",
+      "strict": true,
+      "type": "Link"
+    }
+  ],
+  "type": "Class"
+}]}

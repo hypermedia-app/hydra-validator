@@ -1,5 +1,5 @@
-import { HydraResource } from 'alcaeus/types/Resources'
-import { IHydraResponse } from 'alcaeus/types/HydraResponse'
+import { HydraResource } from 'alcaeus'
+import { HydraResponse } from 'alcaeus/types/HydraResponse'
 
 export type ConstraintOperator = 'eq' | 'gt' | 'ge' | 'lt' | 'le' | 'regex' | 'function'
 export type ConstraintType = 'Representation' | 'Response' | null
@@ -31,7 +31,7 @@ export abstract class Constraint<T = unknown> {
   protected abstract sanityCheckValue(value: unknown): boolean
 }
 
-export abstract class ResponseConstraint extends Constraint<IHydraResponse> {
+export abstract class ResponseConstraint extends Constraint<HydraResponse> {
   public get type(): ConstraintType {
     return 'Response'
   }

@@ -4,16 +4,24 @@
   "scripts": {
     "postinstall": "lerna bootstrap",
     "pretest": "lerna run prepublishOnly --scope hydra-validator-core",
-    "test": "lerna run test"
+    "test": "lerna run test",
+    "example": "ts-node validator-cli/index.ts e2e --docs validator-e2e/example/hydracg-movies.hydra.json http://hydra-movies.herokuapp.com"
   },
   "devDependencies": {
     "@commitlint/cli": "^8.0.0",
     "@commitlint/config-conventional": "^8.0.0",
+    "@types/node": "^13.1.8",
     "cz-lerna-changelog": "^2.0.2",
     "husky": "^2.4.1",
+    "@hydrofoil/hypertest": "^0.7.2",
     "lerna": "^3.13.0",
     "standard-changelog": "^2.0.11",
-    "ts-node": "^8.3.0"
+    "ts-node": "^8.6.2",
+    "typescript": "^3.7.5"
+  },
+  "peerDependencies": {
+    "hydra-validator-core": "*",
+    "hydra-validator-e2e": "*"
   },
   "config": {
     "commitizen": {
