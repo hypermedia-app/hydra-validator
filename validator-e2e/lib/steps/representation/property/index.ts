@@ -1,6 +1,6 @@
-import { NamedNode } from 'rdf-js'
+import { Literal, NamedNode } from 'rdf-js'
 import { namedNode } from '@rdfjs/data-model'
-import { HydraResource } from 'alcaeus/types/Resources'
+import { HydraResource, ResourceIndexer } from 'alcaeus'
 import { E2eContext } from '../../../../types'
 import { checkChain, CheckResult, Result } from 'hydra-validator-core'
 import { ScenarioStep } from '../../'
@@ -32,7 +32,7 @@ export class PropertyStep extends ScenarioStep<HydraResource> {
     return typeof obj === 'object' && 'id' in obj
   }
 
-  public getRunner(resource: HydraResource): checkChain<E2eContext> {
+  public getRunner(resource: HydraResource & ResourceIndexer): checkChain<E2eContext> {
     const step = this
 
     if (step.children.length > 0 && !!step.expectedValue) {
@@ -52,21 +52,23 @@ export class PropertyStep extends ScenarioStep<HydraResource> {
     }
 
     return function () {
-      if (step.propertyId.equals(expand('rdf:type'))) {
+      if (step.propertyId.value === expand('rdf:type')) {
         return step.__executeRdfTypeStatement(resource)
       }
 
-      const value = resource.getArray<HydraResource>(step.propertyId)
-      if (value.length === 0) {
+      let value = resource[step.propertyId.value]
+      if (!value) {
         return step.__getMissingPropertyResult(resource)
+      } else if (!Array.isArray(value)) {
+        value = [value]
       }
 
-      return step.__checkValues(value, this)
+      return step.__checkValues(value as any, this)
     }
   }
 
-  private __checkValues(values: HydraResource[], context: E2eContext, arrayItem = false): CheckResult<E2eContext> {
-    if (Array.isArray(values) && values.length > 1) {
+  private __checkValues(values: (HydraResource | Literal)[], context: E2eContext, arrayItem = false): CheckResult<E2eContext> {
+    if (values.length > 1) {
       return {
         result: Result.Informational(`Stepping into members of array ${this.propertyId.value}`),
         nextChecks: values.map((v, i) => this.__checkArrayItem(v, i)),
@@ -114,7 +116,13 @@ export class PropertyStep extends ScenarioStep<HydraResource> {
     return { result }
   }
 
-  private __executeStatement(value: unknown): CheckResult<E2eContext> {
+  private __executeStatement(value: HydraResource | Literal): CheckResult<E2eContext> {
+    if ('id' in value) {
+      return {
+        result: Result.Failure(`Expected ${this.propertyId.value} to be literal but found resource ${value.id}`),
+      }
+    }
+
     if (areEqual(this.expectedValue, value)) {
       return {
         result: Result.Success(`Found ${this.propertyId.value} property with expected value`),
@@ -137,7 +145,7 @@ export class PropertyStep extends ScenarioStep<HydraResource> {
     return { result, nextChecks }
   }
 
-  private __checkArrayItem(value: HydraResource, index: number): checkChain<E2eContext> {
+  private __checkArrayItem(value: any, index: number): checkChain<E2eContext> {
     const step = this
     if (Array.isArray(value)) {
       return () => ({
