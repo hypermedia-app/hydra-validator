@@ -218,7 +218,7 @@ describe('property step', () => {
       const propertyStatement = new PropertyStep({
         propertyId: 'title',
         strict: false,
-      }, [], [])
+      }, [new StepSpy()], [])
       const value: any = {}
 
       // when
@@ -227,6 +227,7 @@ describe('property step', () => {
 
       // then
       expect(result.result!.status).toBe('informational')
+      expect(propertyStatement.children).toHaveLength(0)
     })
 
     it('returns success when comparing resource has expected rdf:type', async () => {

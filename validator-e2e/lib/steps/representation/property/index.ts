@@ -55,6 +55,8 @@ export class PropertyStep extends ScenarioStep<HydraResource> {
       }
 
       if (!(step.propertyId in resource)) {
+        step.children = []
+
         return step.__getMissingPropertyResult(resource)
       }
 
