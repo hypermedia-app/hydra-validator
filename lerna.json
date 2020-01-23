@@ -13,7 +13,8 @@
     },
     "version": {
       "message": "chore: release new versions",
-      "conventionalCommits": true
+      "conventionalCommits": true,
+      "noPush": true
     }
   }
 }
