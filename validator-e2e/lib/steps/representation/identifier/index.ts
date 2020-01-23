@@ -32,7 +32,7 @@ export class IdentifierStep extends ScenarioStep<HydraResource> {
       } else if (__identifier.equals(obj.id)) {
         result = Result.Success(`Found expected resource identifier ${__identifier}`)
       } else {
-        result = Result.Failure(`Expect resource <${__identifier}> but got <${obj.id}> instead.`)
+        result = Result.Failure(`Expect resource <${__identifier}> but got <${obj.id.value}> instead.`)
       }
 
       return {

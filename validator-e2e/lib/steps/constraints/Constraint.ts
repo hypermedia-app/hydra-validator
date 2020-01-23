@@ -1,4 +1,4 @@
-import { HydraResource } from 'alcaeus'
+import { HydraResource, ResourceIndexer } from 'alcaeus'
 import { HydraResponse } from 'alcaeus/types/HydraResponse'
 
 export type ConstraintOperator = 'eq' | 'gt' | 'ge' | 'lt' | 'le' | 'regex' | 'function'
@@ -37,7 +37,7 @@ export abstract class ResponseConstraint extends Constraint<HydraResponse> {
   }
 }
 
-export abstract class RepresentationConstraint extends Constraint<HydraResource> {
+export abstract class RepresentationConstraint extends Constraint<HydraResource & ResourceIndexer> {
   public get type(): ConstraintType {
     return 'Representation'
   }

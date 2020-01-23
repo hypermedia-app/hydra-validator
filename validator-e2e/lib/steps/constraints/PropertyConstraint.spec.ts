@@ -1,10 +1,16 @@
+import cf, { Clownface } from 'clownface'
+import $rdf from 'rdf-ext'
+import Hydra from 'alcaeus'
 import { PropertyConstraint } from './PropertyConstraint'
-import { HydraResource } from 'alcaeus/types/Resources'
 import { StepConstraintInit } from './index'
 
 describe('PropertyConstraint', () => {
-  const nullResource: HydraResource = {} as any
   const emptyInit: StepConstraintInit = {} as any
+  let graph: Clownface
+
+  beforeEach(() => {
+    graph = cf({ dataset: $rdf.dataset() })
+  })
 
   it('does not pass when property is undefined', () => {
     // given
@@ -17,31 +23,7 @@ describe('PropertyConstraint', () => {
     const constraint = new PropertyConstraint(init, predicate, false)
 
     // when
-    const result = constraint.satisfiedBy({
-      ...nullResource,
-      [property]: undefined,
-    })
-
-    // then
-    expect(result).toBeFalsy()
-    expect(predicate).not.toHaveBeenCalled()
-  })
-
-  it('does not pass when property is null', () => {
-    // given
-    const predicate = jest.fn()
-    const property = 'http://example.com/prop'
-    const init = {
-      ...emptyInit,
-      left: property,
-    }
-    const constraint = new PropertyConstraint(init, predicate, false)
-
-    // when
-    const result = constraint.satisfiedBy({
-      ...nullResource,
-      [property]: null,
-    })
+    const result = constraint.satisfiedBy(Hydra.factory.createEntity(graph.blankNode()))
 
     // then
     expect(result).toBeFalsy()

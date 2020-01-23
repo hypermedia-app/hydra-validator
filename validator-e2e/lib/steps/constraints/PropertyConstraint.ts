@@ -1,5 +1,5 @@
 import { RepresentationConstraint } from './Constraint'
-import { HydraResource } from 'alcaeus/types/Resources'
+import { HydraResource, ResourceIndexer } from 'alcaeus'
 import { StepConstraintInit } from './'
 
 export class PropertyConstraint extends RepresentationConstraint {
@@ -15,7 +15,7 @@ export class PropertyConstraint extends RepresentationConstraint {
     this.__propertyName = init.left
   }
 
-  protected getValue(subject: HydraResource) {
+  protected getValue(subject: HydraResource & ResourceIndexer) {
     return subject[this.__propertyName]
   }
 

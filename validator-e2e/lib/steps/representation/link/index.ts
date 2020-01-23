@@ -64,7 +64,7 @@ export class LinkStep extends ScenarioStep<HydraResource> {
 
       if (step.strict) {
         return {
-          result: Result.Failure(`No resources found on resource ${resource.id} linked with ${step.relation.value}`),
+          result: Result.Failure(`No resources found on resource ${resource.id.value} linked with ${step.relation.value}`),
         }
       }
 

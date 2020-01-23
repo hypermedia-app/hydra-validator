@@ -99,7 +99,7 @@ export class PropertyStep extends ScenarioStep<HydraResource> {
     if (hasType) {
       result = Result.Success(`Found type ${this.expectedValue}`)
     } else {
-      result = Result.Failure(`Resource ${resource.id} does not have expected RDF type ${this.expectedValue}`)
+      result = Result.Failure(`Resource ${resource.id.value} does not have expected RDF type ${this.expectedValue}`)
     }
 
     return { result }
@@ -108,7 +108,7 @@ export class PropertyStep extends ScenarioStep<HydraResource> {
   private __getMissingPropertyResult(resource: HydraResource) {
     let result
     if (this.strict) {
-      result = Result.Failure(`Property ${this.propertyId.value} missing on resource ${resource.id}`)
+      result = Result.Failure(`Property ${this.propertyId.value} missing on resource ${resource.id.value}`)
     } else {
       result = Result.Informational(`Skipping missing property ${this.propertyId.value}`)
     }
@@ -119,7 +119,7 @@ export class PropertyStep extends ScenarioStep<HydraResource> {
   private __executeStatement(value: HydraResource | Literal): CheckResult<E2eContext> {
     if ('id' in value) {
       return {
-        result: Result.Failure(`Expected ${this.propertyId.value} to be literal but found resource ${value.id}`),
+        result: Result.Failure(`Expected ${this.propertyId.value} to be literal but found resource ${value.id.value}`),
       }
     }
 

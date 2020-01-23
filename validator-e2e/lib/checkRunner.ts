@@ -1,4 +1,4 @@
-import Hydra, { HydraResource } from 'alcaeus'
+import Hydra, { HydraResource, ResourceIndexer } from 'alcaeus'
 import { HydraResponse } from 'alcaeus/types/HydraResponse'
 import { E2eContext } from '../types'
 import { checkChain, CheckResult, Result } from 'hydra-validator-core'
@@ -11,7 +11,7 @@ function processResource<T>(resource: T, steps: ScenarioStep[], constraints: Con
   const nextChecks: checkChain<E2eContext>[] = []
 
   const resourceConstraints: RepresentationConstraint[] = constraints.filter(c => c.type === 'Representation')
-  const allConstraintsSatisfied = resourceConstraints.every(c => c.satisfiedBy(resource as unknown as HydraResource))
+  const allConstraintsSatisfied = resourceConstraints.every(c => c.satisfiedBy(resource as unknown as HydraResource & ResourceIndexer))
 
   if (!allConstraintsSatisfied) {
     return {
@@ -71,9 +71,11 @@ function processResponse(response: HydraResponse, steps: ScenarioStep[], constra
 }
 
 function dereferenceAndProcess(id: string | NamedNode, steps: ScenarioStep[], constraints: Constraint[], headers: HeadersInit | null) {
+  const uri: string = typeof id === 'string' ? id : id.value
+
   const loadResource = headers
-    ? Hydra.loadResource(id, headers)
-    : Hydra.loadResource(id)
+    ? Hydra.loadResource(uri, headers)
+    : Hydra.loadResource(uri)
 
   return loadResource
     .then(async response => {
