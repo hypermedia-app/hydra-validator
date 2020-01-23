@@ -59,6 +59,7 @@ describe('link', () => {
         strict: true,
       }, [], [])
       const resource = {
+        id: namedNode('foo'),
         getLinks: () => [],
         getArray: () => [],
       }

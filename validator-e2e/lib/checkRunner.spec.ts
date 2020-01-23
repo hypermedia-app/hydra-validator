@@ -132,7 +132,7 @@ describe('processResponse', () => {
       await runner.call(context)
 
       // then
-      expect(Hydra.loadResource).toHaveBeenCalledWith(namedNode('foo'))
+      expect(Hydra.loadResource).toHaveBeenCalledWith('foo')
     })
 
     it('does not perform request when passed a response object', async () => {
