@@ -1,5 +1,5 @@
 import { E2eContext } from '../types'
-import { verifyAllScenariosExecuted } from './strictRunVerification'
+import { verifyTopLevelBlocksExecuted } from './strictRunVerification'
 import { StepStub } from './steps/stub'
 
 function createVisitedStub(name: string) {
@@ -24,7 +24,7 @@ describe('strictRunVerification', () => {
         createVisitedStub('foo'),
         createVisitedStub('bar'),
       ]
-      const runner = verifyAllScenariosExecuted(true, steps)
+      const runner = verifyTopLevelBlocksExecuted(true, steps)
 
       // when
       const { result } = await runner.call(context)
@@ -39,7 +39,7 @@ describe('strictRunVerification', () => {
         createVisitedStub('foo'),
         new StepStub('bar'),
       ]
-      const runner = verifyAllScenariosExecuted(true, steps)
+      const runner = verifyTopLevelBlocksExecuted(true, steps)
 
       // when
       const { result } = await runner.call(context)
@@ -55,7 +55,7 @@ describe('strictRunVerification', () => {
           createVisitedStub('foo'),
           createVisitedStub('bar'),
         ]
-        const runner = verifyAllScenariosExecuted(false, steps)
+        const runner = verifyTopLevelBlocksExecuted(false, steps)
 
         // when
         const { result } = await runner.call(context)
@@ -70,7 +70,7 @@ describe('strictRunVerification', () => {
           new StepStub('foo'),
           new StepStub('bar'),
         ]
-        const runner = verifyAllScenariosExecuted(false, steps)
+        const runner = verifyTopLevelBlocksExecuted(false, steps)
 
         // when
         const { result } = await runner.call(context)
@@ -85,7 +85,7 @@ describe('strictRunVerification', () => {
           new StepStub('foo'),
           createVisitedStub('bar'),
         ]
-        const runner = verifyAllScenariosExecuted(false, steps)
+        const runner = verifyTopLevelBlocksExecuted(false, steps)
 
         // when
         const { result } = await runner.call(context)
