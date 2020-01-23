@@ -71,8 +71,6 @@ describe('url-resolvable', () => {
     test('returns success', async () => {
       // given
       fetch.mockResolvedValue({
-        dataset: () => {
-        },
       })
 
       // when
@@ -98,8 +96,6 @@ describe('url-resolvable', () => {
       // given
       fetch.mockResolvedValue({
         url: 'https://example.com',
-        dataset: () => {
-        },
       })
 
       // when
@@ -112,8 +108,6 @@ describe('url-resolvable', () => {
     test('queues up Link check if apiDoc param is false', async () => {
       // given
       const response = {
-        dataset: () => {
-        },
       }
       fetch.mockResolvedValue(response)
 

@@ -27,7 +27,7 @@ export default function (response: Response): checkChain {
     const responseUrl = new URL(response.url).toString()
 
     if (responseUrl !== apiDocUrl) {
-      let results = [ Result.Success('Api Documentation link found') ]
+      const results = [ Result.Success('Api Documentation link found') ]
       if (apiDocUrl !== linkUrl) {
         results.push(Result.Warning('Relative Api Documentation link may not be supported by clients'))
       }
