@@ -1,10 +1,13 @@
 import Hydra, { HydraResource, ResourceIndexer } from 'alcaeus'
-import { HydraResponse } from 'alcaeus/types/HydraResponse'
+import { HydraResponse } from 'alcaeus/HydraResponse'
+import { parsers } from '@rdfjs/formats-common'
 import { E2eContext } from '../types'
 import { checkChain, CheckResult, Result } from 'hydra-validator-core'
 import { ScenarioStep } from './steps'
 import { Constraint, RepresentationConstraint, ResponseConstraint } from './steps/constraints/Constraint'
 import { NamedNode } from 'rdf-js'
+
+parsers.forEach((parser, mediaType) => Hydra.parsers.set(mediaType, parser))
 
 function processResource<T>(resource: T, steps: ScenarioStep[], constraints: Constraint[]): CheckResult<E2eContext> {
   const localContext = {}

@@ -1,4 +1,4 @@
-import { Operation } from 'alcaeus/types/Resources/Operation'
+import { Operation } from 'alcaeus/Resources/Operation'
 import { E2eContext } from '../../../../types'
 import { checkChain, Result } from 'hydra-validator-core'
 import { getResponseRunner } from '../../../checkRunner'

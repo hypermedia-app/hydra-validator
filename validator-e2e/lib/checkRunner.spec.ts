@@ -1,12 +1,11 @@
-import Hydra from 'alcaeus'
+import Hydra, { HydraResource } from 'alcaeus'
 import { namedNode } from '@rdfjs/data-model'
 import { RdfResource } from '@tpluscode/rdfine'
 import { getResponseRunner, getResourceRunner, getUrlRunner } from './checkRunner'
 import { E2eContext } from '../types'
 import { ScenarioStep } from './steps'
-import { HydraResource } from 'alcaeus/types/Resources'
 import { ConstraintMock, StepSpy, StepStub } from './steps/stub'
-import { HydraResponse } from 'alcaeus/types/HydraResponse'
+import { HydraResponse } from 'alcaeus/HydraResponse'
 import { runAll } from './testHelpers'
 
 jest.mock('alcaeus')
