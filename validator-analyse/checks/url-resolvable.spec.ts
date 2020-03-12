@@ -2,11 +2,12 @@ jest.mock('@rdfjs/fetch-lite')
 jest.mock('./response/api-doc-link')
 jest.mock('./analyse-representation')
 
-// @ts-ignore
-import fetch from '@rdfjs/fetch-lite'
+import realFetch from '@rdfjs/fetch-lite'
 import check from './url-resolvable'
 import apiLinkCheck from './response/api-doc-link'
 import representationCheck from './analyse-representation'
+
+const fetch = realFetch as jest.Mock
 
 function testContext(visitedUrls: string[] = []) {
   return {

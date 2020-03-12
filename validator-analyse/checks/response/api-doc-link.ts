@@ -1,5 +1,4 @@
 import { checkChain, Result } from 'hydra-validator-core'
-// @ts-ignore
 import parse from 'parse-link-header'
 import { Hydra } from 'hydra-validator-core/namespace'
 import urlResolveCheck from '../url-resolvable'
@@ -14,9 +13,9 @@ export default function (response: Response): checkChain {
     }
 
     const linkHeaders = response.headers.get('link')
-    const links = parse(linkHeaders)
+    const links = parse(linkHeaders || '')
 
-    if (!links[Hydra.apiDocumentation.value]) {
+    if (!links || !links[Hydra.apiDocumentation.value]) {
       return {
         result: Result.Failure(`rel=<${Hydra.apiDocumentation.value}> link not found in the response`),
       }

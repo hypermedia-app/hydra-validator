@@ -1,18 +1,16 @@
-// @ts-ignore
 import fetch from '@rdfjs/fetch-lite'
-// @ts-ignore
 import formats from '@rdfjs/formats-common'
 import rdf from 'rdf-ext'
-import { Context, Result } from 'hydra-validator-core'
+import { checkChain, Context, Result } from 'hydra-validator-core'
 import statusCheck from './response/status-code'
 import apiDocLink from './response/api-doc-link'
 import analyseRepresentation from './analyse-representation'
 
-export default function (url: string, { fetchOnly = false, isApiDoc = false } = {}) {
+export default function (url: string, { fetchOnly = false, isApiDoc = false } = {}): checkChain {
   return function tryFetch(this: Context) {
     const urlNormalised = new URL(url).toString()
 
-    if (this.visitedUrls.includes(urlNormalised) !== false) {
+    if (this.visitedUrls.includes(urlNormalised)) {
       return {
         result: Result.Informational(`Skipping already visited resource <${url}>`),
       }
