@@ -32,7 +32,7 @@ export class StepSpy extends ScenarioStep {
     super([])
     this.realAppliesTo = jest.fn().mockReturnValue(true)
     this.runner = jest.fn()
-    this.runner.mockReturnValue({ })
+    this.runner.mockReturnValue(() => ({ }))
   }
 
   public appliesTo(obj: unknown): boolean {

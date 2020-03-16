@@ -1,6 +1,6 @@
 import { HydraResource } from 'alcaeus/types/Resources'
 import { E2eContext } from '../../../../types'
-import { checkChain, CheckResult, Result } from 'hydra-validator-core'
+import { checkChain, CheckResult, Result, IResult } from 'hydra-validator-core'
 import { ScenarioStep } from '../../'
 import { expand } from '@zazuko/rdf-vocabularies'
 import areEqual from '../../../comparison'
@@ -11,6 +11,29 @@ interface PropertyStepInit {
   propertyId: string
   value?: unknown
   strict: boolean
+}
+
+async function flattenResults(root: CheckResult<E2eContext>, context: E2eContext): Promise<IResult[]> {
+  let results: IResult[] = []
+  if (root.results) {
+    results = root.results
+  } else if (root.result) {
+    results = [root.result]
+  }
+
+  if (!root.nextChecks || root.nextChecks.length === 0) {
+    return results
+  }
+
+  let remainingChecks = [...root.nextChecks]
+  while (remainingChecks.length > 0) {
+    const child = remainingChecks.splice(0, 1)[0]
+    const childResult = await child.call(context)
+
+    results = [...results, ...await flattenResults(childResult, context)]
+  }
+
+  return results
 }
 
 export class PropertyStep extends ScenarioStep<HydraResource> {
@@ -62,12 +85,15 @@ export class PropertyStep extends ScenarioStep<HydraResource> {
     }
   }
 
-  private __checkValues(value: HydraResource | HydraResource[], context: E2eContext, arrayItem = false): CheckResult<E2eContext> {
+  private __checkValues(value: HydraResource | HydraResource[], context: E2eContext, arrayItem = false): Promise<CheckResult<E2eContext>> | CheckResult<E2eContext> {
     if (Array.isArray(value)) {
-      return {
-        result: Result.Informational(`Stepping into members of array ${this.propertyId}`),
-        nextChecks: value.map((v, i) => this.__checkArrayItem(v, i)),
+      if (value.length === 0) {
+        return {
+          result: Result.Warning(`Found empty array for property ${this.propertyId}`),
+        }
       }
+
+      return this.__executeArray(value, context)
     }
 
     if (typeof this.expectedValue !== 'undefined' && this.expectedValue !== null) {
@@ -80,7 +106,7 @@ export class PropertyStep extends ScenarioStep<HydraResource> {
       }
     }
 
-    return this.__executeBlock(value as HydraResource, context, arrayItem)
+    return this.__executeBlock(value as HydraResource, arrayItem)
   }
 
   private __executeRdfTypeStatement(resource: HydraResource) {
@@ -122,7 +148,7 @@ export class PropertyStep extends ScenarioStep<HydraResource> {
     }
   }
 
-  private __executeBlock(value: HydraResource, context: E2eContext, arrayItem: boolean): CheckResult<E2eContext> {
+  private __executeBlock(value: HydraResource, arrayItem: boolean): CheckResult<E2eContext> {
     const result = Result.Informational(`Stepping into property ${this.propertyId}`)
     const nextChecks = [ getResourceRunner(value, this) ]
 
@@ -133,21 +159,34 @@ export class PropertyStep extends ScenarioStep<HydraResource> {
     return { result, nextChecks }
   }
 
-  private __checkArrayItem(value: HydraResource, index: number): checkChain<E2eContext> {
-    const step = this
-    if (Array.isArray(value)) {
-      return () => ({
-        result: Result.Warning(`Cannot check value at index ${index}`, 'Nested arrays are not supported'),
-      })
+  private async __executeArray(array: HydraResource[], context: E2eContext) {
+    let anyFailed = false
+
+    for (const value of array) {
+      const childResult = await this.__checkValues(value, context, true)
+      const allResults = await flattenResults(childResult, context)
+
+      const noSuccessResults = allResults.every(r => r.status !== 'success')
+      const someFailed = allResults.some(r => r.status === 'failure' || r.status === 'error')
+
+      if (someFailed || noSuccessResults) {
+        anyFailed = anyFailed || someFailed
+        continue
+      }
+
+      return {
+        result: Result.Success(`Found ${this.propertyId} property matching expected criteria`),
+      }
     }
 
-    return function () {
+    if (!anyFailed) {
       return {
-        result: Result.Informational(`Array item at index ${index}`),
-        nextChecks: [function () {
-          return step.__checkValues(value, this, true)
-        }],
+        result: Result.Informational(`No object of ${this.propertyId} property but no steps failed. Have all object been excluded by constraints?`),
       }
+    }
+
+    return {
+      result: Result.Failure(`No object of ${this.propertyId} property was found matching the criteria`),
     }
   }
 }
