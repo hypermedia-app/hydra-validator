@@ -1,8 +1,6 @@
 jest.mock('./ensure-single-resource')
 
-// @ts-ignore
 import clownface from 'clownface'
-// @ts-ignore
 import $rdf from 'rdf-ext'
 import { Hydra, rdf } from 'hydra-validator-core/namespace'
 import check from './index'
@@ -11,7 +9,7 @@ import ensureSingleNode from './ensure-single-resource'
 describe('api-documentation', () => {
   test('should pass ApiDocumentation node to subsequent check', () => {
     // given
-    const graph = clownface($rdf.dataset())
+    const graph = clownface({ dataset: $rdf.dataset() })
     graph.node('urn:api:doc').addOut(rdf.type, Hydra.ApiDocumentation)
 
     // when
