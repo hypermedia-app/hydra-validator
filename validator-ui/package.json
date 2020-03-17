@@ -36,6 +36,7 @@
     "eslint": "^5.16.0",
     "http-server": "^0.11.1",
     "lint-staged": "^8.2.1",
+    "minimist": ">=1.2.2",
     "owc-dev-server": "^0.3.0",
     "serialize-javascript": ">=2.1.1",
     "standard": "^12.0.1",
