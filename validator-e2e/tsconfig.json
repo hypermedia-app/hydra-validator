@@ -9,6 +9,10 @@
     "strict": true,
     "declaration": true,
     "sourceMap": false,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "typeRoots": [
+      "node_modules/@types",
+      "types"
+    ]
   }
 }
