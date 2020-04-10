@@ -39,6 +39,13 @@ function processResponse(response: IHydraResponse, steps: ScenarioStep[], constr
   const resource = response.root
   const xhr = response.xhr
 
+  if (xhr.ok === false) {
+    return {
+      result: Result.Failure(`Failed to dereference resource ${xhr.url}. Response was ${xhr.status} ${xhr.statusText}`),
+      sameLevel: true,
+    }
+  }
+
   const results = [
     Result.Informational(`Fetched resource ${xhr.url}`),
   ]
@@ -81,7 +88,7 @@ function dereferenceAndProcess(id: string, steps: ScenarioStep[], constraints: C
       return processResponse(response, steps, constraints)
     })
     .catch(e => ({
-      result: Result.Warning(`Failed to dereference ${id}`, e),
+      result: Result.Error(`Failed to dereference ${id}`, e),
     }))
 }
 

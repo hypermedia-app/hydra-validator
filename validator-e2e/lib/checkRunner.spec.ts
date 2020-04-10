@@ -76,7 +76,25 @@ describe('processResponse', () => {
       const { result } = await runner.call(context)
 
       // then
-      expect(result!.status).toBe('warning')
+      expect(result!.status).toBe('error')
+    })
+
+    it('fails when request is not successful', async () => {
+      // given
+      loadResource.mockResolvedValue({
+        xhr: {
+          ok: false,
+          status: 404,
+          statusText: 'Not Found',
+        },
+      })
+      const runner = getUrlRunner('urn:resource:id', new StepStub('ignored'))
+
+      // when
+      const { result } = await runner.call(context)
+
+      // then
+      expect(result!.status).toBe('failure')
     })
   })
 
