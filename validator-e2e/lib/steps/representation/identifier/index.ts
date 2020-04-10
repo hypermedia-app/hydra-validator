@@ -1,5 +1,5 @@
 import { ScenarioStep } from '../../index'
-import { HydraResource } from 'alcaeus/types/Resources'
+import { HydraResource } from 'alcaeus/Resources'
 import { E2eContext } from '../../../../types'
 import { checkChain, Result } from 'hydra-validator-core'
 import { NamedNode } from 'rdf-js'

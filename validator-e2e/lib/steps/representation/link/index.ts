@@ -1,4 +1,4 @@
-import { HydraResource } from 'alcaeus/types/Resources'
+import { HydraResource } from 'alcaeus/Resources'
 import { checkChain, Result } from 'hydra-validator-core'
 import { getResponseRunner } from '../../../checkRunner'
 import { ScenarioStep } from '../../index'

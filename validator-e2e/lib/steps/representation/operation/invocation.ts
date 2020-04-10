@@ -3,7 +3,7 @@ import { E2eContext } from '../../../../types'
 import { checkChain, Result } from 'hydra-validator-core'
 import { getResponseRunner } from '../../../checkRunner'
 import { ScenarioStep } from '../../index'
-import { readFileSync } from 'fs'
+import { readFileSync } from '../../fs'
 import { resolve } from 'path'
 
 interface InvocationStepInit {

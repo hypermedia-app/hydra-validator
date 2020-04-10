@@ -1,5 +1,5 @@
 import { namedNode } from '@rdfjs/data-model'
-import { HydraResource } from 'alcaeus/types/Resources'
+import { HydraResource } from 'alcaeus/Resources'
 import { getResponseRunner } from '../../../checkRunner'
 import { LinkStep } from './'
 import { E2eContext } from '../../../../types'

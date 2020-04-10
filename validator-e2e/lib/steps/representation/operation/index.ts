@@ -1,9 +1,8 @@
-import { HydraResource } from 'alcaeus/types/Resources'
 import { E2eContext } from '../../../../types'
 import { checkChain, Result } from 'hydra-validator-core'
 import { ScenarioStep } from '../../index'
 import { getResourceRunner } from '../../../checkRunner'
-import { ResourceIdentifier } from 'alcaeus'
+import { HydraResource, ResourceIdentifier } from 'alcaeus'
 import { namedNode } from '@rdfjs/data-model'
 
 interface OperationStepInit {

@@ -1,4 +1,4 @@
-import { HydraResource } from 'alcaeus/types/Resources'
+import { HydraResource } from 'alcaeus/Resources'
 import { E2eContext } from '../../../types'
 import { checkChain } from 'hydra-validator-core'
 import { ScenarioStep } from '../'
