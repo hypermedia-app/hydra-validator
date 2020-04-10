@@ -8,8 +8,7 @@ function equality(expected: unknown) {
 }
 
 function inequality(operator: string, expected: unknown): () => boolean {
-  // @ts-ignore
-  return new Function('value', `return value ${operator} ${expected}`) // eslint-disable-line no-new-func
+  return new Function('value', `return value ${operator} ${expected}`) as any // eslint-disable-line no-new-func
 }
 
 function regex(regex: RegExp) {

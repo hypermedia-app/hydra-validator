@@ -1,13 +1,13 @@
-// @ts-ignore
 import clownface from 'clownface'
+import DatasetExt from 'rdf-ext/lib/Dataset'
 import { checkChain, Result } from 'hydra-validator-core'
 import apiDocsChecks from './api-documentation'
 
 export default function (response: Response & any, isApiDoc: boolean): checkChain {
   return function representation() {
     return response.dataset()
-      .then((dataset: any) => {
-        const graph = clownface(dataset)
+      .then((dataset: DatasetExt) => {
+        const graph = clownface({ dataset })
 
         const nextChecks = []
 

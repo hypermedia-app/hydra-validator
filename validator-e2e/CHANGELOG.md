@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.9.0](https://github.com/hypermedia-app/hydra-validator/compare/hydra-validator-e2e@0.8.3...hydra-validator-e2e@0.9.0) (2020-03-17)
+
+
+### Features
+
+* it was not possible to check only one of multiple values ([6e2d811](https://github.com/hypermedia-app/hydra-validator/commit/6e2d811e948ea0c5f242940da1a1c759b9d8bf94))
+
+
+### BREAKING CHANGES
+
+* property step now only fails if all objects fail
+
+
+
+
+
 ## [0.8.3](https://github.com/hypermedia-app/hydra-validator/compare/hydra-validator-e2e@0.8.2...hydra-validator-e2e@0.8.3) (2020-01-23)
 
 

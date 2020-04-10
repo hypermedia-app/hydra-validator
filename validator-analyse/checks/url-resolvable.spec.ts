@@ -2,11 +2,12 @@ jest.mock('@rdfjs/fetch-lite')
 jest.mock('./response/api-doc-link')
 jest.mock('./analyse-representation')
 
-// @ts-ignore
-import fetch from '@rdfjs/fetch-lite'
+import realFetch from '@rdfjs/fetch-lite'
 import check from './url-resolvable'
 import apiLinkCheck from './response/api-doc-link'
 import representationCheck from './analyse-representation'
+
+const fetch = realFetch as jest.Mock
 
 function testContext(visitedUrls: string[] = []) {
   return {
@@ -71,8 +72,6 @@ describe('url-resolvable', () => {
     test('returns success', async () => {
       // given
       fetch.mockResolvedValue({
-        dataset: () => {
-        },
       })
 
       // when
@@ -98,8 +97,6 @@ describe('url-resolvable', () => {
       // given
       fetch.mockResolvedValue({
         url: 'https://example.com',
-        dataset: () => {
-        },
       })
 
       // when
@@ -112,8 +109,6 @@ describe('url-resolvable', () => {
     test('queues up Link check if apiDoc param is false', async () => {
       // given
       const response = {
-        dataset: () => {
-        },
       }
       fetch.mockResolvedValue(response)
 

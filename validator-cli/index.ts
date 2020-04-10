@@ -2,7 +2,6 @@
 
 import program from 'commander'
 import runChecks from 'hydra-validator-core/run-checks'
-// @ts-ignore
 import deps from 'matchdep'
 import debug from 'debug'
 import { ResultKind } from 'hydra-validator-core'
@@ -34,7 +33,7 @@ debug.formatters.l = (logger: ResultKind) => {
   return ''
 }
 
-const plugins: string[] = deps.filterAll([ 'hydra-validator-*', 'hydra-validator-core' ], `${process.cwd()}/package.json`)
+const plugins = deps.filterAll([ 'hydra-validator-*', 'hydra-validator-core' ], `${process.cwd()}/package.json`)
 
 for (let plugin of plugins) {
   const match = plugin.match(/^hydra-validator-([\d\w]+)$/)
@@ -66,8 +65,7 @@ for (let plugin of plugins) {
         const checkGenerator = runChecks(firstCheck)
 
         for await (let check of checkGenerator) {
-          // @ts-ignore
-          loggers[check.result.status]('%l %p %s %s', check.result.status, check.level, check.result.description, check.result.details || '')
+          loggers[check.result.status]('%l %p %s %s', check.result.status, check.level, check.result.description, (check.result as any).details || '')
 
           if (check.result.status === 'failure' || check.result.status === 'error') {
             unsucessfulCount++

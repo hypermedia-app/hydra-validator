@@ -310,11 +310,30 @@ describe('property step', () => {
       expect(result.result!.status).toBe('error')
     })
 
-    it('runs check on each value of array', async () => {
+    it('runs check on array items and returns success if value is found', async () => {
       // given
       const propertyStatement = new PropertyStep({
         propertyId: 'http://example.com/title',
-        value: 'foo',
+        value: 'bar',
+        strict: false,
+      }, [], [])
+      const value: any = {
+        title: [ 'foo', 'bar', 'baz' ],
+      }
+
+      // when
+      const arrayRunner = propertyStatement.getRunner(value)
+      const { result } = await arrayRunner.call(context)
+
+      // then
+      expect(result!.status).toBe('success')
+    })
+
+    it('runs check on array items and returns failure if matching value is not found', async () => {
+      // given
+      const propertyStatement = new PropertyStep({
+        propertyId: 'title',
+        value: 'baz',
         strict: false,
       }, [], [])
       const value = Hydra.factory.createEntity<HydraResource>(
@@ -324,12 +343,10 @@ describe('property step', () => {
 
       // when
       const arrayRunner = propertyStatement.getRunner(value)
-      const results = await runAll(arrayRunner)
+      const { result } = await arrayRunner.call(context)
 
       // then
-      expect(results.length).toBe(5)
-      expect(results.successes).toBe(1)
-      expect(results.failures).toBe(1)
+      expect(result!.status).toBe('failure')
     })
 
     it('returns success when expected value is not specified and property exists', async () => {
@@ -421,13 +438,15 @@ describe('property step', () => {
       expect(result.checkNames).toContain('topLevel2')
     })
 
-    it('runs check on each value of array', async () => {
+    it('runs check on array items and returns success if any child step succeeds', async () => {
       // given
+      const fooCheck = new StepSpy()
+      fooCheck.runner.mockReturnValue({ result: { status: 'success' } })
       const children = [
-        new StepSpy(),
-        new StepSpy(),
+        fooCheck,
+        fooCheck,
       ]
-      const propertyStatement = new PropertyStep({
+      const propertyBlock = new PropertyStep({
         propertyId: 'friend',
         strict: false,
       }, children, [])
@@ -436,13 +455,40 @@ describe('property step', () => {
       }
 
       // when
-      const arrayRunner = propertyStatement.getRunner(value)
-      await runAll(arrayRunner)
+      const arrayRunner = propertyBlock.getRunner(value)
+      const { result } = await arrayRunner.call(context)
 
       // then
-      children.forEach(childStep => {
-        expect(childStep.getRunner()).toHaveBeenCalledTimes(2)
-      })
+      expect(fooCheck.runner).toHaveBeenCalledTimes(2)
+      expect(result!.status).toEqual('success')
+    })
+
+    it('runs check on array items and returns failure is no child check succeeds', async () => {
+      // given
+      const failedCheck = new StepSpy()
+      failedCheck.runner.mockReturnValue({ result: { status: 'failure' } })
+      const successCheck = new StepSpy()
+      successCheck.runner.mockReturnValue({ result: { status: 'success' } })
+      const children = [
+        failedCheck,
+        successCheck,
+      ]
+      const propertyBlock = new PropertyStep({
+        propertyId: 'friend',
+        strict: false,
+      }, children, [])
+      const value: any = {
+        friend: [ 'foo', 'bar' ],
+      }
+
+      // when
+      const arrayRunner = propertyBlock.getRunner(value)
+      const { result } = await arrayRunner.call(context)
+
+      // then
+      expect(failedCheck.runner).toHaveBeenCalledTimes(2)
+      expect(successCheck.runner).toHaveBeenCalledTimes(2)
+      expect(result!.status).toEqual('failure')
     })
 
     describe('when constrained', () => {
@@ -455,8 +501,8 @@ describe('property step', () => {
         }, [
           childStep,
         ], [
-          new ConstraintMock(true),
-          new ConstraintMock(false),
+          new ConstraintMock(true, 'Representation'),
+          new ConstraintMock(false, 'Representation'),
         ])
         const value = Hydra.factory.createEntity<HydraResource>(
           cf({ dataset })

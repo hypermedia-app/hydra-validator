@@ -2,7 +2,6 @@ jest.mock('./api-documentation')
 
 import check from './analyse-representation'
 import apiDocsChecks from './api-documentation'
-// @ts-ignore
 import rdf from 'rdf-ext'
 
 describe('analyse-representation', () => {
