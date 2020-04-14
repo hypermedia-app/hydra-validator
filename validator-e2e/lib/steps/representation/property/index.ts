@@ -27,7 +27,7 @@ async function flattenResults(root: CheckResult<E2eContext>, context: E2eContext
     return results
   }
 
-  let remainingChecks = [...root.nextChecks]
+  const remainingChecks = [...root.nextChecks]
   while (remainingChecks.length > 0) {
     const child = remainingChecks.splice(0, 1)[0]
     const childResult = await child.call(context)
@@ -79,11 +79,9 @@ export class PropertyStep extends ScenarioStep<HydraResource> {
         return step.__executeRdfTypeStatement(resource)
       }
 
-      let value = resource[step.propertyId.value]
+      const value = resource[step.propertyId.value]
       if (!value) {
         return step.__getMissingPropertyResult(resource)
-      } else if (!Array.isArray(value)) {
-        value = [value]
       }
 
       return step.__checkValues(value as any, this)
