@@ -1,18 +1,20 @@
-import { Hydra } from 'alcaeus'
-import { IHydraResponse } from 'alcaeus/types/HydraResponse'
+import Hydra, { HydraResource, ResourceIndexer } from 'alcaeus'
+import { HydraResponse } from 'alcaeus/HydraResponse'
+import { parsers } from '@rdfjs/formats-common'
 import { E2eContext } from '../types'
 import { checkChain, CheckResult, Result } from 'hydra-validator-core'
 import { ScenarioStep } from './steps'
-import { HydraResource } from 'alcaeus/types/Resources'
 import { Constraint, RepresentationConstraint, ResponseConstraint } from './steps/constraints/Constraint'
-import { IResource } from 'alcaeus/types/Resources/Resource'
+import { NamedNode } from 'rdf-js'
+
+parsers.forEach((parser, mediaType) => Hydra.parsers.set(mediaType, parser))
 
 function processResource<T>(resource: T, steps: ScenarioStep[], constraints: Constraint[]): CheckResult<E2eContext> {
   const localContext = {}
   const nextChecks: checkChain<E2eContext>[] = []
 
   const resourceConstraints: RepresentationConstraint[] = constraints.filter(c => c.type === 'Representation')
-  const allConstraintsSatisfied = resourceConstraints.every(c => c.satisfiedBy(resource as unknown as HydraResource))
+  const allConstraintsSatisfied = resourceConstraints.every(c => c.satisfiedBy(resource as unknown as HydraResource & ResourceIndexer))
 
   if (!allConstraintsSatisfied) {
     return {
@@ -32,7 +34,7 @@ function processResource<T>(resource: T, steps: ScenarioStep[], constraints: Con
   }
 }
 
-function processResponse(response: IHydraResponse, steps: ScenarioStep[], constraints: Constraint[]): CheckResult<E2eContext> {
+function processResponse(response: HydraResponse, steps: ScenarioStep[], constraints: Constraint[]): CheckResult<E2eContext> {
   const localContext = {}
 
   const nextChecks: checkChain<E2eContext>[] = []
@@ -78,12 +80,18 @@ function processResponse(response: IHydraResponse, steps: ScenarioStep[], constr
   }
 }
 
-function dereferenceAndProcess(id: string, steps: ScenarioStep[], constraints: Constraint[], headers: HeadersInit | null) {
+function dereferenceAndProcess(id: string | NamedNode, steps: ScenarioStep[], constraints: Constraint[], headers: HeadersInit | null) {
+  const uri: string = typeof id === 'string' ? id : id.value
+
   const loadResource = headers
-    ? Hydra.loadResource(id, headers)
-    : Hydra.loadResource(id)
+    ? Hydra.loadResource(uri, headers)
+    : Hydra.loadResource(uri)
 
   return loadResource
+    .then(async response => {
+      await Hydra.apiDocumentations
+      return response
+    })
     .then(response => {
       return processResponse(response, steps, constraints)
     })
@@ -113,7 +121,7 @@ export function getUrlRunner(id: string, currentStep?: ScenarioStep) {
 }
 
 export function getResponseRunner(
-  resourceOrResponse: IResource | IHydraResponse,
+  resourceOrResponse: HydraResource | HydraResponse,
   currentStep?: ScenarioStep) {
   const childSteps = currentStep ? currentStep.children : []
   const constraints = currentStep ? currentStep.constraints : []
@@ -123,9 +131,15 @@ export function getResponseRunner(
 
     if (typeof resourceOrResponse === 'object') {
       if ('id' in resourceOrResponse) {
-        return dereferenceAndProcess((resourceOrResponse as HydraResource).id, steps, constraints, this.headers || null)
+        if (resourceOrResponse.id.termType === 'BlankNode') {
+          return {
+            result: Result.Failure('Cannot dereference blank node identifier'),
+          }
+        }
+
+        return dereferenceAndProcess(resourceOrResponse.id, steps, constraints, this.headers || null)
       }
-      return processResponse(resourceOrResponse, steps, constraints)
+      return processResponse(resourceOrResponse as HydraResponse, steps, constraints)
     }
 
     return {

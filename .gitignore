@@ -6,7 +6,7 @@ coverage/
 !*.conf.js
 !validator-ui/src/**/*.js
 *.log
-*.hydra.json
+*.hydra.*.json
 *.d.ts
 *.js.map
 /CHANGELOG.md

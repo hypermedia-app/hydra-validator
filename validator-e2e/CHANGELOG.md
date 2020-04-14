@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.10.0-alpha.0](https://github.com/hypermedia-app/hydra-validator/compare/hydra-validator-e2e@0.9.0...hydra-validator-e2e@0.10.0-alpha.0) (2020-04-10)
+
+
+### Bug Fixes
+
+* ensure all "common parsers" are st up with alcaeus ([63dae3f](https://github.com/hypermedia-app/hydra-validator/commit/63dae3f027039fe8f165808efd2925d700846aca))
+* scenario should fail when link fails to dereference ([9b7442e](https://github.com/hypermedia-app/hydra-validator/commit/9b7442e81003966afaf9c3355b05c8639f6ba27e))
+
+
+
+
+
 # [0.9.0](https://github.com/hypermedia-app/hydra-validator/compare/hydra-validator-e2e@0.8.3...hydra-validator-e2e@0.9.0) (2020-03-17)
 
 

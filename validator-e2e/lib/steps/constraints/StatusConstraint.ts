@@ -1,8 +1,8 @@
 import { ResponseConstraint } from './Constraint'
-import { IHydraResponse } from 'alcaeus/types/HydraResponse'
+import { HydraResponse } from 'alcaeus/HydraResponse'
 
 export class StatusConstraint extends ResponseConstraint {
-  protected getValue(subject: IHydraResponse): number {
+  protected getValue(subject: HydraResponse): number {
     return subject.xhr.status
   }
 

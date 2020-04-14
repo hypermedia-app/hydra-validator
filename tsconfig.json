@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "target": "es2018",
+    "module": "commonjs",
+    "lib": [
+      "es2015",
+      "dom"
+    ],
+    "strict": true,
+    "declaration": false,
+    "sourceMap": false,
+    "esModuleInterop": true,
+    "noEmit": true
+  }
+}

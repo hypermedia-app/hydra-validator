@@ -1,10 +1,9 @@
-import { IOperation } from 'alcaeus/types/Resources'
-import { IHydraResponse } from 'alcaeus/types/HydraResponse'
+import { Operation } from 'alcaeus/Resources/Operation'
 import { E2eContext } from '../../../../types'
 import { checkChain, Result } from 'hydra-validator-core'
 import { getResponseRunner } from '../../../checkRunner'
 import { ScenarioStep } from '../../index'
-import { readFileSync } from 'fs'
+import { readFileSync } from '../../fs'
 import { resolve } from 'path'
 
 interface InvocationStepInit {
@@ -34,7 +33,7 @@ export class InvocationStep extends ScenarioStep {
     }
   }
 
-  public getRunner(operation: IOperation): checkChain<E2eContext> {
+  public getRunner(operation: Operation): checkChain<E2eContext> {
     const step = this
     return async function (this: E2eContext) {
       if (step.executed) {
@@ -64,7 +63,7 @@ export class InvocationStep extends ScenarioStep {
         })
       }
 
-      const response: IHydraResponse = await operation.invoke(body, headers)
+      const response = await operation.invoke(body, headers)
 
       step.markExecuted()
 

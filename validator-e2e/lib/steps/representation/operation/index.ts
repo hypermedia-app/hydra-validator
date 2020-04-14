@@ -1,8 +1,9 @@
-import { HydraResource } from 'alcaeus/types/Resources'
 import { E2eContext } from '../../../../types'
 import { checkChain, Result } from 'hydra-validator-core'
 import { ScenarioStep } from '../../index'
 import { getResourceRunner } from '../../../checkRunner'
+import { HydraResource, ResourceIdentifier } from 'alcaeus'
+import { namedNode } from '@rdfjs/data-model'
 
 interface OperationStepInit {
   operationId: string
@@ -10,12 +11,12 @@ interface OperationStepInit {
 }
 
 export class OperationStep extends ScenarioStep {
-  public operationId: string;
+  public operationId: ResourceIdentifier;
   public strict: boolean;
 
   public constructor(init: OperationStepInit, children: ScenarioStep[]) {
     super(children)
-    this.operationId = init.operationId
+    this.operationId = namedNode(init.operationId)
     this.strict = init.strict
   }
 
@@ -26,9 +27,9 @@ export class OperationStep extends ScenarioStep {
   public getRunner(resource: HydraResource): checkChain<E2eContext> {
     const step = this
     return async function invokeOperation(this: E2eContext) {
-      const operation = resource.operations.find(op => op.supportedOperation.id === step.operationId || op.supportedOperation.types.contains(step.operationId))
+      const operation = resource.operations.find(op => op.supportedOperation.id.equals(step.operationId) || op.supportedOperation.types.has(step.operationId))
       if (!operation) {
-        const message = `Operation ${step.operationId} not found`
+        const message = `Operation ${step.operationId.value} not found`
         if (step.strict) {
           return {
             result: Result.Failure(message),

@@ -7,6 +7,10 @@ interface Summary {
   checkNames: string[]
 }
 
+export type RecursivePartial<T> = {
+  [P in keyof T]?: RecursivePartial<T[P]>;
+};
+
 export async function runAll(chain: checkChain<E2eContext>, context: E2eContext = { scenarios: [], basePath: '' }): Promise<IResult[] & Summary> {
   const checkNames = []
 

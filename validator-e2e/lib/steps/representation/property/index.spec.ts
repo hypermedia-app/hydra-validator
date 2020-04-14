@@ -1,10 +1,25 @@
+import Hydra, { HydraResource } from 'alcaeus'
+import cf from 'clownface'
+import $rdf from 'rdf-ext'
+import DatasetExt from 'rdf-ext/lib/Dataset'
+import { literal, namedNode } from '@rdfjs/data-model'
+import namespace from '@rdfjs/namespace'
 import { PropertyStep } from '.'
 import { E2eContext } from '../../../../types'
 import { StepStub, StepSpy, ConstraintMock } from '../../stub'
-import { expand } from '@zazuko/rdf-vocabularies'
+import { prefixes, expand } from '@zazuko/rdf-vocabularies'
 import { runAll } from '../../../testHelpers'
 
+const xsd = namespace(prefixes.xsd)
+const rdf = namespace(prefixes.rdf)
+
 describe('property step', () => {
+  let dataset: DatasetExt
+
+  beforeEach(() => {
+    dataset = $rdf.dataset()
+  })
+
   let context: E2eContext & any
   beforeEach(() => {
     context = {
@@ -15,7 +30,7 @@ describe('property step', () => {
   it('returns error when step has both children and value', async () => {
     // given
     const propertyStatement = new PropertyStep({
-      propertyId: 'title',
+      propertyId: 'http://example.com/title',
       value: 'foo',
       strict: false,
     }, [ {} as any ], [])
@@ -31,7 +46,7 @@ describe('property step', () => {
   it('returns error when step has both constraints and value', async () => {
     // given
     const propertyStatement = new PropertyStep({
-      propertyId: 'title',
+      propertyId: 'http://example.com/title',
       value: 'foo',
       strict: false,
     }, [], [ {} as any ],)
@@ -47,7 +62,7 @@ describe('property step', () => {
   it('applies to hydra resource', () => {
     // given
     const propertyStatement = new PropertyStep({
-      propertyId: 'title',
+      propertyId: 'http://example.com/title',
       value: 'foo',
       strict: false,
     }, [], [])
@@ -65,13 +80,14 @@ describe('property step', () => {
     it('returns failure when values do not match', async () => {
       // given
       const propertyStatement = new PropertyStep({
-        propertyId: 'title',
+        propertyId: 'http://example.com/title',
         value: 'foo',
         strict: false,
       }, [], [])
-      const value: any = {
-        title: 'bar',
-      }
+      const value = Hydra.factory.createEntity<HydraResource>(
+        cf({ dataset })
+          .blankNode()
+          .addOut(namedNode('http://example.com/title'), 'bar'))
 
       // when
       const execute = propertyStatement.getRunner(value)
@@ -84,13 +100,14 @@ describe('property step', () => {
     it('returns success when values match', async () => {
       // given
       const propertyStatement = new PropertyStep({
-        propertyId: 'title',
+        propertyId: 'http://example.com/title',
         value: 'foo',
         strict: false,
       }, [], [])
-      const value: any = {
-        title: 'foo',
-      }
+      const value = Hydra.factory.createEntity<HydraResource>(
+        cf({ dataset })
+          .blankNode()
+          .addOut(namedNode('http://example.com/title'), 'foo'))
 
       // when
       const execute = propertyStatement.getRunner(value)
@@ -107,9 +124,10 @@ describe('property step', () => {
         value: false,
         strict: false,
       }, [], [])
-      const value: any = {
-        active: false,
-      }
+      const value = Hydra.factory.createEntity<HydraResource>(
+        cf({ dataset })
+          .blankNode()
+          .addOut(namedNode('active'), literal('false', xsd.boolean)))
 
       // when
       const execute = propertyStatement.getRunner(value)
@@ -126,9 +144,10 @@ describe('property step', () => {
         value: 0,
         strict: false,
       }, [], [])
-      const value: any = {
-        count: 0,
-      }
+      const value = Hydra.factory.createEntity<HydraResource>(
+        cf({ dataset })
+          .blankNode()
+          .addOut(namedNode('count'), literal('0', xsd.int)))
 
       // when
       const execute = propertyStatement.getRunner(value)
@@ -145,9 +164,10 @@ describe('property step', () => {
         value: 0,
         strict: false,
       }, [], [])
-      const value: any = {
-        count: '0',
-      }
+      const value = Hydra.factory.createEntity<HydraResource>(
+        cf({ dataset })
+          .blankNode()
+          .addOut(namedNode('count'), literal('0')))
 
       // when
       const execute = propertyStatement.getRunner(value)
@@ -164,9 +184,10 @@ describe('property step', () => {
         value: false,
         strict: false,
       }, [], [])
-      const value: any = {
-        count: 'false',
-      }
+      const value = Hydra.factory.createEntity<HydraResource>(
+        cf({ dataset })
+          .blankNode()
+          .addOut(namedNode('count'), literal('false')))
 
       // when
       const execute = propertyStatement.getRunner(value)
@@ -183,9 +204,10 @@ describe('property step', () => {
         value: '',
         strict: false,
       }, [], [])
-      const value: any = {
-        count: '',
-      }
+      const value = Hydra.factory.createEntity<HydraResource>(
+        cf({ dataset })
+          .blankNode()
+          .addOut(namedNode('count'), literal('')))
 
       // when
       const execute = propertyStatement.getRunner(value)
@@ -198,12 +220,11 @@ describe('property step', () => {
     it('returns failure when strict and property is missing', async () => {
       // given
       const propertyStatement = new PropertyStep({
-        propertyId: 'title',
+        propertyId: 'http://example.com/title',
         value: 'foo',
         strict: true,
       }, [], [])
-      const value: any = {
-      }
+      const value = Hydra.factory.createEntity<HydraResource>(cf({ dataset }).blankNode())
 
       // when
       const execute = propertyStatement.getRunner(value)
@@ -216,10 +237,12 @@ describe('property step', () => {
     it('returns informational when not strict and property is missing', async () => {
       // given
       const propertyStatement = new PropertyStep({
-        propertyId: 'title',
+        propertyId: 'http://example.com/title',
         strict: false,
       }, [], [])
-      const value: any = {}
+      const value = Hydra.factory.createEntity<HydraResource>(
+        cf({ dataset })
+          .blankNode())
 
       // when
       const execute = propertyStatement.getRunner(value)
@@ -236,14 +259,13 @@ describe('property step', () => {
         value: 'http://example.com/Class',
         strict: true,
       }, [], [])
-      const value = {
-        types: {
-          contains: () => true,
-        },
-      }
+      const value = Hydra.factory.createEntity<HydraResource>(
+        cf({ dataset })
+          .blankNode()
+          .addOut(rdf.type, namedNode('http://example.com/Class')))
 
       // when
-      const execute = propertyStatement.getRunner(value as any)
+      const execute = propertyStatement.getRunner(value)
       const result = await execute.call(context)
 
       // then
@@ -257,14 +279,12 @@ describe('property step', () => {
         value: 'http://example.com/Class',
         strict: true,
       }, [], [])
-      const value = {
-        types: {
-          contains: () => false,
-        },
-      }
+      const value = Hydra.factory.createEntity<HydraResource>(
+        cf({ dataset })
+          .blankNode())
 
       // when
-      const execute = propertyStatement.getRunner(value as any)
+      const execute = propertyStatement.getRunner(value)
       const result = await execute.call(context)
 
       // then
@@ -278,14 +298,12 @@ describe('property step', () => {
         value: 'http://example.com/Class',
         strict: false,
       }, [], [])
-      const value = {
-        types: {
-          contains: () => false,
-        },
-      }
+      const value = Hydra.factory.createEntity<HydraResource>(
+        cf({ dataset })
+          .blankNode())
 
       // when
-      const execute = propertyStatement.getRunner(value as any)
+      const execute = propertyStatement.getRunner(value)
       const result = await execute.call(context)
 
       // then
@@ -295,13 +313,14 @@ describe('property step', () => {
     it('runs check on array items and returns success if value is found', async () => {
       // given
       const propertyStatement = new PropertyStep({
-        propertyId: 'title',
+        propertyId: 'http://example.com/title',
         value: 'bar',
         strict: false,
       }, [], [])
-      const value: any = {
-        title: [ 'foo', 'bar', 'baz' ],
-      }
+      const value = Hydra.factory.createEntity<HydraResource>(
+        cf({ dataset })
+          .blankNode()
+          .addOut(namedNode('http://example.com/title'), [ 'foo', 'bar', 'baz' ]))
 
       // when
       const arrayRunner = propertyStatement.getRunner(value)
@@ -314,13 +333,14 @@ describe('property step', () => {
     it('runs check on array items and returns failure if matching value is not found', async () => {
       // given
       const propertyStatement = new PropertyStep({
-        propertyId: 'title',
+        propertyId: 'http://example.com/title',
         value: 'baz',
         strict: false,
       }, [], [])
-      const value: any = {
-        title: [ 'foo', 'bar' ],
-      }
+      const value = Hydra.factory.createEntity<HydraResource>(
+        cf({ dataset })
+          .blankNode()
+          .addOut(namedNode('http://example.com/title'), ['foo', 'bar']))
 
       // when
       const arrayRunner = propertyStatement.getRunner(value)
@@ -336,9 +356,10 @@ describe('property step', () => {
         propertyId: 'count',
         strict: false,
       }, [], [])
-      const value: any = {
-        count: '',
-      }
+      const value = Hydra.factory.createEntity<HydraResource>(
+        cf({ dataset })
+          .blankNode()
+          .addOut(namedNode('count'), ''))
 
       // when
       const execute = propertyStatement.getRunner(value)
@@ -353,12 +374,14 @@ describe('property step', () => {
     it('returns failure when strict and property is missing', async () => {
       // given
       const propertyBlock = new PropertyStep({
-        propertyId: 'title',
+        propertyId: 'http://example.com/title',
         strict: true,
       }, [
         new StepStub('foo'),
       ], [])
-      const value: any = {}
+      const value = Hydra.factory.createEntity<HydraResource>(
+        cf({ dataset })
+          .blankNode())
 
       // when
       const execute = propertyBlock.getRunner(value)
@@ -371,12 +394,14 @@ describe('property step', () => {
     it('returns informational when not strict and property is missing', async () => {
       // given
       const propertyBlock = new PropertyStep({
-        propertyId: 'title',
+        propertyId: 'http://example.com/title',
         strict: false,
       }, [
         new StepStub('foo'),
       ], [])
-      const value: any = {}
+      const value = Hydra.factory.createEntity<HydraResource>(
+        cf({ dataset })
+          .blankNode())
 
       // when
       const execute = propertyBlock.getRunner(value)
@@ -388,26 +413,30 @@ describe('property step', () => {
 
     it('enqueues child steps and top-level steps in that order', async () => {
       // given
+      const executions: string[] = []
       const childSteps = [
-        new StepStub('step1'),
-        new StepStub('step2'),
+        new StepStub('step1', executions),
+        new StepStub('step2', executions),
       ]
-      context.scenarios.push(new StepStub('topLevel1'))
-      context.scenarios.push(new StepStub('topLevel2'))
+      context.scenarios.push(new StepStub('topLevel1', executions))
+      context.scenarios.push(new StepStub('topLevel2', executions))
       const propertyBlock = new PropertyStep({
-        propertyId: 'title',
+        propertyId: 'http://example.com/title',
         strict: false,
       }, childSteps, [])
+      const value = Hydra.factory.createEntity<HydraResource>(
+        cf({ dataset })
+          .blankNode()
+          .addOut(namedNode('http://example.com/title'), 'hello'))
 
       // when
-      const execute = propertyBlock.getRunner({ title: 'hello' } as any)
-      const result = await runAll(execute, context)
+      const execute = propertyBlock.getRunner(value)
+      await runAll(execute, context)
 
       // then
-      expect(result.checkNames).toContain('step1')
-      expect(result.checkNames).toContain('step2')
-      expect(result.checkNames).toContain('topLevel1')
-      expect(result.checkNames).toContain('topLevel2')
+      expect(executions).toEqual(
+        expect.arrayContaining(['step1', 'step2', 'topLevel1', 'topLevel2'])
+      )
     })
 
     it('runs check on array items and returns success if any child step succeeds', async () => {
@@ -468,7 +497,7 @@ describe('property step', () => {
         // given
         const childStep = new StepSpy()
         const propertyBlock = new PropertyStep({
-          propertyId: 'title',
+          propertyId: 'http://example.com/title',
           strict: false,
         }, [
           childStep,
@@ -476,9 +505,10 @@ describe('property step', () => {
           new ConstraintMock(true, 'Representation'),
           new ConstraintMock(false, 'Representation'),
         ])
-        const value: any = {
-          title: [ 'Rocky IV', 'Rocky V' ],
-        }
+        const value = Hydra.factory.createEntity<HydraResource>(
+          cf({ dataset })
+            .blankNode()
+            .addOut(namedNode('http://example.com/title'), ['Rocky IV', 'Rocky V']))
 
         // when
         const execute = propertyBlock.getRunner(value)
@@ -493,7 +523,7 @@ describe('property step', () => {
         // given
         const childStep = new StepSpy()
         const propertyBlock = new PropertyStep({
-          propertyId: 'title',
+          propertyId: 'http://example.com/title',
           strict: false,
         }, [
           childStep,
@@ -501,9 +531,10 @@ describe('property step', () => {
           new ConstraintMock(true),
           new ConstraintMock(true),
         ])
-        const value: any = {
-          title: 'Rocky IV',
-        }
+        const value = Hydra.factory.createEntity<HydraResource>(
+          cf({ dataset })
+            .blankNode()
+            .addOut(namedNode('http://example.com/title'), 'Rocky IV'))
 
         // when
         const execute = propertyBlock.getRunner(value)
@@ -517,7 +548,7 @@ describe('property step', () => {
         // given
         const childStep = new StepSpy()
         const propertyBlock = new PropertyStep({
-          propertyId: 'title',
+          propertyId: 'http://example.com/title',
           strict: false,
         }, [
           childStep,
@@ -525,9 +556,10 @@ describe('property step', () => {
           new ConstraintMock(true),
           new ConstraintMock(true),
         ])
-        const value: any = {
-          title: [ 'Rocky IV', 'Rocky V' ],
-        }
+        const value = Hydra.factory.createEntity<HydraResource>(
+          cf({ dataset })
+            .blankNode()
+            .addOut(namedNode('http://example.com/title'), ['Rocky IV', 'Rocky V']))
 
         // when
         const execute = propertyBlock.getRunner(value)

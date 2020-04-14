@@ -1,6 +1,10 @@
-import { getResponseRunner } from '../../../checkRunner'
+import { namedNode } from '@rdfjs/data-model'
+import { HydraResource } from 'alcaeus/Resources'
+import { getResponseRunner, getUrlRunner } from '../../../checkRunner'
 import { LinkStep } from './'
 import { E2eContext } from '../../../../types'
+import { RecursivePartial } from '../../../testHelpers'
+import { IriTemplate } from 'alcaeus/Resources/Mixins/IriTemplate'
 
 jest.mock('../../../checkRunner')
 
@@ -38,6 +42,7 @@ describe('link', () => {
       }, [], [])
       const resource = {
         getLinks: () => [],
+        getArray: () => [],
       }
 
       // when
@@ -55,7 +60,9 @@ describe('link', () => {
         strict: true,
       }, [], [])
       const resource = {
+        id: namedNode('foo'),
         getLinks: () => [],
+        getArray: () => [],
       }
 
       // when
@@ -88,39 +95,18 @@ describe('link', () => {
       expect(getResponseRunner).toHaveBeenCalledWith(linked, step)
     })
 
-    it('when strict and link not found but exists on resource; ignores non-resource values', async () => {
-      // given
-      const step = new LinkStep({
-        rel: 'urn:not:link',
-        strict: true,
-      }, [], [])
-      const linked = { id: 'urn:resource:linked' }
-      const resource = {
-        getLinks: () => [],
-        getArray: jest.fn().mockReturnValue([ 10, 'whatever' ]),
-        'urn:not:link': linked,
-      }
-
-      // when
-      const execute = step.getRunner(resource as any)
-      await execute.call(context)
-
-      // then
-      expect(getResponseRunner).toHaveBeenCalledTimes(0)
-    })
-
-    it('dereferences linked resources when child steps exist', async () => {
+    it('dereferences linked resources', async () => {
       // given
       const step = new LinkStep({
         rel: 'urn:link:rel',
         strict: true,
       }, [], [])
-      const resource = {
+      const resource: RecursivePartial<HydraResource> = {
         getLinks: () => [
           {
             supportedProperty: {
               property: {
-                id: 'urn:link:rel',
+                id: namedNode('urn:link:rel'),
               },
             },
             resources: [
@@ -129,6 +115,7 @@ describe('link', () => {
             ],
           },
         ],
+        getArray: () => [],
       }
 
       // when
@@ -139,6 +126,50 @@ describe('link', () => {
       expect(nextChecks).toHaveLength(2)
       expect(getResponseRunner).toHaveBeenCalledWith({ id: 'urn:resource:one' }, step)
       expect(getResponseRunner).toHaveBeenCalledWith({ id: 'urn:resource:two' }, step)
+    })
+  })
+
+  describe('block', () => {
+    it('dereferences populated template', async () => {
+      // given
+      const step = new LinkStep({
+        rel: 'urn:link:rel',
+        strict: false,
+        variables: [
+          { key: 'http://schema.org/tag', value: 'foo' },
+          { key: 'http://schema.org/tag', value: 'bar' },
+          { key: 'http://schema.org/title', value: 'baz' },
+        ],
+      }, [], [])
+      const template: Partial<IriTemplate> = {
+        expand: jest.fn().mockReturnValue('filled-in-template'),
+      }
+      const resource: RecursivePartial<HydraResource> = {
+        getLinks: () => [
+          {
+            supportedProperty: {
+              property: {
+                id: namedNode('urn:link:rel'),
+              },
+            },
+            resources: [
+              template,
+            ],
+          },
+        ],
+        getArray: () => [],
+      }
+
+      // when
+      const execute = step.getRunner(resource as any)
+      await execute.call(context)
+
+      // then
+      expect(template.expand).toHaveBeenCalledWith({
+        'http://schema.org/tag': ['foo', 'bar'],
+        'http://schema.org/title': 'baz',
+      })
+      expect(getUrlRunner).toHaveBeenCalledWith('filled-in-template', step)
     })
   })
 })

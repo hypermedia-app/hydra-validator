@@ -1,12 +1,12 @@
-import { Hydra } from 'alcaeus'
+import Hydra, { HydraResource } from 'alcaeus'
+import { namedNode } from '@rdfjs/data-model'
+import { RdfResource } from '@tpluscode/rdfine'
 import { getResponseRunner, getResourceRunner, getUrlRunner } from './checkRunner'
 import { E2eContext } from '../types'
 import { ScenarioStep } from './steps'
-import { HydraResource } from 'alcaeus/types/Resources'
 import { ConstraintMock, StepSpy, StepStub } from './steps/stub'
-import { IHydraResponse } from 'alcaeus/types/HydraResponse'
+import { HydraResponse } from 'alcaeus/HydraResponse'
 import { runAll } from './testHelpers'
-import { IResource } from 'alcaeus/types/Resources/Resource'
 
 jest.mock('alcaeus')
 
@@ -135,15 +135,15 @@ describe('processResponse', () => {
         children: [ ],
         constraints: [],
       } as any
-      const resource = {
-        id: 'foo',
+      const resource: Partial<RdfResource> = {
+        id: namedNode('foo'),
       }
       loadResource.mockResolvedValue({
         xhr: {
           url: 'x:y:z',
         },
       })
-      const runner = getResponseRunner(resource as IResource, step)
+      const runner = getResponseRunner(resource as any, step)
 
       // when
       await runner.call(context)
@@ -158,7 +158,7 @@ describe('processResponse', () => {
         children: [ ],
         constraints: [],
       } as any
-      const response: IHydraResponse = {
+      const response: HydraResponse = {
         xhr: { url: 'foo' },
       } as any
       const runner = getResponseRunner(response, step)
@@ -178,7 +178,7 @@ describe('processResponse', () => {
         constraints: [],
       } as any
       const topLevelStep = new StepSpy()
-      const response: IHydraResponse = {
+      const response: HydraResponse = {
         xhr: { url: 'foo' },
       } as any
       const runner = getResponseRunner(response, step)
@@ -200,7 +200,7 @@ describe('processResponse', () => {
         constraints: [ new ConstraintMock(false, 'Response') ],
       } as any
       const topLevelStep = new StepSpy()
-      const response: IHydraResponse = {
+      const response: HydraResponse = {
         xhr: { url: 'foo' },
       } as any
       const runner = getResponseRunner(response, step)

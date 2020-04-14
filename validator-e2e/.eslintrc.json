@@ -13,6 +13,9 @@
   "plugins": [
     "jest"
   ],
+  "rules": {
+    "@typescript-eslint/no-this-alias": 0
+  },
   "overrides": [
     {
       "files": ["*.spec.ts"],

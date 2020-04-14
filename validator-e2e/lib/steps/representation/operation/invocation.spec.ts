@@ -2,9 +2,9 @@ import { E2eContext } from '../../../../types'
 import { InvocationStep } from './invocation'
 import { StepStub } from '../../stub'
 import { getResponseRunner } from '../../../checkRunner'
-import { readFileSync } from 'fs'
+import { readFileSync } from '../../fs'
 
-jest.mock('fs')
+jest.mock('../../fs')
 jest.mock('../../../checkRunner')
 
 describe('Invoke block', () => {

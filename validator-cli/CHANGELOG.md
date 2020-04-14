@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.3.0-alpha.0](https://github.com/hypermedia-app/hydra-validator/compare/hydra-validator@1.2.0...hydra-validator@1.3.0-alpha.0) (2020-04-10)
+
+**Note:** Version bump only for package hydra-validator
+
+
+
+
+
 # [1.2.0](https://github.com/hypermedia-app/hydra-validator/compare/hydra-validator@1.1.3...hydra-validator@1.2.0) (2020-03-17)
 
 **Note:** Version bump only for package hydra-validator

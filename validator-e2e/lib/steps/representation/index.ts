@@ -1,4 +1,4 @@
-import { HydraResource } from 'alcaeus/types/Resources'
+import { HydraResource } from 'alcaeus/Resources'
 import { E2eContext } from '../../../types'
 import { checkChain } from 'hydra-validator-core'
 import { ScenarioStep } from '../'
@@ -19,7 +19,7 @@ export class ClassStep extends ScenarioStep {
   }
 
   protected appliesToInternal(obj: HydraResource): boolean {
-    return 'id' in obj && obj.types.contains(this.classId)
+    return 'id' in obj && obj.types.has(this.classId)
   }
 
   public getRunner(resource: HydraResource): checkChain<E2eContext> {

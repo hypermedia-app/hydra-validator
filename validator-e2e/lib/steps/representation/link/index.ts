@@ -1,25 +1,59 @@
-import { HydraResource } from 'alcaeus/types/Resources'
+import { HydraResource } from 'alcaeus/Resources'
+import { IriTemplate } from 'alcaeus/Resources/Mixins/IriTemplate'
 import { checkChain, Result } from 'hydra-validator-core'
-import { getResponseRunner } from '../../../checkRunner'
+import { getResponseRunner, getUrlRunner } from '../../../checkRunner'
 import { ScenarioStep } from '../../index'
 import { Constraint } from '../../constraints/Constraint'
 import { E2eContext } from '../../../../types'
-import { IResource } from 'alcaeus/types/Resources/Resource'
+import { namedNode } from '@rdfjs/data-model'
+import { NamedNode } from 'rdf-js'
 
 interface LinkStepInit {
   rel: string
   strict: boolean
+  variables?: TemplateVariable[]
+}
+
+interface TemplateVariable {
+  key: string
+  value: string
+}
+
+function reduceVariables(variables: Record<string, string | string[]>, variable: TemplateVariable) {
+  const value = variables[variable.key]
+
+  if (!value) {
+    return {
+      ...variables,
+      [variable.key]: variable.value,
+    }
+  }
+
+  if (Array.isArray(value)) {
+    return {
+      ...variables,
+      [variable.key]: [...value, variable.value],
+    }
+  }
+
+  return {
+    ...variables,
+    ...variables,
+    [variable.key]: [value, variable.value],
+  }
 }
 
 export class LinkStep extends ScenarioStep<HydraResource> {
-  private relation: string
+  private relation: NamedNode
   private strict: boolean
+  private variables: Record<string, string | string[]>
 
   public constructor(init: LinkStepInit, children: ScenarioStep[], constraints: Constraint[]) {
     super(children, constraints)
 
-    this.relation = init.rel
+    this.relation = namedNode(init.rel)
     this.strict = init.strict
+    this.variables = init.variables?.reduce(reduceVariables, {}) || {}
   }
 
   protected appliesToInternal(obj: HydraResource): boolean {
@@ -35,42 +69,47 @@ export class LinkStep extends ScenarioStep<HydraResource> {
       }
 
       const linkValue = resource.getLinks()
-        .find(link => link.supportedProperty.property.id === step.relation)
+        .find(link => link.supportedProperty.property.id.equals(step.relation))
 
       // found supportedProperty which is a hydra:Link
       if (linkValue) {
         step.markExecuted()
 
         return {
-          result: Result.Informational(`Stepping into link ${step.relation}`),
-          nextChecks: linkValue.resources.map(resource => getResponseRunner(resource, step)),
+          result: Result.Informational(`Stepping into link ${step.relation.value}`),
+          nextChecks: linkValue.resources.map(resource => step.__dereferenceLinkedResource(resource, step)),
         }
       }
 
       // the resource may have a matching key, but not a supportedProperty hydra:Links
-      if (step.relation in resource) {
-        const potentialLinks = resource.getArray(step.relation)
-          .filter((r: any) => typeof r === 'object' && 'id' in r) as IResource[]
+      const potentialLinks = resource.getArray<HydraResource>(step.relation)
 
-        if (potentialLinks.length > 0) {
-          step.markExecuted()
+      if (potentialLinks.length > 0) {
+        step.markExecuted()
 
-          return {
-            result: Result.Warning(
-              `Stepping into link ${step.relation}`,
-              `Resources found but ${step.relation} is not a SupportedProperty of hydra:Link type.`),
-            nextChecks: potentialLinks.map(resource => getResponseRunner(resource, step)),
-          }
+        return {
+          result: Result.Warning(
+            `Stepping into link ${step.relation.value}`,
+            `Resources found but ${step.relation.value} is not a SupportedProperty of hydra:Link type.`),
+          nextChecks: potentialLinks.map(resource => step.__dereferenceLinkedResource(resource, step)),
         }
       }
 
       if (step.strict) {
         return {
-          result: Result.Failure(`No resources found on resource ${resource.id} linked with ${step.relation}`),
+          result: Result.Failure(`No resources found on resource ${resource.id.value} linked with ${step.relation.value}`),
         }
       }
 
       return {}
     }
+  }
+
+  private __dereferenceLinkedResource(resource: HydraResource | IriTemplate, step: this) {
+    if ('expand' in resource) {
+      return getUrlRunner(resource.expand(step.variables), step)
+    }
+
+    return getResponseRunner(resource, step)
   }
 }

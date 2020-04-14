@@ -1,14 +1,20 @@
 import areEqual from './comparison'
+import { literal } from '@rdfjs/data-model'
+import namespace from '@rdfjs/namespace'
+import { prefixes } from '@zazuko/rdf-vocabularies'
+import { Literal } from 'rdf-js'
+
+const xsd = namespace(prefixes.xsd)
 
 describe('areEqual', () => {
-  const equalPairs = [
-    [0, 0],
-    [0, '0'],
-    ['0', '0'],
-    [false, false],
-    [false, 'false'],
-    [true, 'true'],
-    ['foo', 'foo'],
+  const equalPairs: [string | number | boolean, Literal][] = [
+    [0, literal('0', xsd.int)],
+    [0, literal('0')],
+    ['0', literal('0')],
+    [false, literal('false', xsd.boolean)],
+    [false, literal('false')],
+    [true, literal('true')],
+    ['foo', literal('foo')],
   ]
 
   equalPairs.forEach(pair => {
@@ -17,13 +23,13 @@ describe('areEqual', () => {
     })
   })
 
-  const unequalPairs = [
-    [0, 1],
-    [0, '1'],
-    [false, true],
-    [false, 'true'],
-    [true, 'false'],
-    ['foo', 'bar'],
+  const unequalPairs: [string | number | boolean, Literal][] = [
+    [0, literal('1', xsd.int)],
+    [0, literal('1')],
+    [false, literal('true', xsd.boolean)],
+    [false, literal('true')],
+    [true, literal('false')],
+    ['foo', literal('bar')],
   ]
 
   unequalPairs.forEach(pair => {

@@ -1,4 +1,6 @@
-import { HydraResource } from 'alcaeus/types/Resources'
+import { Literal, NamedNode } from 'rdf-js'
+import { namedNode } from '@rdfjs/data-model'
+import { HydraResource, ResourceIndexer } from 'alcaeus'
 import { E2eContext } from '../../../../types'
 import { checkChain, CheckResult, Result, IResult } from 'hydra-validator-core'
 import { ScenarioStep } from '../../'
@@ -37,14 +39,14 @@ async function flattenResults(root: CheckResult<E2eContext>, context: E2eContext
 }
 
 export class PropertyStep extends ScenarioStep<HydraResource> {
-  public propertyId: string
+  public propertyId: NamedNode
   public strict: boolean
   public expectedValue?: unknown
 
   public constructor(init: PropertyStepInit, children: ScenarioStep[], constraints: Constraint[]) {
     super(children, constraints)
 
-    this.propertyId = init.propertyId
+    this.propertyId = namedNode(init.propertyId)
     this.strict = init.strict
     this.expectedValue = init.value
   }
@@ -53,7 +55,7 @@ export class PropertyStep extends ScenarioStep<HydraResource> {
     return typeof obj === 'object' && 'id' in obj
   }
 
-  public getRunner(resource: HydraResource): checkChain<E2eContext> {
+  public getRunner(resource: HydraResource & ResourceIndexer): checkChain<E2eContext> {
     const step = this
 
     if (step.children.length > 0 && !!step.expectedValue) {
@@ -73,23 +75,26 @@ export class PropertyStep extends ScenarioStep<HydraResource> {
     }
 
     return function () {
-      if (step.propertyId === expand('rdf:type')) {
+      if (step.propertyId.value === expand('rdf:type')) {
         return step.__executeRdfTypeStatement(resource)
       }
 
-      if (!(step.propertyId in resource)) {
+      let value = resource[step.propertyId.value]
+      if (!value) {
         return step.__getMissingPropertyResult(resource)
+      } else if (!Array.isArray(value)) {
+        value = [value]
       }
 
-      return step.__checkValues(resource[step.propertyId] as any, this)
+      return step.__checkValues(value as any, this)
     }
   }
 
-  private __checkValues(value: HydraResource | HydraResource[], context: E2eContext, arrayItem = false): Promise<CheckResult<E2eContext>> | CheckResult<E2eContext> {
+  private __checkValues(value: (HydraResource | Literal) | (HydraResource | Literal)[], context: E2eContext, arrayItem = false): Promise<CheckResult<E2eContext>> | CheckResult<E2eContext> {
     if (Array.isArray(value)) {
       if (value.length === 0) {
         return {
-          result: Result.Warning(`Found empty array for property ${this.propertyId}`),
+          result: Result.Warning(`Found empty array for property ${this.propertyId.value}`),
         }
       }
 
@@ -102,7 +107,7 @@ export class PropertyStep extends ScenarioStep<HydraResource> {
 
     if (!this.children || this.children.length === 0) {
       return {
-        result: Result.Success(`Found expected property ${this.propertyId}`),
+        result: Result.Success(`Found expected property ${this.propertyId.value}`),
       }
     }
 
@@ -115,11 +120,11 @@ export class PropertyStep extends ScenarioStep<HydraResource> {
     }
 
     let result
-    const hasType = resource.types.contains(this.expectedValue as string)
+    const hasType = resource.types.has(this.expectedValue as string)
     if (hasType) {
       result = Result.Success(`Found type ${this.expectedValue}`)
     } else {
-      result = Result.Failure(`Resource ${resource.id} does not have expected RDF type ${this.expectedValue}`)
+      result = Result.Failure(`Resource ${resource.id.value} does not have expected RDF type ${this.expectedValue}`)
     }
 
     return { result }
@@ -128,28 +133,34 @@ export class PropertyStep extends ScenarioStep<HydraResource> {
   private __getMissingPropertyResult(resource: HydraResource) {
     let result
     if (this.strict) {
-      result = Result.Failure(`Property ${this.propertyId} missing on resource ${resource.id}`)
+      result = Result.Failure(`Property ${this.propertyId.value} missing on resource ${resource.id.value}`)
     } else {
-      result = Result.Informational(`Skipping missing property ${this.propertyId}`)
+      result = Result.Informational(`Skipping missing property ${this.propertyId.value}`)
     }
 
     return { result }
   }
 
-  private __executeStatement(value: unknown): CheckResult<E2eContext> {
+  private __executeStatement(value: HydraResource | Literal): CheckResult<E2eContext> {
+    if ('id' in value) {
+      return {
+        result: Result.Failure(`Expected ${this.propertyId.value} to be literal but found resource ${value.id.value}`),
+      }
+    }
+
     if (areEqual(this.expectedValue, value)) {
       return {
-        result: Result.Success(`Found ${this.propertyId} property with expected value`),
+        result: Result.Success(`Found ${this.propertyId.value} property with expected value`),
       }
     }
 
     return {
-      result: Result.Failure(`Expected ${this.propertyId} to equal ${this.expectedValue} but found ${value}`),
+      result: Result.Failure(`Expected ${this.propertyId.value} to equal ${this.expectedValue} but found ${value}`),
     }
   }
 
   private __executeBlock(value: HydraResource, arrayItem: boolean): CheckResult<E2eContext> {
-    const result = Result.Informational(`Stepping into property ${this.propertyId}`)
+    const result = Result.Informational(`Stepping into property ${this.propertyId.value}`)
     const nextChecks = [ getResourceRunner(value, this) ]
 
     if (arrayItem) {
@@ -159,7 +170,7 @@ export class PropertyStep extends ScenarioStep<HydraResource> {
     return { result, nextChecks }
   }
 
-  private async __executeArray(array: HydraResource[], context: E2eContext) {
+  private async __executeArray(array: (Literal | HydraResource)[], context: E2eContext) {
     let anyFailed = false
 
     for (const value of array) {
@@ -175,18 +186,18 @@ export class PropertyStep extends ScenarioStep<HydraResource> {
       }
 
       return {
-        result: Result.Success(`Found ${this.propertyId} property matching expected criteria`),
+        result: Result.Success(`Found ${this.propertyId.value} property matching expected criteria`),
       }
     }
 
     if (!anyFailed) {
       return {
-        result: Result.Informational(`No object of ${this.propertyId} property but no steps failed. Have all object been excluded by constraints?`),
+        result: Result.Informational(`No object of ${this.propertyId.value} property but no steps failed. Have all object been excluded by constraints?`),
       }
     }
 
     return {
-      result: Result.Failure(`No object of ${this.propertyId} property was found matching the criteria`),
+      result: Result.Failure(`No object of ${this.propertyId.value} property was found matching the criteria`),
     }
   }
 }

@@ -4,14 +4,18 @@ import { Constraint } from './constraints/Constraint'
 
 export class StepStub extends ScenarioStep {
   private readonly runner: checkChain
+  private readonly executions: string[]
+  private readonly name: string
   public visited = false
 
-  public constructor(name: string) {
+  public constructor(name: string, executions: string[] = []) {
     super([])
 
+    this.name = name
+    this.executions = executions
     // eslint-disable-next-line no-new-func
     this.runner = new Function(
-      `return function ${name}() { }`
+      `return function ${name}() { return {} }`
     )()
   }
 
@@ -20,6 +24,7 @@ export class StepStub extends ScenarioStep {
   }
 
   public getRunner() {
+    this.executions.push(this.name)
     return this.runner
   }
 }
