@@ -1,5 +1,5 @@
 import { checkChain, Result } from 'hydra-validator-core'
-import { join, dirname } from 'path'
+import { resolve, dirname } from 'path'
 import { E2eOptions, E2eContext } from './types'
 import { getUrlRunner } from './lib/checkRunner'
 import { load, ScenarioJson } from './lib/docsLoader'
@@ -8,7 +8,7 @@ import { verifyTopLevelBlocksExecuted } from './lib/strictRunVerification'
 import { buildHeaders } from './lib/headers'
 
 export function check(url: string, { docs, cwd, strict }: E2eOptions): checkChain<E2eContext> {
-  const docsPath = join(cwd, docs)
+  const docsPath = resolve(cwd, docs)
   let steps: RuntimeStep[]
   let resourcePath: string
   let scenario: ScenarioJson
