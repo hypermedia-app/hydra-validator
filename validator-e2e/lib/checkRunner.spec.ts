@@ -79,7 +79,7 @@ describe('processResponse', () => {
       expect(result!.status).toBe('error')
     })
 
-    it('fails when request is not successful', async () => {
+    it('can fail fast when request is not successful', async () => {
       // given
       loadResource.mockResolvedValue({
         xhr: {
@@ -88,7 +88,7 @@ describe('processResponse', () => {
           statusText: 'Not Found',
         },
       })
-      const runner = getUrlRunner('urn:resource:id', new StepStub('ignored'))
+      const runner = getUrlRunner('urn:resource:id', new StepStub('ignored'), true)
 
       // when
       const { result } = await runner.call(context)

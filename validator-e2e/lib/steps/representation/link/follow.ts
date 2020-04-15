@@ -35,7 +35,7 @@ export class FollowStep extends ScenarioStep {
         ? Result.Informational(`Fetching resource ${resourceId}`)
         : Result.Failure(`Variable ${step.variable} not found`)
 
-      let nextChecks: checkChain<E2eContext>[] = []
+      const nextChecks: checkChain<E2eContext>[] = []
       if (result.status !== 'failure') {
         nextChecks.push(getUrlRunner(resourceId, step))
 

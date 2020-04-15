@@ -5,6 +5,8 @@ import { LinkStep } from './'
 import { E2eContext } from '../../../../types'
 import { RecursivePartial } from '../../../testHelpers'
 import { IriTemplate } from 'alcaeus/Resources/Mixins/IriTemplate'
+import { StepSpy } from '../../stub'
+import { StatusStep } from '../../response/status'
 
 jest.mock('../../../checkRunner')
 
@@ -92,7 +94,7 @@ describe('link', () => {
 
       // then
       expect(result!.status).toBe('warning')
-      expect(getResponseRunner).toHaveBeenCalledWith(linked, step)
+      expect(getResponseRunner).toHaveBeenCalledWith(linked, step, false)
     })
 
     it('dereferences linked resources', async () => {
@@ -124,8 +126,8 @@ describe('link', () => {
 
       // then
       expect(nextChecks).toHaveLength(2)
-      expect(getResponseRunner).toHaveBeenCalledWith({ id: 'urn:resource:one' }, step)
-      expect(getResponseRunner).toHaveBeenCalledWith({ id: 'urn:resource:two' }, step)
+      expect(getResponseRunner).toHaveBeenCalledWith({ id: 'urn:resource:one' }, step, false)
+      expect(getResponseRunner).toHaveBeenCalledWith({ id: 'urn:resource:two' }, step, false)
     })
   })
 
@@ -140,7 +142,7 @@ describe('link', () => {
           { key: 'http://schema.org/tag', value: 'bar' },
           { key: 'http://schema.org/title', value: 'baz' },
         ],
-      }, [], [])
+      }, [new StepSpy()], [])
       const template: Partial<IriTemplate> = {
         expand: jest.fn().mockReturnValue('filled-in-template'),
       }
@@ -169,7 +171,49 @@ describe('link', () => {
         'http://schema.org/tag': ['foo', 'bar'],
         'http://schema.org/title': 'baz',
       })
-      expect(getUrlRunner).toHaveBeenCalledWith('filled-in-template', step)
+      expect(getUrlRunner).toHaveBeenCalledWith('filled-in-template', step, true)
+    })
+
+    it('does not fail child step when they include a StatusStep', async () => {
+      // given
+      const step = new LinkStep({
+        rel: 'urn:link:rel',
+        strict: false,
+        variables: [
+          { key: 'http://schema.org/tag', value: 'foo' },
+          { key: 'http://schema.org/tag', value: 'bar' },
+          { key: 'http://schema.org/title', value: 'baz' },
+        ],
+      }, [new StatusStep({ code: 400 })], [])
+      const template: Partial<IriTemplate> = {
+        expand: jest.fn().mockReturnValue('filled-in-template'),
+      }
+      const resource: RecursivePartial<HydraResource> = {
+        getLinks: () => [
+          {
+            supportedProperty: {
+              property: {
+                id: namedNode('urn:link:rel'),
+              },
+            },
+            resources: [
+              template,
+            ],
+          },
+        ],
+        getArray: () => [],
+      }
+
+      // when
+      const execute = step.getRunner(resource as any)
+      await execute.call(context)
+
+      // then
+      expect(template.expand).toHaveBeenCalledWith({
+        'http://schema.org/tag': ['foo', 'bar'],
+        'http://schema.org/title': 'baz',
+      })
+      expect(getUrlRunner).toHaveBeenCalledWith('filled-in-template', step, false)
     })
   })
 })

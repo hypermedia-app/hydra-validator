@@ -15,7 +15,7 @@ export class StepStub extends ScenarioStep {
     this.executions = executions
     // eslint-disable-next-line no-new-func
     this.runner = new Function(
-      `return function ${name}() { return {} }`
+      `return function ${name}() { return {} }`,
     )()
   }
 
@@ -56,7 +56,7 @@ export class StepSpy extends ScenarioStep {
 export class ConstraintMock extends Constraint<unknown> {
   public type: 'Representation' | 'Response' | null
 
-  public constructor(mockResult: boolean = true, type?: 'Representation' | 'Response') {
+  public constructor(mockResult = true, type?: 'Representation' | 'Response') {
     super(() => mockResult, false)
 
     this.type = type || null
