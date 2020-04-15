@@ -7,6 +7,7 @@ import { Constraint } from '../../constraints/Constraint'
 import { E2eContext } from '../../../../types'
 import { namedNode } from '@rdfjs/data-model'
 import { NamedNode } from 'rdf-js'
+import { StatusStep } from '../../response/status'
 
 interface LinkStepInit {
   rel: string
@@ -106,7 +107,7 @@ export class LinkStep extends ScenarioStep<HydraResource> {
   }
 
   private __dereferenceLinkedResource(resource: HydraResource | IriTemplate, step: this) {
-    const failOnNegativeResponse = step.children.some(Boolean)
+    const failOnNegativeResponse = step.children.length > 0 && !step.children.some(child => child instanceof StatusStep)
 
     if ('expand' in resource) {
       return getUrlRunner(resource.expand(step.variables), step, failOnNegativeResponse)
