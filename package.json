@@ -4,7 +4,8 @@
   "scripts": {
     "postinstall": "lerna bootstrap",
     "test": "lerna run test",
-    "example": "ts-node validator-cli/index.ts e2e --docs validator-e2e/example/hydracg-movies.hydra.json http://hydra-movies.herokuapp.com"
+    "example": "ts-node validator-cli/index.ts e2e --docs validator-e2e/example/hydracg-movies.hydra.json http://hydra-movies.herokuapp.com",
+    "release": "lerna publish from-package -y"
   },
   "devDependencies": {
     "@commitlint/cli": "^8.0.0",
