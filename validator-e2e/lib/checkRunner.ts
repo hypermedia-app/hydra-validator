@@ -22,7 +22,7 @@ function processResource<T>(resource: T, steps: ScenarioStep[], constraints: Con
     }
   }
 
-  for (let step of steps) {
+  for (const step of steps) {
     if (step.appliesTo(resource)) {
       nextChecks.push(step.getRunner(resource, localContext))
     }
@@ -34,14 +34,14 @@ function processResource<T>(resource: T, steps: ScenarioStep[], constraints: Con
   }
 }
 
-function processResponse(response: HydraResponse, steps: ScenarioStep[], constraints: Constraint[]): CheckResult<E2eContext> {
+function processResponse(response: HydraResponse, steps: ScenarioStep[], constraints: Constraint[], failOnNegativeResponse: boolean): CheckResult<E2eContext> {
   const localContext = {}
 
   const nextChecks: checkChain<E2eContext>[] = []
   const resource = response.root
   const xhr = response.xhr
 
-  if (xhr.ok === false) {
+  if (!xhr.ok && failOnNegativeResponse) {
     return {
       result: Result.Failure(`Failed to dereference resource ${xhr.url}. Response was ${xhr.status} ${xhr.statusText}`),
       sameLevel: true,
@@ -52,6 +52,10 @@ function processResponse(response: HydraResponse, steps: ScenarioStep[], constra
     Result.Informational(`Fetched resource ${xhr.url}`),
   ]
 
+  if (!xhr.ok) {
+    results.push(Result.Warning(`Response was ${xhr.status} ${xhr.statusText}`))
+  }
+
   const responseConstraints: ResponseConstraint[] = constraints.filter(c => c.type === 'Response')
   const allConstraintsSatisfied = responseConstraints.every(c => c.satisfiedBy(response))
 
@@ -61,7 +65,7 @@ function processResponse(response: HydraResponse, steps: ScenarioStep[], constra
     }
   }
 
-  for (let step of steps) {
+  for (const step of steps) {
     if (step.appliesTo(xhr)) {
       nextChecks.push(step.getRunner(xhr, localContext))
     }
@@ -80,7 +84,7 @@ function processResponse(response: HydraResponse, steps: ScenarioStep[], constra
   }
 }
 
-function dereferenceAndProcess(id: string | NamedNode, steps: ScenarioStep[], constraints: Constraint[], headers: HeadersInit | null) {
+function dereferenceAndProcess(id: string | NamedNode, steps: ScenarioStep[], constraints: Constraint[], headers: HeadersInit | null, failOnNegativeResponse: boolean) {
   const uri: string = typeof id === 'string' ? id : id.value
 
   const loadResource = headers
@@ -89,11 +93,11 @@ function dereferenceAndProcess(id: string | NamedNode, steps: ScenarioStep[], co
 
   return loadResource
     .then(async response => {
-      await Hydra.apiDocumentations
+      await Hydra.apiDocumentationRequests
       return response
     })
     .then(response => {
-      return processResponse(response, steps, constraints)
+      return processResponse(response, steps, constraints, failOnNegativeResponse)
     })
     .catch(e => ({
       result: Result.Error(`Failed to dereference ${id}`, e),
@@ -109,20 +113,21 @@ export function getResourceRunner<T>(
   }
 }
 
-export function getUrlRunner(id: string, currentStep?: ScenarioStep) {
+export function getUrlRunner(id: string, currentStep?: ScenarioStep, failOnNegativeResponse = false) {
   const childSteps = currentStep ? currentStep.children : []
   const constraints = currentStep ? currentStep.constraints : []
 
   return async function checkResourceResponse(this: E2eContext) {
     const steps = [...childSteps, ...this.scenarios]
 
-    return dereferenceAndProcess(id, steps, constraints, this.headers || null)
+    return dereferenceAndProcess(id, steps, constraints, this.headers || null, failOnNegativeResponse)
   }
 }
 
 export function getResponseRunner(
   resourceOrResponse: HydraResource | HydraResponse,
-  currentStep?: ScenarioStep) {
+  currentStep?: ScenarioStep,
+  failOnNegativeResponse = false) {
   const childSteps = currentStep ? currentStep.children : []
   const constraints = currentStep ? currentStep.constraints : []
 
@@ -137,9 +142,9 @@ export function getResponseRunner(
           }
         }
 
-        return dereferenceAndProcess(resourceOrResponse.id, steps, constraints, this.headers || null)
+        return dereferenceAndProcess(resourceOrResponse.id, steps, constraints, this.headers || null, failOnNegativeResponse)
       }
-      return processResponse(resourceOrResponse as HydraResponse, steps, constraints)
+      return processResponse(resourceOrResponse, steps, constraints, failOnNegativeResponse)
     }
 
     return {

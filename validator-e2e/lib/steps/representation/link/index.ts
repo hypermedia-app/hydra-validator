@@ -106,10 +106,12 @@ export class LinkStep extends ScenarioStep<HydraResource> {
   }
 
   private __dereferenceLinkedResource(resource: HydraResource | IriTemplate, step: this) {
+    const failOnNegativeResponse = step.children.some(Boolean)
+
     if ('expand' in resource) {
-      return getUrlRunner(resource.expand(step.variables), step)
+      return getUrlRunner(resource.expand(step.variables), step, failOnNegativeResponse)
     }
 
-    return getResponseRunner(resource, step)
+    return getResponseRunner(resource, step, failOnNegativeResponse)
   }
 }
