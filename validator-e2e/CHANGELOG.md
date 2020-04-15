@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.10.0](https://github.com/hypermedia-app/hydra-validator/compare/hydra-validator-e2e@0.10.0-alpha.1...hydra-validator-e2e@0.10.0) (2020-04-15)
+
+
+### Bug Fixes
+
+* **e2e:** link should not fail fast when there is a status check ([29fc39c](https://github.com/hypermedia-app/hydra-validator/commit/29fc39c0923109b62ee2d2b07d5b15379b85ee41))
+* **e2e:** minor fixes to debug messages ([2df03d4](https://github.com/hypermedia-app/hydra-validator/commit/2df03d4b99187e3e345098ae8b927837b27459e1))
+
+
+
+
+
 # [0.10.0-alpha.1](https://github.com/hypermedia-app/hydra-validator/compare/hydra-validator-e2e@0.10.0-alpha.0...hydra-validator-e2e@0.10.0-alpha.1) (2020-04-15)
 
 
