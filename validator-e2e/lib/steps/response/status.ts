@@ -1,4 +1,4 @@
-import { IResult, Result } from 'hydra-validator-core'
+import { Result } from 'hydra-validator-core'
 import { ResponseStep } from '../'
 
 interface ExpectationStepInit {
@@ -27,9 +27,7 @@ export class StatusStep extends ResponseStep {
     }
 
     return function () {
-      let result: IResult
-
-      result = response.status === expectation.code
+      const result = response.status === expectation.code
         ? Result.Success(`Status code '${expectation.code}'`)
         : Result.Failure(`Expected status code ${expectation.code} but got ${response.status}`)
 

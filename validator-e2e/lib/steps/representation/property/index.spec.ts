@@ -49,7 +49,7 @@ describe('property step', () => {
       propertyId: 'http://example.com/title',
       value: 'foo',
       strict: false,
-    }, [], [ {} as any ],)
+    }, [], [ {} as any ])
 
     // when
     const execute = propertyStatement.getRunner({} as any)
@@ -435,7 +435,7 @@ describe('property step', () => {
 
       // then
       expect(executions).toEqual(
-        expect.arrayContaining(['step1', 'step2', 'topLevel1', 'topLevel2'])
+        expect.arrayContaining(['step1', 'step2', 'topLevel1', 'topLevel2']),
       )
     })
 
