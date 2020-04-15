@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.10.0-alpha.1](https://github.com/hypermedia-app/hydra-validator/compare/hydra-validator-e2e@0.10.0-alpha.0...hydra-validator-e2e@0.10.0-alpha.1) (2020-04-15)
+
+
+### Bug Fixes
+
+* **e2e:** did not work with absolute paths ([81fecb9](https://github.com/hypermedia-app/hydra-validator/commit/81fecb93cd73b383a084f8bf018c5ddd76a13245))
+* **e2e:** only fail links when they have child steps ([f97c08b](https://github.com/hypermedia-app/hydra-validator/commit/f97c08b4731f47eb67a86b02fe3c0ee6ca24cfbb))
+* **e2e:** single object of property was treated like an array ([373e8fb](https://github.com/hypermedia-app/hydra-validator/commit/373e8fba2968d699ff175a8963309cc0d2bc4f5b))
+
+
+### Features
+
+* templated links ([61755d6](https://github.com/hypermedia-app/hydra-validator/commit/61755d62c7d69270c1194b8440732194c6e3e11e))
+
+
+
+
+
 # [0.10.0-alpha.0](https://github.com/hypermedia-app/hydra-validator/compare/hydra-validator-e2e@0.9.0...hydra-validator-e2e@0.10.0-alpha.0) (2020-04-10)
 
 

@@ -1,6 +1,6 @@
 {
   "name": "hydra-validator-e2e",
-  "version": "0.10.0-alpha.0",
+  "version": "0.10.0-alpha.1",
   "description": "A set of tools to execute E2E tests on a Hydra API",
   "main": "index.js",
   "scripts": {
@@ -63,7 +63,7 @@
     "@zazuko/rdf-vocabularies": "^2019.12.23",
     "alcaeus": "^1.0.0-alpha.13",
     "escape-string-regexp": "^2.0.0",
-    "hydra-validator-core": "^0.5.0-alpha.0"
+    "hydra-validator-core": "^0.5.0-alpha.1"
   },
   "publishConfig": {
     "access": "public"
