@@ -22,4 +22,4 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
       - run: echo "//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" >> $HOME/.npmrc 2> /dev/null
       - run: npm run release
-        if: matrix.node-version == '13'
+        if: matrix.node == '13'
