@@ -20,3 +20,5 @@ jobs:
         uses: codecov/codecov-action@v1.0.5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
+      - run: echo "//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" >> $HOME/.npmrc 2> /dev/null
+      - run: lerna publish from-package -y
