@@ -100,7 +100,7 @@ function dereferenceAndProcess(id: string | NamedNode, steps: ScenarioStep[], co
       return processResponse(response, steps, constraints, failOnNegativeResponse)
     })
     .catch(e => ({
-      result: Result.Error(`Failed to dereference ${id}`, e),
+      result: Result.Error(`Failed to dereference ${uri}`, e),
     }))
 }
 

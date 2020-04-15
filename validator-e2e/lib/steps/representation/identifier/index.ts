@@ -28,11 +28,11 @@ export class IdentifierStep extends ScenarioStep<HydraResource> {
       let result: Result
 
       if (typeof obj !== 'object') {
-        result = Result.Failure(`Expected <${__identifier}> resource but the value is a ${typeof obj}`)
+        result = Result.Failure(`Expected <${__identifier.value}> resource but the value is a ${typeof obj}`)
       } else if (__identifier.equals(obj.id)) {
-        result = Result.Success(`Found expected resource identifier ${__identifier}`)
+        result = Result.Success(`Found expected resource identifier ${__identifier.value}`)
       } else {
-        result = Result.Failure(`Expect resource <${__identifier}> but got <${obj.id.value}> instead.`)
+        result = Result.Failure(`Expect resource <${__identifier.value}> but got <${obj.id.value}> instead.`)
       }
 
       return {
