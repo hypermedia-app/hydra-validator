@@ -13,7 +13,7 @@
   "scripts": {
     "pretest": "eslint --ext ts . --quiet",
     "eslint:fix": "eslint --ext ts . --quiet --fix",
-    "prepublishOnly": "tsc",
+    "prepack": "tsc",
     "precommit": "lint-staged"
   },
   "repository": {

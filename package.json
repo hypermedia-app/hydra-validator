@@ -5,6 +5,7 @@
     "postinstall": "lerna bootstrap",
     "test": "lerna run test",
     "example": "ts-node validator-cli/index.ts e2e --docs validator-e2e/example/hydracg-movies.hydra.json http://hydra-movies.herokuapp.com",
+    "build": "lerna run prepack",
     "release": "lerna publish from-package -y"
   },
   "devDependencies": {

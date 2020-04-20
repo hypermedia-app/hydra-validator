@@ -7,7 +7,7 @@
     "pretest": "eslint --ext ts . --quiet",
     "eslint:fix": "eslint --ext ts . --quiet --fix",
     "test": "jest",
-    "prepublishOnly": "tsc",
+    "prepack": "tsc",
     "precommit": "lint-staged"
   },
   "repository": {

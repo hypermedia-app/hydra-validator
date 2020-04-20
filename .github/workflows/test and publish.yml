@@ -20,6 +20,7 @@ jobs:
         uses: codecov/codecov-action@v1.0.5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
+      - run: npm run build
       - run: npm config set '//registry.npmjs.org/:_authToken' "${NPM_TOKEN}"
       - run: npm run release
         if: matrix.node == '13'
