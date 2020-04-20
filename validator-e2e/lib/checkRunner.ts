@@ -92,10 +92,6 @@ function dereferenceAndProcess(id: string | NamedNode, steps: ScenarioStep[], co
     : Hydra.loadResource(uri)
 
   return loadResource
-    .then(async response => {
-      await Hydra.apiDocumentationRequests
-      return response
-    })
     .then(response => {
       return processResponse(response, steps, constraints, failOnNegativeResponse)
     })
