@@ -62,7 +62,7 @@
     "@rdfjs/data-model": "^1.1.2",
     "@rdfjs/formats-common": "^2.1.0",
     "@zazuko/rdf-vocabularies": "^2019.12.23",
-    "alcaeus": "^1.0.0-beta.2",
+    "alcaeus": "^1.0.0-beta.3",
     "escape-string-regexp": "^2.0.0",
     "hydra-validator-core": "^0.5.0"
   },
