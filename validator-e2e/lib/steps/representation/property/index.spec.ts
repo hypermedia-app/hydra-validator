@@ -84,7 +84,7 @@ describe('property step', () => {
         value: 'foo',
         strict: false,
       }, [], [])
-      const value = Hydra.factory.createEntity<HydraResource>(
+      const value = Hydra.resources.factory.createEntity<HydraResource>(
         cf({ dataset })
           .blankNode()
           .addOut(namedNode('http://example.com/title'), 'bar'))
@@ -104,7 +104,7 @@ describe('property step', () => {
         value: 'foo',
         strict: false,
       }, [], [])
-      const value = Hydra.factory.createEntity<HydraResource>(
+      const value = Hydra.resources.factory.createEntity<HydraResource>(
         cf({ dataset })
           .blankNode()
           .addOut(namedNode('http://example.com/title'), 'foo'))
@@ -124,7 +124,7 @@ describe('property step', () => {
         value: false,
         strict: false,
       }, [], [])
-      const value = Hydra.factory.createEntity<HydraResource>(
+      const value = Hydra.resources.factory.createEntity<HydraResource>(
         cf({ dataset })
           .blankNode()
           .addOut(namedNode('active'), literal('false', xsd.boolean)))
@@ -144,7 +144,7 @@ describe('property step', () => {
         value: 0,
         strict: false,
       }, [], [])
-      const value = Hydra.factory.createEntity<HydraResource>(
+      const value = Hydra.resources.factory.createEntity<HydraResource>(
         cf({ dataset })
           .blankNode()
           .addOut(namedNode('count'), literal('0', xsd.int)))
@@ -164,7 +164,7 @@ describe('property step', () => {
         value: 0,
         strict: false,
       }, [], [])
-      const value = Hydra.factory.createEntity<HydraResource>(
+      const value = Hydra.resources.factory.createEntity<HydraResource>(
         cf({ dataset })
           .blankNode()
           .addOut(namedNode('count'), literal('0')))
@@ -184,7 +184,7 @@ describe('property step', () => {
         value: false,
         strict: false,
       }, [], [])
-      const value = Hydra.factory.createEntity<HydraResource>(
+      const value = Hydra.resources.factory.createEntity<HydraResource>(
         cf({ dataset })
           .blankNode()
           .addOut(namedNode('count'), literal('false')))
@@ -204,7 +204,7 @@ describe('property step', () => {
         value: '',
         strict: false,
       }, [], [])
-      const value = Hydra.factory.createEntity<HydraResource>(
+      const value = Hydra.resources.factory.createEntity<HydraResource>(
         cf({ dataset })
           .blankNode()
           .addOut(namedNode('count'), literal('')))
@@ -224,7 +224,7 @@ describe('property step', () => {
         value: 'foo',
         strict: true,
       }, [], [])
-      const value = Hydra.factory.createEntity<HydraResource>(cf({ dataset }).blankNode())
+      const value = Hydra.resources.factory.createEntity<HydraResource>(cf({ dataset }).blankNode())
 
       // when
       const execute = propertyStatement.getRunner(value)
@@ -240,7 +240,7 @@ describe('property step', () => {
         propertyId: 'http://example.com/title',
         strict: false,
       }, [], [])
-      const value = Hydra.factory.createEntity<HydraResource>(
+      const value = Hydra.resources.factory.createEntity<HydraResource>(
         cf({ dataset })
           .blankNode())
 
@@ -259,7 +259,7 @@ describe('property step', () => {
         value: 'http://example.com/Class',
         strict: true,
       }, [], [])
-      const value = Hydra.factory.createEntity<HydraResource>(
+      const value = Hydra.resources.factory.createEntity<HydraResource>(
         cf({ dataset })
           .blankNode()
           .addOut(rdf.type, namedNode('http://example.com/Class')))
@@ -279,7 +279,7 @@ describe('property step', () => {
         value: 'http://example.com/Class',
         strict: true,
       }, [], [])
-      const value = Hydra.factory.createEntity<HydraResource>(
+      const value = Hydra.resources.factory.createEntity<HydraResource>(
         cf({ dataset })
           .blankNode())
 
@@ -298,7 +298,7 @@ describe('property step', () => {
         value: 'http://example.com/Class',
         strict: false,
       }, [], [])
-      const value = Hydra.factory.createEntity<HydraResource>(
+      const value = Hydra.resources.factory.createEntity<HydraResource>(
         cf({ dataset })
           .blankNode())
 
@@ -317,7 +317,7 @@ describe('property step', () => {
         value: 'bar',
         strict: false,
       }, [], [])
-      const value = Hydra.factory.createEntity<HydraResource>(
+      const value = Hydra.resources.factory.createEntity<HydraResource>(
         cf({ dataset })
           .blankNode()
           .addOut(namedNode('http://example.com/title'), [ 'foo', 'bar', 'baz' ]))
@@ -337,7 +337,7 @@ describe('property step', () => {
         value: 'baz',
         strict: false,
       }, [], [])
-      const value = Hydra.factory.createEntity<HydraResource>(
+      const value = Hydra.resources.factory.createEntity<HydraResource>(
         cf({ dataset })
           .blankNode()
           .addOut(namedNode('http://example.com/title'), ['foo', 'bar']))
@@ -356,7 +356,7 @@ describe('property step', () => {
         propertyId: 'count',
         strict: false,
       }, [], [])
-      const value = Hydra.factory.createEntity<HydraResource>(
+      const value = Hydra.resources.factory.createEntity<HydraResource>(
         cf({ dataset })
           .blankNode()
           .addOut(namedNode('count'), ''))
@@ -379,7 +379,7 @@ describe('property step', () => {
       }, [
         new StepStub('foo'),
       ], [])
-      const value = Hydra.factory.createEntity<HydraResource>(
+      const value = Hydra.resources.factory.createEntity<HydraResource>(
         cf({ dataset })
           .blankNode())
 
@@ -399,7 +399,7 @@ describe('property step', () => {
       }, [
         new StepStub('foo'),
       ], [])
-      const value = Hydra.factory.createEntity<HydraResource>(
+      const value = Hydra.resources.factory.createEntity<HydraResource>(
         cf({ dataset })
           .blankNode())
 
@@ -424,7 +424,7 @@ describe('property step', () => {
         propertyId: 'http://example.com/title',
         strict: false,
       }, childSteps, [])
-      const value = Hydra.factory.createEntity<HydraResource>(
+      const value = Hydra.resources.factory.createEntity<HydraResource>(
         cf({ dataset })
           .blankNode()
           .addOut(namedNode('http://example.com/title'), 'hello'))
@@ -505,7 +505,7 @@ describe('property step', () => {
           new ConstraintMock(true, 'Representation'),
           new ConstraintMock(false, 'Representation'),
         ])
-        const value = Hydra.factory.createEntity<HydraResource>(
+        const value = Hydra.resources.factory.createEntity<HydraResource>(
           cf({ dataset })
             .blankNode()
             .addOut(namedNode('http://example.com/title'), ['Rocky IV', 'Rocky V']))
@@ -531,7 +531,7 @@ describe('property step', () => {
           new ConstraintMock(true),
           new ConstraintMock(true),
         ])
-        const value = Hydra.factory.createEntity<HydraResource>(
+        const value = Hydra.resources.factory.createEntity<HydraResource>(
           cf({ dataset })
             .blankNode()
             .addOut(namedNode('http://example.com/title'), 'Rocky IV'))
@@ -556,7 +556,7 @@ describe('property step', () => {
           new ConstraintMock(true),
           new ConstraintMock(true),
         ])
-        const value = Hydra.factory.createEntity<HydraResource>(
+        const value = Hydra.resources.factory.createEntity<HydraResource>(
           cf({ dataset })
             .blankNode()
             .addOut(namedNode('http://example.com/title'), ['Rocky IV', 'Rocky V']))

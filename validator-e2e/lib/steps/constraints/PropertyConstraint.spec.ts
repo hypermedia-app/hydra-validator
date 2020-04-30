@@ -1,12 +1,13 @@
-import cf, { Clownface } from 'clownface'
+import cf, { AnyContext, Clownface } from 'clownface'
 import $rdf from 'rdf-ext'
 import Hydra from 'alcaeus'
 import { PropertyConstraint } from './PropertyConstraint'
 import { StepConstraintInit } from './index'
+import DatasetExt from 'rdf-ext/lib/Dataset'
 
 describe('PropertyConstraint', () => {
   const emptyInit: StepConstraintInit = {} as any
-  let graph: Clownface
+  let graph: Clownface<AnyContext, DatasetExt>
 
   beforeEach(() => {
     graph = cf({ dataset: $rdf.dataset() })
@@ -23,7 +24,7 @@ describe('PropertyConstraint', () => {
     const constraint = new PropertyConstraint(init, predicate, false)
 
     // when
-    const result = constraint.satisfiedBy(Hydra.factory.createEntity(graph.blankNode()))
+    const result = constraint.satisfiedBy(Hydra.resources.factory.createEntity(graph.blankNode()))
 
     // then
     expect(result).toBeFalsy()

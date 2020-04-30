@@ -25,8 +25,10 @@ describe('StatusConstraint', () => {
 
     // when
     const result = constraint.satisfiedBy({
-      xhr: {
-        status: 303,
+      response: {
+        xhr: {
+          status: 303,
+        },
       },
     } as any)
 

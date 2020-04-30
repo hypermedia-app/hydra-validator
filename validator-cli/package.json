@@ -14,7 +14,8 @@
     "pretest": "eslint --ext ts . --quiet",
     "eslint:fix": "eslint --ext ts . --quiet --fix",
     "prepack": "tsc",
-    "precommit": "lint-staged"
+    "precommit": "lint-staged",
+    "start": "ts-node index.ts e2e https://wikibus-sources.lndo.site/ --docs /Users/tomaszpluskiewicz/projects/github/wikibus/sources.wikibus.org/e2e-tests/Brochure/Create.hydra.hypertest.json"
   },
   "repository": {
     "type": "git",
