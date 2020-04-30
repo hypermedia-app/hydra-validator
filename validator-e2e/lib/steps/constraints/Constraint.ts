@@ -1,5 +1,4 @@
-import { HydraResource, ResourceIndexer } from 'alcaeus'
-import { HydraResponse } from 'alcaeus/HydraResponse'
+import { HydraResource, ResourceIndexer, HydraResponse } from 'alcaeus'
 
 export type ConstraintOperator = 'eq' | 'gt' | 'ge' | 'lt' | 'le' | 'regex' | 'function'
 export type ConstraintType = 'Representation' | 'Response' | null

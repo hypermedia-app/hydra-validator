@@ -1,11 +1,10 @@
-import Hydra, { HydraResource } from 'alcaeus'
+import Hydra, { HydraResource, HydraResponse } from 'alcaeus'
 import { namedNode } from '@rdfjs/data-model'
 import { RdfResource } from '@tpluscode/rdfine'
 import { getResponseRunner, getResourceRunner, getUrlRunner } from './checkRunner'
 import { E2eContext } from '../types'
 import { ScenarioStep } from './steps'
 import { ConstraintMock, StepSpy, StepStub } from './steps/stub'
-import { HydraResponse } from 'alcaeus/HydraResponse'
 import { runAll } from './testHelpers'
 
 jest.mock('alcaeus')
@@ -82,10 +81,12 @@ describe('processResponse', () => {
     it('can fail fast when request is not successful', async () => {
       // given
       loadResource.mockResolvedValue({
-        xhr: {
-          ok: false,
-          status: 404,
-          statusText: 'Not Found',
+        response: {
+          xhr: {
+            ok: false,
+            status: 404,
+            statusText: 'Not Found',
+          },
         },
       })
       const runner = getUrlRunner('urn:resource:id', new StepStub('ignored'), true)
@@ -179,7 +180,7 @@ describe('processResponse', () => {
       } as any
       const topLevelStep = new StepSpy()
       const response: HydraResponse = {
-        xhr: { url: 'foo' },
+        response: { xhr: { url: 'foo' } },
       } as any
       const runner = getResponseRunner(response, step)
       context.scenarios.push(topLevelStep)

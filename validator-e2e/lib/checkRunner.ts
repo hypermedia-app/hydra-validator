@@ -1,5 +1,4 @@
-import Hydra, { HydraResource, ResourceIndexer } from 'alcaeus'
-import { HydraResponse } from 'alcaeus/HydraResponse'
+import Hydra, { HydraResource, ResourceIndexer, HydraResponse } from 'alcaeus'
 import { parsers } from '@rdfjs/formats-common'
 import { E2eContext } from '../types'
 import { checkChain, CheckResult, Result } from 'hydra-validator-core'
@@ -38,10 +37,17 @@ function processResponse(response: HydraResponse, steps: ScenarioStep[], constra
   const localContext = {}
 
   const nextChecks: checkChain<E2eContext>[] = []
-  const resource = response.root
-  const xhr = response.xhr
+  const resource = response.representation?.root
+  const xhr = response.response?.xhr
 
-  if (!xhr.ok && failOnNegativeResponse) {
+  if (!xhr) {
+    return {
+      result: Result.Error('No response to request'),
+      sameLevel: true,
+    }
+  }
+
+  if (!xhr?.ok && failOnNegativeResponse) {
     return {
       result: Result.Failure(`Failed to dereference resource ${xhr.url}. Response was ${xhr.status} ${xhr.statusText}`),
       sameLevel: true,
@@ -61,7 +67,7 @@ function processResponse(response: HydraResponse, steps: ScenarioStep[], constra
 
   if (!allConstraintsSatisfied) {
     return {
-      result: Result.Informational(`Skipping response from ${response.xhr.url} due to scenario constraints`),
+      result: Result.Informational(`Skipping response from ${xhr.url} due to scenario constraints`),
     }
   }
 
