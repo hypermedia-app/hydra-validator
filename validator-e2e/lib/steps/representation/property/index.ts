@@ -153,7 +153,7 @@ export class PropertyStep extends ScenarioStep<HydraResource> {
     }
 
     return {
-      result: Result.Failure(`Expected ${this.propertyId.value} to equal ${this.expectedValue} but found ${value}`),
+      result: Result.Failure(`Expected ${this.propertyId.value} to equal ${this.expectedValue} but found ${value.value}`),
     }
   }
 
