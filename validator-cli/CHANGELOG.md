@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.3.4](https://github.com/hypermedia-app/hydra-validator/compare/hydra-validator@1.3.3...hydra-validator@1.3.4) (2020-05-02)
+
+
+### Bug Fixes
+
+* **e2e:** latest alcaeus fixes managing resource state ([cb07289](https://github.com/hypermedia-app/hydra-validator/commit/cb07289d78df1080b2fad7457f4a856be3a666f6))
+
+
+
+
+
 ## [1.3.3](https://github.com/hypermedia-app/hydra-validator/compare/hydra-validator@1.3.2...hydra-validator@1.3.3) (2020-04-25)
 
 **Note:** Version bump only for package hydra-validator
