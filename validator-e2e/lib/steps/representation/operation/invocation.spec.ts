@@ -1,8 +1,11 @@
+import fetchPony from 'fetch-ponyfill'
 import { E2eContext } from '../../../../types'
 import { InvocationStep } from './invocation'
 import { StepStub } from '../../stub'
 import { getResponseRunner } from '../../../checkRunner'
 import { readFileSync } from '../../fs'
+
+const { Headers } = fetchPony()
 
 jest.mock('../../fs')
 jest.mock('../../../checkRunner')
@@ -90,7 +93,7 @@ describe('Invoke block', () => {
     // then
     expect(operation.invoke).toHaveBeenCalledWith(
       'Test', new Headers({
-        'User-Agent': 'curl',
+        'user-agent': 'curl',
         'content-type': 'text/csv',
         'accept': 'application/rdf+xml',
       }))
