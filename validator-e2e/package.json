@@ -40,6 +40,7 @@
     "@types/jest": "^25.2.1",
     "@types/matchdep": "^2.0.0",
     "@types/node": "^11.13.9",
+    "@types/node-fetch": "^2.5.7",
     "@types/rdf-dataset-indexed": "^0.4.4",
     "@types/rdf-ext": "^1.3.7",
     "@types/rdf-js": "^2.0.12",
@@ -50,7 +51,6 @@
     "clownface": "^0.12.1",
     "eslint": "^6.8.0",
     "eslint-plugin-jest": "^23.8.2",
-    "isomorphic-fetch": "^2.2.1",
     "jest": "^25.3.0",
     "lint-staged": "^8.2.1",
     "minimist": ">=1.2.2",
@@ -62,9 +62,10 @@
     "@rdfjs/data-model": "^1.1.2",
     "@rdfjs/formats-common": "^2.1.0",
     "@zazuko/rdf-vocabularies": "^2019.12.23",
-    "alcaeus": "^1.0.0-beta.4",
+    "alcaeus": "^1.0.0-beta.5",
     "escape-string-regexp": "^2.0.0",
-    "hydra-validator-core": "^0.5.0"
+    "hydra-validator-core": "^0.5.0",
+    "fetch-ponyfill": "^6.1.0"
   },
   "publishConfig": {
     "access": "public"

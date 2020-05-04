@@ -1,10 +1,13 @@
 import { Operation } from 'alcaeus/Resources/Operation'
+import fetchPony from 'fetch-ponyfill'
 import { E2eContext } from '../../../../types'
 import { checkChain, Result } from 'hydra-validator-core'
 import { getResponseRunner } from '../../../checkRunner'
 import { ScenarioStep } from '../../index'
 import { readFileSync } from '../../fs'
 import { resolve } from 'path'
+
+const { Headers } = fetchPony()
 
 interface InvocationStepInit {
   body?: string | { path: string }
