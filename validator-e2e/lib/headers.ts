@@ -1,4 +1,7 @@
 import { E2eContext } from '../types'
+import fetchPony from 'fetch-ponyfill'
+
+const { Headers } = fetchPony()
 
 export function buildHeaders(this: E2eContext, headers: Record<string, string[]>): Headers {
   return Object.entries(headers)

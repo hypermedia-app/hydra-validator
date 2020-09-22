@@ -1,13 +1,13 @@
-import cf, { AnyContext, Clownface } from 'clownface'
+import cf, { AnyContext, AnyPointer } from 'clownface'
 import $rdf from 'rdf-ext'
-import Hydra from 'alcaeus'
+import { Hydra } from 'alcaeus/node'
 import { PropertyConstraint } from './PropertyConstraint'
 import { StepConstraintInit } from './index'
 import DatasetExt from 'rdf-ext/lib/Dataset'
 
 describe('PropertyConstraint', () => {
   const emptyInit: StepConstraintInit = {} as any
-  let graph: Clownface<AnyContext, DatasetExt>
+  let graph: AnyPointer<AnyContext, DatasetExt>
 
   beforeEach(() => {
     graph = cf({ dataset: $rdf.dataset() })

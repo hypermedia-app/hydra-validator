@@ -1,4 +1,5 @@
-import Hydra, { HydraResource } from 'alcaeus'
+import { HydraResource } from 'alcaeus'
+import { Hydra } from 'alcaeus/node'
 import cf from 'clownface'
 import $rdf from 'rdf-ext'
 import DatasetExt from 'rdf-ext/lib/Dataset'
