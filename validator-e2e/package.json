@@ -59,7 +59,7 @@
     "@hydrofoil/hypertest": "^0.7.2",
     "@rdfjs/data-model": "^1.2",
     "@zazuko/rdf-vocabularies": "^2019.12.23",
-    "alcaeus": "^1.0.0-beta.17",
+    "alcaeus": "^1.0.0-beta.18",
     "escape-string-regexp": "^2.0.0",
     "hydra-validator-core": "^0.5.0",
     "isomorphic-fetch": "^2.2.1"
