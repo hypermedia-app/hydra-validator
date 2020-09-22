@@ -5,6 +5,9 @@ module.exports = {
   collectCoverage: true,
   collectCoverageFrom: ['**/*.ts'],
   transformIgnorePatterns: [
-    'node_modules/(?!(alcaeus|hydra-validator-core)/)',
+    'node_modules/(?!(hydra-validator-core)/)',
   ],
+  moduleNameMapper: {
+    '@rdf-esm/(.*)': '@rdfjs/$1',
+  },
 }
