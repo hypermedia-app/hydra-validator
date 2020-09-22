@@ -1,8 +1,6 @@
-import fetchPonyfill from 'fetch-ponyfill'
 import { HeaderStep } from './header'
 import { E2eContext } from '../../../types'
-
-const { Response } = fetchPonyfill()
+import 'isomorphic-fetch'
 
 describe('header statement', () => {
   let context: E2eContext & any

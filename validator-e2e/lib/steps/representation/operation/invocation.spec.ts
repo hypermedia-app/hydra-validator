@@ -1,11 +1,9 @@
-import fetchPony from 'fetch-ponyfill'
 import { E2eContext } from '../../../../types'
 import { InvocationStep } from './invocation'
 import { StepStub } from '../../stub'
 import { getResponseRunner } from '../../../checkRunner'
 import { readFileSync } from '../../fs'
-
-const { Headers } = fetchPony()
+import 'isomorphic-fetch'
 
 jest.mock('../../fs')
 jest.mock('../../../checkRunner')
