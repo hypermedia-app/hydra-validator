@@ -1,6 +1,6 @@
 {
   "name": "hydra-validator-e2e",
-  "version": "0.10.5",
+  "version": "0.10.6",
   "description": "A set of tools to execute E2E tests on a Hydra API",
   "main": "index.js",
   "scripts": {

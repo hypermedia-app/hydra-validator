@@ -21,7 +21,7 @@
     "@polymer/paper-icon-button": "^3.0.2",
     "@polymer/paper-input": "^3.0.2",
     "@polymer/paper-item": "^3.0.1",
-    "hydra-validator-analyse": "^0.3.0",
+    "hydra-validator-analyse": "^0.3.1",
     "hydra-validator-core": "^0.5.0",
     "ld-navigation": "^0.5.2",
     "lit-element": "^2.0.1",
@@ -47,5 +47,5 @@
     "webpack-merge": "^4.2.1"
   },
   "private": true,
-  "version": "0.4.0"
+  "version": "0.4.1"
 }

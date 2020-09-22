@@ -1,6 +1,6 @@
 {
   "name": "hydra-validator-analyse",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Static analysis checks for hydra-validator",
   "main": "index.js",
   "scripts": {
