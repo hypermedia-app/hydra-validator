@@ -1,8 +1,6 @@
-import fetchPony from 'fetch-ponyfill'
 import { StatusStep } from './status'
 import { E2eContext } from '../../../types'
-
-const { Response } = fetchPony()
+import 'isomorphic-fetch'
 
 describe('status statement', () => {
   let context: E2eContext & any

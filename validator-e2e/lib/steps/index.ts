@@ -1,9 +1,6 @@
-import fetchPony from 'fetch-ponyfill'
 import { checkChain, Context } from 'hydra-validator-core'
 import { E2eContext } from '../../types'
 import { Constraint } from './constraints/Constraint'
-
-const { Response } = fetchPony()
 
 export abstract class ScenarioStep<T = unknown> {
   public children: ScenarioStep[];
