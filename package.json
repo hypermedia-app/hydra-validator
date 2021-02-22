@@ -2,7 +2,6 @@
   "name": "root",
   "private": true,
   "scripts": {
-    "postinstall": "lerna bootstrap",
     "test": "lerna run test",
     "example": "ts-node validator-cli/index.ts e2e --docs validator-e2e/example/hydracg-movies.hydra.json http://hydra-movies.herokuapp.com",
     "build": "lerna run prepack",
@@ -11,14 +10,21 @@
   "devDependencies": {
     "@commitlint/cli": "^8.0.0",
     "@commitlint/config-conventional": "^8.0.0",
+    "@tpluscode/eslint-config": "^0.1.1",
     "@types/node": "^13.1.8",
+    "@typescript-eslint/eslint-plugin": "^2.34.0",
+    "@typescript-eslint/parser": "^2.34.0",
     "cz-lerna-changelog": "^2.0.2",
+    "eslint": "^7.20.0",
+    "eslint-config-standard": "^16.0.2",
+    "eslint-plugin-jest": "^24.1.5",
     "husky": "^2.4.1",
     "@hydrofoil/hypertest": "^0.7.2",
     "lerna": "^3.20.2",
     "minimist": ">=1.2.2",
+    "standard": "^16.0.3",
     "standard-changelog": "^2.0.11",
-    "ts-node": "^8.6.2",
+    "ts-node": "^8.8.2",
     "typescript": "^3.7.5"
   },
   "peerDependencies": {
@@ -29,5 +35,12 @@
     "commitizen": {
       "path": "./node_modules/cz-lerna-changelog"
     }
-  }
+  },
+  "workspaces": [
+    "validator-analyse",
+    "validator-cli",
+    "validator-core",
+    "validator-e2e",
+    "validator-ui"
+  ]
 }

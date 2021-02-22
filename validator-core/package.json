@@ -30,21 +30,14 @@
     "@babel/plugin-proposal-object-rest-spread": "^7.5.5",
     "@babel/preset-env": "^7.5.5",
     "@babel/preset-typescript": "^7.3.3",
-    "@tpluscode/eslint-config": "^0.0.4",
     "@types/jest": "^24.0.12",
     "@types/node": "^11.13.9",
     "@types/node-fetch": "^2.3.3",
     "@types/rdfjs__namespace": "^1.1.1",
-    "@typescript-eslint/eslint-plugin": "^1.7.0",
-    "@typescript-eslint/parser": "^1.7.0",
-    "eslint": "^5.16.0",
-    "eslint-plugin-jest": "^22.5.1",
     "isomorphic-fetch": "^2.2.1",
     "jest": "^24.7.1",
     "lint-staged": "^8.2.1",
-    "minimist": ">=1.2.2",
-    "standard": "^12.0.1",
-    "typescript": "^3.7.5"
+    "minimist": ">=1.2.2"
   },
   "dependencies": {
     "@rdfjs/namespace": "^1.1.0"
