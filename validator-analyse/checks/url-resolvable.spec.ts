@@ -2,6 +2,7 @@ jest.mock('@rdfjs/fetch-lite')
 jest.mock('./response/api-doc-link')
 jest.mock('./analyse-representation')
 
+import 'isomorphic-fetch'
 import realFetch from '@rdfjs/fetch-lite'
 import check from './url-resolvable'
 import apiLinkCheck from './response/api-doc-link'
