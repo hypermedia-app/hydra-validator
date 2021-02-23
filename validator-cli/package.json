@@ -55,5 +55,8 @@
     "debug": "^4.1.1",
     "hydra-validator-core": "^0.5.0",
     "matchdep": "^2.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
