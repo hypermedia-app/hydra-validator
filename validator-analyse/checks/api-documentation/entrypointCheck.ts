@@ -14,7 +14,7 @@ export default function (apiDoc: any): checkChain {
 
     if (entrypoint.term.termType === 'Literal') {
       return {
-        result: Result.Failure(`hydra:entrypoint property found but the value was a literal`),
+        result: Result.Failure('hydra:entrypoint property found but the value was a literal'),
       }
     }
 

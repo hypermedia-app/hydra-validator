@@ -1,5 +1,4 @@
-import { HydraResource } from 'alcaeus/Resources'
-import { IriTemplate } from 'alcaeus/Resources/Mixins/IriTemplate'
+import { IriTemplate, Resource } from 'alcaeus'
 import { checkChain, Result } from 'hydra-validator-core'
 import { getResponseRunner, getUrlRunner } from '../../../checkRunner'
 import { ScenarioStep } from '../../index'
@@ -8,16 +7,18 @@ import { E2eContext } from '../../../../types'
 import { namedNode } from '@rdfjs/data-model'
 import { NamedNode } from 'rdf-js'
 import { StatusStep } from '../../response/status'
+import clownface from 'clownface'
+import $rdf from 'rdf-ext'
+
+interface TemplateVariable {
+  key: string
+  value: string
+}
 
 interface LinkStepInit {
   rel: string
   strict: boolean
   variables?: TemplateVariable[]
-}
-
-interface TemplateVariable {
-  key: string
-  value: string
 }
 
 function reduceVariables(variables: Record<string, string | string[]>, variable: TemplateVariable) {
@@ -44,7 +45,7 @@ function reduceVariables(variables: Record<string, string | string[]>, variable:
   }
 }
 
-export class LinkStep extends ScenarioStep<HydraResource> {
+export class LinkStep extends ScenarioStep<Resource> {
   private relation: NamedNode
   private strict: boolean
   private variables: Record<string, string | string[]>
@@ -57,11 +58,11 @@ export class LinkStep extends ScenarioStep<HydraResource> {
     this.variables = init.variables?.reduce(reduceVariables, {}) || {}
   }
 
-  protected appliesToInternal(obj: HydraResource): boolean {
+  protected appliesToInternal(obj: Resource): boolean {
     return 'id' in obj
   }
 
-  public getRunner(resource: HydraResource): checkChain<E2eContext> {
+  public getRunner(resource: Resource): checkChain<E2eContext> {
     const step = this
 
     return async function checkLink() {
@@ -70,7 +71,7 @@ export class LinkStep extends ScenarioStep<HydraResource> {
       }
 
       const linkValue = resource.getLinks()
-        .find(link => link.supportedProperty.property.id.equals(step.relation))
+        .find(link => link.supportedProperty.id.equals(step.relation))
 
       // found supportedProperty which is a hydra:Link
       if (linkValue) {
@@ -78,12 +79,12 @@ export class LinkStep extends ScenarioStep<HydraResource> {
 
         return {
           result: Result.Informational(`Stepping into link ${step.relation.value}`),
-          nextChecks: linkValue.resources.map(resource => step.__dereferenceLinkedResource(resource, step)),
+          nextChecks: linkValue.resources.map(resource => step.__dereferenceLinkedResource(resource as any, step)),
         }
       }
 
       // the resource may have a matching key, but not a supportedProperty hydra:Links
-      const potentialLinks = resource.getArray<HydraResource>(step.relation)
+      const potentialLinks = resource.getArray<Resource>(step.relation)
 
       if (potentialLinks.length > 0) {
         step.markExecuted()
@@ -106,11 +107,14 @@ export class LinkStep extends ScenarioStep<HydraResource> {
     }
   }
 
-  private __dereferenceLinkedResource(resource: HydraResource | IriTemplate, step: this) {
+  private __dereferenceLinkedResource(resource: Resource | IriTemplate, step: this) {
     const failOnNegativeResponse = step.children.length > 0 && !step.children.some(child => child instanceof StatusStep)
 
     if ('expand' in resource) {
-      return getUrlRunner(resource.expand(step.variables), step, failOnNegativeResponse)
+      const variables = [...Object.entries(step.variables)].reduce((pointer, [predicate, objects]) => {
+        return pointer.addOut($rdf.namedNode(predicate), objects)
+      }, clownface({ dataset: $rdf.dataset() }).blankNode())
+      return getUrlRunner(resource.expand(variables), step, failOnNegativeResponse)
     }
 
     return getResponseRunner(resource, step, failOnNegativeResponse)

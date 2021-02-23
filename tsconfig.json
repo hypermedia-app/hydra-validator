@@ -1,15 +1,17 @@
 {
   "compilerOptions": {
-    "target": "es2018",
+    "target": "es2019",
     "module": "commonjs",
+    "moduleResolution": "Node",
     "lib": [
-      "es2015",
+      "es2018",
       "dom"
     ],
     "strict": true,
     "declaration": false,
     "sourceMap": false,
     "esModuleInterop": true,
-    "noEmit": true
+    "noEmit": true,
+    "skipLibCheck": true
   }
 }

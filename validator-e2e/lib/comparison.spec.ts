@@ -3,6 +3,8 @@ import { literal } from '@rdfjs/data-model'
 import namespace from '@rdfjs/namespace'
 import { prefixes } from '@zazuko/rdf-vocabularies'
 import { Literal } from 'rdf-js'
+import { expect } from 'chai'
+import { describe, it } from 'mocha'
 
 const xsd = namespace(prefixes.xsd)
 
@@ -19,7 +21,7 @@ describe('areEqual', () => {
 
   equalPairs.forEach(pair => {
     it(`${typeof pair[0]} ${pair[0]} should equal ${typeof pair[1]} ${pair[1]}`, () => {
-      expect(areEqual(pair[0], pair[1])).toBeTruthy()
+      expect(areEqual(pair[0], pair[1])).to.be.ok
     })
   })
 
@@ -34,7 +36,7 @@ describe('areEqual', () => {
 
   unequalPairs.forEach(pair => {
     it(`${typeof pair[0]} ${pair[0]} should not equal ${typeof pair[1]} ${pair[1]}`, () => {
-      expect(areEqual(pair[0], pair[1])).toBeFalsy()
+      expect(areEqual(pair[0], pair[1])).not.to.be.ok
     })
   })
 })

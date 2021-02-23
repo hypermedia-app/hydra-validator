@@ -12,7 +12,7 @@ import fireNavigation from 'ld-navigation/fireNavigation'
 import './views'
 import { css } from 'lit-element'
 
-function navigate(e) {
+function navigate(this: any, e) {
   fireNavigation(this, e.target.url)
 }
 
@@ -68,8 +68,8 @@ ${super.renderMain()}`
 
   async loadResourceInternal(url) {
     const [runChecks, firstCheck] = await Promise.all([
-            import('hydra-validator-core/run-checks'),
-            import('hydra-validator-analyse/checks/url-resolvable'),
+      import('hydra-validator-core/run-checks'),
+      import('hydra-validator-analyse/checks/url-resolvable'),
     ])
 
     return runChecks.default(firstCheck.default(url))

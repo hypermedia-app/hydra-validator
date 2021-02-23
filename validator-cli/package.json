@@ -11,8 +11,6 @@
     "**/*.d.ts"
   ],
   "scripts": {
-    "pretest": "eslint --ext ts . --quiet",
-    "eslint:fix": "eslint --ext ts . --quiet --fix",
     "prepack": "tsc",
     "precommit": "lint-staged",
     "start": "ts-node index.ts e2e https://wikibus-sources.lndo.site/ --docs /Users/tomaszpluskiewicz/projects/github/wikibus/sources.wikibus.org/e2e-tests/Brochure/Create.hydra.hypertest.json"
@@ -38,26 +36,18 @@
     "@babel/plugin-proposal-optional-chaining": "^7.9.0",
     "@babel/preset-env": "^7.9.5",
     "@babel/preset-typescript": "^7.9.0",
-    "@tpluscode/eslint-config": "^0.0.4",
     "@types/debug": "^4.1.4",
     "@types/jest": "^24.0.12",
     "@types/matchdep": "^2",
     "@types/node": "^11.13.9",
     "@types/node-fetch": "^2.3.3",
-    "@typescript-eslint/eslint-plugin": "^2.28.0",
-    "@typescript-eslint/parser": "^2.28.0",
-    "eslint": "^6.8.0",
-    "eslint-plugin-jest": "^22.5.1",
     "hydra-validator-analyse": "^0.3.1",
     "hydra-validator-e2e": "^0.10.7",
     "isomorphic-fetch": "^2.2.1",
     "jest": "^24.7.1",
     "lint-staged": "^8.2.1",
     "minimist": ">=1.2.2",
-    "rimraf": "^2.6.3",
-    "standard": "^12.0.1",
-    "ts-node": "^8.8.2",
-    "typescript": "^3.8.3"
+    "rimraf": "^2.6.3"
   },
   "dependencies": {
     "commander": "^2.20.0",

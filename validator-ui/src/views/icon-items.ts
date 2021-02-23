@@ -2,12 +2,12 @@ import { html } from 'lit-html'
 import { ifDefined } from 'lit-html/directives/if-defined'
 
 function item({ icon, color, description, details }) {
-    import('@polymer/paper-item/paper-icon-item')
-    import('@polymer/iron-icon/iron-icon')
-    import('@polymer/iron-icons/iron-icons')
-    import('@polymer/paper-item/paper-item-body')
+  import('@polymer/paper-item/paper-icon-item')
+  import('@polymer/iron-icon/iron-icon')
+  import('@polymer/iron-icons/iron-icons')
+  import('@polymer/paper-item/paper-item-body')
 
-    return html`
+  return html`
 <paper-icon-item>
     <iron-icon icon="${icon}" style="color: ${color}" slot="item-icon"></iron-icon>
     <paper-item-body two-lines="${ifDefined(details)}">

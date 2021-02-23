@@ -1,6 +1,6 @@
 import { Context } from 'hydra-validator-core'
 import { ScenarioStep } from './lib/steps'
-import { Loggers } from '../validator-cli'
+import type { Loggers } from 'hydra-validator'
 
 export interface E2eOptions {
   docs: string

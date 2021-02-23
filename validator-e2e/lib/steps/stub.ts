@@ -1,6 +1,8 @@
 import { ScenarioStep } from './index'
 import { checkChain } from 'hydra-validator-core'
 import { Constraint } from './constraints/Constraint'
+// eslint-disable-next-line import/no-extraneous-dependencies
+import sinon from 'sinon'
 
 export class StepStub extends ScenarioStep {
   private readonly runner: checkChain
@@ -30,14 +32,13 @@ export class StepStub extends ScenarioStep {
 }
 
 export class StepSpy extends ScenarioStep {
-  public readonly runner: jest.Mock
-  public readonly realAppliesTo: jest.Mock
+  public readonly runner: sinon.SinonStub
+  public readonly realAppliesTo: sinon.SinonStub
 
   public constructor() {
     super([])
-    this.realAppliesTo = jest.fn().mockReturnValue(true)
-    this.runner = jest.fn()
-    this.runner.mockReturnValue(() => ({ }))
+    this.realAppliesTo = sinon.stub().returns(true)
+    this.runner = sinon.stub().returns(() => ({ }))
   }
 
   public appliesTo(obj: unknown): boolean {

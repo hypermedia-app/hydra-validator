@@ -1,25 +1,8 @@
 {
-  "extends": [
-    "@tpluscode",
-    "plugin:jest/recommended"
-  ],
   "env": {
-    "browser": true,
     "jest/globals": true
-  },
-  "parserOptions": {
-    "project": "./tsconfig.json"
   },
   "plugins": [
     "jest"
-  ],
-  "overrides": [
-    {
-      "files": ["*.spec.ts"],
-      "rules": {
-        "@typescript-eslint/no-non-null-assertion": 0,
-        "import/first": 0
-      }
-    }
   ]
 }

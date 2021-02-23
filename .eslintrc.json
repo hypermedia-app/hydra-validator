@@ -1,27 +1,24 @@
 {
   "extends": [
-    "@tpluscode",
-    "plugin:jest/recommended"
+    "@tpluscode"
   ],
   "env": {
-    "browser": true,
-    "jest/globals": true
+    "browser": true
   },
   "parserOptions": {
     "project": "./tsconfig.json"
   },
-  "plugins": [
-    "jest"
-  ],
   "rules": {
     "@typescript-eslint/no-this-alias": 0
   },
   "overrides": [
     {
-      "files": ["*.spec.ts"],
+      "files": ["*.spec.ts", "mocha-setup.js"],
       "rules": {
         "@typescript-eslint/no-non-null-assertion": 0,
-        "import/first": 0
+        "import/first": 0,
+        "import/no-extraneous-dependencies": ["error", {"devDependencies": true}],
+        "no-unused-expressions": "off"
       }
     }
   ]

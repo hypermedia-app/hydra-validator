@@ -27,7 +27,7 @@ interface StepConstructor<T> {
 }
 
 const stepConstructors = new Map<string, StepConstructor<RuntimeStep>>()
-function registerStep<T>(name: string, ctor: StepConstructor<ScenarioStep>) {
+function registerStep(name: string, ctor: StepConstructor<ScenarioStep>) {
   stepConstructors.set(name, SpyMixin(ctor))
 }
 

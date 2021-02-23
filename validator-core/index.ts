@@ -1,6 +1,5 @@
 export type ResultKind = 'success' | 'failure' | 'informational' | 'warning' | 'error'
 
-// eslint-disable-next-line @typescript-eslint/interface-name-prefix
 export interface IResult {
   description: string
   status: ResultKind
@@ -17,6 +16,8 @@ class ErrorResult implements IResult {
     this.details = details
   }
 }
+
+type FailureKind = 'failed' | 'inconclusive'
 
 class Failure implements IResult {
   public details: string | Error
@@ -41,7 +42,7 @@ export class Result implements IResult {
     this.details = details
   }
 
-  public static Success(description: string = '', details?: string) {
+  public static Success(description = '', details?: string) {
     return new Result(description, 'success', details)
   }
 
@@ -62,8 +63,6 @@ export class Result implements IResult {
   }
 }
 
-type FailureKind = 'failed' | 'inconclusive'
-
 export interface Context {
   [s: string]: any
 }
@@ -83,6 +82,7 @@ export interface CheckResult<T extends Context = Context> {
   /**
      * Checks to add to queue
      */
+  // eslint-disable-next-line no-use-before-define
   nextChecks?: checkChain<T>[]
   /**
      * If true, does not nest nextChecks

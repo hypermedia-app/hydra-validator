@@ -1,18 +1,12 @@
 {
+  "extends": "../tsconfig.json",
   "compilerOptions": {
-    "target": "es2018",
-    "module": "commonjs",
-    "lib": [
-      "es2015",
-      "dom"
-    ],
-    "strict": true,
-    "declaration": true,
-    "sourceMap": false,
+    "module": "esnext",
+    "target": "esnext",
+    "moduleResolution": "node",
     "esModuleInterop": true,
-    "typeRoots": [
-      "node_modules/@types",
-      "types"
-    ]
+    "skipLibCheck": true,
+    "noImplicitAny": false,
+    "rootDir": "../"
   }
 }

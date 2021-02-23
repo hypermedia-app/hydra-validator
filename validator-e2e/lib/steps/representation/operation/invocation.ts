@@ -1,40 +1,40 @@
-import { Operation } from 'alcaeus/Resources/Operation'
+import { RuntimeOperation } from 'alcaeus'
 import { E2eContext } from '../../../../types'
 import { checkChain, Result } from 'hydra-validator-core'
 import { getResponseRunner } from '../../../checkRunner'
 import { ScenarioStep } from '../../index'
-import { readFileSync } from '../../fs'
+import * as fs from 'fs'
 import { resolve } from 'path'
 import 'isomorphic-fetch'
 
 interface InvocationStepInit {
   body?: string | { path: string }
   headers?: { [key: string]: string }
+  fs?: Pick<typeof fs, 'readFileSync'>
 }
 
 export class InvocationStep extends ScenarioStep {
   private body?: (basePath: string) => BodyInit;
   private headers: Map<string, string>;
 
-  public constructor(init: InvocationStepInit, children: ScenarioStep[]) {
+  public constructor({ body, headers, fs: { readFileSync } = fs }: InvocationStepInit, children: ScenarioStep[]) {
     super(children)
 
-    this.headers = Object.entries((init.headers || {}))
+    this.headers = Object.entries((headers || {}))
       .reduce((headers, kv) => {
         headers.set(kv[0].toLowerCase(), kv[1])
         return headers
       }, new Map())
 
-    if (typeof init.body === 'string') {
-      const body = init.body
+    if (typeof body === 'string') {
       this.body = () => body
-    } else if (init.body && init.body.path) {
-      const path = init.body.path
+    } else if (body && body.path) {
+      const path = body.path
       this.body = (basePath) => readFileSync(resolve(basePath, path))
     }
   }
 
-  public getRunner(operation: Operation): checkChain<E2eContext> {
+  public getRunner(operation: RuntimeOperation): checkChain<E2eContext> {
     const step = this
     return async function (this: E2eContext) {
       if (step.executed) {

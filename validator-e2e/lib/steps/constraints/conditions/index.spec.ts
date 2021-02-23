@@ -1,5 +1,7 @@
 import { factory } from './'
 import { StepConstraintInit } from '../'
+import { expect } from 'chai'
+import { describe, it } from 'mocha'
 
 describe('condition', () => {
   const emptyInit: StepConstraintInit = {} as any
@@ -9,7 +11,7 @@ describe('condition', () => {
     const init = { ...emptyInit, operator: 'foo' } as any
 
     // then
-    expect(() => factory(init)).toThrow()
+    expect(() => factory(init)).to.throw()
   })
 
   describe('eq', () => {
@@ -26,7 +28,7 @@ describe('condition', () => {
       const result = equality('expected')
 
       // then
-      expect(result).toBe(true)
+      expect(result).to.eq(true)
     })
   })
 
@@ -44,7 +46,7 @@ describe('condition', () => {
       const result = equality(99)
 
       // then
-      expect(result).toBe(true)
+      expect(result).to.eq(true)
     })
   })
 
@@ -62,7 +64,7 @@ describe('condition', () => {
       const result = equality(100)
 
       // then
-      expect(result).toBe(true)
+      expect(result).to.eq(true)
     })
   })
 
@@ -80,7 +82,7 @@ describe('condition', () => {
       const result = equality(100)
 
       // then
-      expect(result).toBe(true)
+      expect(result).to.eq(true)
     })
   })
 
@@ -98,7 +100,7 @@ describe('condition', () => {
       const result = equality(101)
 
       // then
-      expect(result).toBe(true)
+      expect(result).to.eq(true)
     })
   })
 
@@ -116,7 +118,7 @@ describe('condition', () => {
       const result = regex('expected')
 
       // then
-      expect(result).toBe(true)
+      expect(result).to.eq(true)
     })
   })
 
@@ -135,7 +137,7 @@ describe('condition', () => {
       const result = regex('expected')
 
       // then
-      expect(result).toBe('AS EXPECTED')
+      expect(result).to.eq('AS EXPECTED')
     })
   })
 })

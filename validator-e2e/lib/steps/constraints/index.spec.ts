@@ -1,14 +1,23 @@
+import { expect } from 'chai'
+import { describe, it, beforeEach, afterEach } from 'mocha'
+import sinon from 'sinon'
 import { factory, StepConstraintInit } from './'
-import { factory as conditionFactory } from './conditions/'
-import { PropertyConstraint } from './PropertyConstraint'
-import { StatusConstraint } from './StatusConstraint'
-
-jest.mock('./conditions/')
-jest.mock('./PropertyConstraint')
-jest.mock('./StatusConstraint')
+import * as conditions from './conditions/'
+import * as PC from './PropertyConstraint'
+import * as SC from './StatusConstraint'
 
 describe('factory', () => {
   const emptyInit: StepConstraintInit = {} as any
+
+  beforeEach(() => {
+    sinon.stub(conditions, 'factory').returns(() => true)
+    sinon.stub(PC)
+    sinon.stub(SC)
+  })
+
+  afterEach(() => {
+    sinon.restore()
+  })
 
   it('throws when type is unsupported', () => {
     // given
@@ -18,12 +27,12 @@ describe('factory', () => {
     }
 
     // then
-    expect(() => factory(init)).toThrow()
+    expect(() => factory(init)).to.throw()
   })
 
   it('throws when type is falsy', () => {
     // then
-    expect(() => factory(emptyInit)).toThrow()
+    expect(() => factory(emptyInit)).to.throw()
   })
 
   it('calls conditionFactory', () => {
@@ -34,7 +43,7 @@ describe('factory', () => {
     factory(init)
 
     // then
-    expect(conditionFactory).toHaveBeenCalledWith(init)
+    expect(conditions.factory).to.have.been.calledWith(init)
   })
 
   it('creates PropertyConstraint', () => {
@@ -49,7 +58,7 @@ describe('factory', () => {
     factory(init)
 
     // then
-    expect(PropertyConstraint).toHaveBeenCalled()
+    expect(PC.PropertyConstraint).to.have.been.called
   })
 
   it('calls StatusConstraint', () => {
@@ -60,6 +69,6 @@ describe('factory', () => {
     factory(init)
 
     // then
-    expect(StatusConstraint).toHaveBeenCalled()
+    expect(SC.StatusConstraint).to.have.been.called
   })
 })
