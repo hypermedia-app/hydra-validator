@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.11.1
+
+### Patch Changes
+
+- 45aa529: Fix packaging (no JS)
+
 ## 0.11.0
 
 ### Minor Changes
