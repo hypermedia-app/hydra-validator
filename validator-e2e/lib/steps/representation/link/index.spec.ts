@@ -1,22 +1,29 @@
 import { namedNode } from '@rdfjs/data-model'
-import { HydraResource } from 'alcaeus/Resources'
-import { getResponseRunner, getUrlRunner } from '../../../checkRunner'
+import { IriTemplate, Resource } from 'alcaeus'
+import * as checkRunner from '../../../checkRunner'
 import { LinkStep } from './'
 import { E2eContext } from '../../../../types'
 import { RecursivePartial } from '../../../testHelpers'
-import { IriTemplate } from 'alcaeus/Resources/Mixins/IriTemplate'
 import { StepSpy } from '../../stub'
 import { StatusStep } from '../../response/status'
-
-jest.mock('../../../checkRunner')
+import { expect } from 'chai'
+import { describe, it, beforeEach } from 'mocha'
+import sinon from 'sinon'
+import { GraphPointer } from 'clownface'
+import { schema } from '@tpluscode/rdf-ns-builders'
 
 describe('link', () => {
   let context: E2eContext & any
+  let getResponseRunner: sinon.SinonStub
+  let getUrlRunner: sinon.SinonStub
+
   beforeEach(() => {
     context = {
       scenarios: [],
     }
-    jest.resetAllMocks()
+    sinon.restore()
+    getResponseRunner = sinon.stub(checkRunner, 'getResponseRunner')
+    getUrlRunner = sinon.stub(checkRunner, 'getUrlRunner')
   })
 
   it('applies to identified resource', () => {
@@ -32,7 +39,7 @@ describe('link', () => {
     } as any)
 
     // then
-    expect(applies).toBeTruthy()
+    expect(applies).to.be.ok
   })
 
   describe('statement', () => {
@@ -52,7 +59,7 @@ describe('link', () => {
       const { result } = await execute.call(context)
 
       // then
-      expect(result).toBeUndefined()
+      expect(result).to.be.undefined
     })
 
     it('when strict and link not found, returns failure', async () => {
@@ -72,7 +79,7 @@ describe('link', () => {
       const { result } = await execute.call(context)
 
       // then
-      expect(result!.status).toBe('failure')
+      expect(result!.status).to.eq('failure')
     })
 
     it('when strict and link not found but exists on resource; returns warning, follows link', async () => {
@@ -84,7 +91,7 @@ describe('link', () => {
       const linked = { id: 'urn:resource:linked' }
       const resource = {
         getLinks: () => [],
-        getArray: jest.fn().mockReturnValue([ linked ]),
+        getArray: sinon.stub().returns([linked]),
         'urn:not:link': linked,
       }
 
@@ -93,8 +100,8 @@ describe('link', () => {
       const { result } = await execute.call(context)
 
       // then
-      expect(result!.status).toBe('warning')
-      expect(getResponseRunner).toHaveBeenCalledWith(linked, step, false)
+      expect(result!.status).to.eq('warning')
+      expect(getResponseRunner).to.have.been.calledWith(linked, step, false)
     })
 
     it('dereferences linked resources', async () => {
@@ -103,13 +110,11 @@ describe('link', () => {
         rel: 'urn:link:rel',
         strict: true,
       }, [], [])
-      const resource: RecursivePartial<HydraResource> = {
+      const resource: RecursivePartial<Resource> = {
         getLinks: () => [
           {
             supportedProperty: {
-              property: {
-                id: namedNode('urn:link:rel'),
-              },
+              id: namedNode('urn:link:rel'),
             },
             resources: [
               { id: 'urn:resource:one' },
@@ -125,9 +130,9 @@ describe('link', () => {
       const { nextChecks } = await execute.call(context)
 
       // then
-      expect(nextChecks).toHaveLength(2)
-      expect(getResponseRunner).toHaveBeenCalledWith({ id: 'urn:resource:one' }, step, false)
-      expect(getResponseRunner).toHaveBeenCalledWith({ id: 'urn:resource:two' }, step, false)
+      expect(nextChecks).to.have.length(2)
+      expect(getResponseRunner).to.have.been.calledWith({ id: 'urn:resource:one' }, step, false)
+      expect(getResponseRunner).to.have.been.calledWith({ id: 'urn:resource:two' }, step, false)
     })
   })
 
@@ -144,15 +149,13 @@ describe('link', () => {
         ],
       }, [new StepSpy()], [])
       const template: Partial<IriTemplate> = {
-        expand: jest.fn().mockReturnValue('filled-in-template'),
+        expand: sinon.stub().returns('filled-in-template'),
       }
-      const resource: RecursivePartial<HydraResource> = {
+      const resource: RecursivePartial<Resource> = {
         getLinks: () => [
           {
             supportedProperty: {
-              property: {
-                id: namedNode('urn:link:rel'),
-              },
+              id: namedNode('urn:link:rel'),
             },
             resources: [
               template,
@@ -167,11 +170,12 @@ describe('link', () => {
       await execute.call(context)
 
       // then
-      expect(template.expand).toHaveBeenCalledWith({
-        'http://schema.org/tag': ['foo', 'bar'],
-        'http://schema.org/title': 'baz',
+      expect(template.expand).to.have.been.calledWithMatch((variables: GraphPointer) => {
+        expect(variables.out(schema.tag).values).to.include.all.members(['foo', 'bar'])
+        expect(variables.out(schema.title).value).to.eq('baz')
+        return true
       })
-      expect(getUrlRunner).toHaveBeenCalledWith('filled-in-template', step, true)
+      expect(getUrlRunner).to.have.been.calledWith('filled-in-template', step, true)
     })
 
     it('does not fail child step when they include a StatusStep', async () => {
@@ -186,15 +190,13 @@ describe('link', () => {
         ],
       }, [new StatusStep({ code: 400 })], [])
       const template: Partial<IriTemplate> = {
-        expand: jest.fn().mockReturnValue('filled-in-template'),
+        expand: sinon.stub().returns('filled-in-template'),
       }
-      const resource: RecursivePartial<HydraResource> = {
+      const resource: RecursivePartial<Resource> = {
         getLinks: () => [
           {
             supportedProperty: {
-              property: {
-                id: namedNode('urn:link:rel'),
-              },
+              id: namedNode('urn:link:rel'),
             },
             resources: [
               template,
@@ -209,11 +211,12 @@ describe('link', () => {
       await execute.call(context)
 
       // then
-      expect(template.expand).toHaveBeenCalledWith({
-        'http://schema.org/tag': ['foo', 'bar'],
-        'http://schema.org/title': 'baz',
+      expect(template.expand).to.have.been.calledWithMatch((variables: GraphPointer) => {
+        expect(variables.out(schema.tag).values).to.include.all.members(['foo', 'bar'])
+        expect(variables.out(schema.title).value).to.eq('baz')
+        return true
       })
-      expect(getUrlRunner).toHaveBeenCalledWith('filled-in-template', step, false)
+      expect(getUrlRunner).to.have.been.calledWith('filled-in-template', step, false)
     })
   })
 })

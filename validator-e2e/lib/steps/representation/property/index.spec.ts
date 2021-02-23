@@ -1,4 +1,6 @@
-import { HydraResource } from 'alcaeus'
+import { describe, it, beforeEach } from 'mocha'
+import { expect } from 'chai'
+import { Resource } from 'alcaeus'
 import { Hydra } from 'alcaeus/node'
 import cf from 'clownface'
 import $rdf from 'rdf-ext'
@@ -34,14 +36,14 @@ describe('property step', () => {
       propertyId: 'http://example.com/title',
       value: 'foo',
       strict: false,
-    }, [ {} as any ], [])
+    }, [{} as any], [])
 
     // when
     const execute = propertyStatement.getRunner({} as any)
     const result = await execute.call(context)
 
     // then
-    expect(result.result!.status).toBe('error')
+    expect(result.result!.status).to.eq('error')
   })
 
   it('returns error when step has both constraints and value', async () => {
@@ -50,14 +52,14 @@ describe('property step', () => {
       propertyId: 'http://example.com/title',
       value: 'foo',
       strict: false,
-    }, [], [ {} as any ])
+    }, [], [{} as any])
 
     // when
     const execute = propertyStatement.getRunner({} as any)
     const result = await execute.call(context)
 
     // then
-    expect(result.result!.status).toBe('error')
+    expect(result.result!.status).to.eq('error')
   })
 
   it('applies to hydra resource', () => {
@@ -74,7 +76,7 @@ describe('property step', () => {
     } as any)
 
     // then
-    expect(result).toBe(true)
+    expect(result).to.eq(true)
   })
 
   describe('statement', () => {
@@ -85,7 +87,7 @@ describe('property step', () => {
         value: 'foo',
         strict: false,
       }, [], [])
-      const value = Hydra.resources.factory.createEntity<HydraResource>(
+      const value = Hydra.resources.factory.createEntity<Resource>(
         cf({ dataset })
           .blankNode()
           .addOut(namedNode('http://example.com/title'), 'bar'))
@@ -95,7 +97,7 @@ describe('property step', () => {
       const result = await execute.call(context)
 
       // then
-      expect(result.result!.status).toBe('failure')
+      expect(result.result!.status).to.eq('failure')
     })
 
     it('returns success when values match', async () => {
@@ -105,7 +107,7 @@ describe('property step', () => {
         value: 'foo',
         strict: false,
       }, [], [])
-      const value = Hydra.resources.factory.createEntity<HydraResource>(
+      const value = Hydra.resources.factory.createEntity<Resource>(
         cf({ dataset })
           .blankNode()
           .addOut(namedNode('http://example.com/title'), 'foo'))
@@ -115,7 +117,7 @@ describe('property step', () => {
       const result = await execute.call(context)
 
       // then
-      expect(result.result!.status).toBe('success')
+      expect(result.result!.status).to.eq('success')
     })
 
     it('returns success when boolean false matches expectation', async () => {
@@ -125,7 +127,7 @@ describe('property step', () => {
         value: false,
         strict: false,
       }, [], [])
-      const value = Hydra.resources.factory.createEntity<HydraResource>(
+      const value = Hydra.resources.factory.createEntity<Resource>(
         cf({ dataset })
           .blankNode()
           .addOut(namedNode('active'), literal('false', xsd.boolean)))
@@ -135,7 +137,7 @@ describe('property step', () => {
       const result = await execute.call(context)
 
       // then
-      expect(result.result!.status).toBe('success')
+      expect(result.result!.status).to.eq('success')
     })
 
     it('returns success when number 0 matches expectation', async () => {
@@ -145,7 +147,7 @@ describe('property step', () => {
         value: 0,
         strict: false,
       }, [], [])
-      const value = Hydra.resources.factory.createEntity<HydraResource>(
+      const value = Hydra.resources.factory.createEntity<Resource>(
         cf({ dataset })
           .blankNode()
           .addOut(namedNode('count'), literal('0', xsd.int)))
@@ -155,7 +157,7 @@ describe('property step', () => {
       const result = await execute.call(context)
 
       // then
-      expect(result.result!.status).toBe('success')
+      expect(result.result!.status).to.eq('success')
     })
 
     it('returns success when number expecting 0 but value is "0"', async () => {
@@ -165,7 +167,7 @@ describe('property step', () => {
         value: 0,
         strict: false,
       }, [], [])
-      const value = Hydra.resources.factory.createEntity<HydraResource>(
+      const value = Hydra.resources.factory.createEntity<Resource>(
         cf({ dataset })
           .blankNode()
           .addOut(namedNode('count'), literal('0')))
@@ -175,7 +177,7 @@ describe('property step', () => {
       const result = await execute.call(context)
 
       // then
-      expect(result.result!.status).toBe('success')
+      expect(result.result!.status).to.eq('success')
     })
 
     it('returns success when number expecting false but value is "false"', async () => {
@@ -185,7 +187,7 @@ describe('property step', () => {
         value: false,
         strict: false,
       }, [], [])
-      const value = Hydra.resources.factory.createEntity<HydraResource>(
+      const value = Hydra.resources.factory.createEntity<Resource>(
         cf({ dataset })
           .blankNode()
           .addOut(namedNode('count'), literal('false')))
@@ -195,7 +197,7 @@ describe('property step', () => {
       const result = await execute.call(context)
 
       // then
-      expect(result.result!.status).toBe('success')
+      expect(result.result!.status).to.eq('success')
     })
 
     it('returns success when empty string matches expectation', async () => {
@@ -205,7 +207,7 @@ describe('property step', () => {
         value: '',
         strict: false,
       }, [], [])
-      const value = Hydra.resources.factory.createEntity<HydraResource>(
+      const value = Hydra.resources.factory.createEntity<Resource>(
         cf({ dataset })
           .blankNode()
           .addOut(namedNode('count'), literal('')))
@@ -215,7 +217,7 @@ describe('property step', () => {
       const result = await execute.call(context)
 
       // then
-      expect(result.result!.status).toBe('success')
+      expect(result.result!.status).to.eq('success')
     })
 
     it('returns failure when strict and property is missing', async () => {
@@ -225,14 +227,14 @@ describe('property step', () => {
         value: 'foo',
         strict: true,
       }, [], [])
-      const value = Hydra.resources.factory.createEntity<HydraResource>(cf({ dataset }).blankNode())
+      const value = Hydra.resources.factory.createEntity<Resource>(cf({ dataset }).blankNode())
 
       // when
       const execute = propertyStatement.getRunner(value)
       const result = await execute.call(context)
 
       // then
-      expect(result.result!.status).toBe('failure')
+      expect(result.result!.status).to.eq('failure')
     })
 
     it('returns informational when not strict and property is missing', async () => {
@@ -241,7 +243,7 @@ describe('property step', () => {
         propertyId: 'http://example.com/title',
         strict: false,
       }, [], [])
-      const value = Hydra.resources.factory.createEntity<HydraResource>(
+      const value = Hydra.resources.factory.createEntity<Resource>(
         cf({ dataset })
           .blankNode())
 
@@ -250,7 +252,7 @@ describe('property step', () => {
       const result = await execute.call(context)
 
       // then
-      expect(result.result!.status).toBe('informational')
+      expect(result.result!.status).to.eq('informational')
     })
 
     it('returns success when comparing resource has expected rdf:type', async () => {
@@ -260,7 +262,7 @@ describe('property step', () => {
         value: 'http://example.com/Class',
         strict: true,
       }, [], [])
-      const value = Hydra.resources.factory.createEntity<HydraResource>(
+      const value = Hydra.resources.factory.createEntity<Resource>(
         cf({ dataset })
           .blankNode()
           .addOut(rdf.type, namedNode('http://example.com/Class')))
@@ -270,7 +272,7 @@ describe('property step', () => {
       const result = await execute.call(context)
 
       // then
-      expect(result.result!.status).toBe('success')
+      expect(result.result!.status).to.eq('success')
     })
 
     it('returns success when resource does not have expected rdf:type', async () => {
@@ -280,7 +282,7 @@ describe('property step', () => {
         value: 'http://example.com/Class',
         strict: true,
       }, [], [])
-      const value = Hydra.resources.factory.createEntity<HydraResource>(
+      const value = Hydra.resources.factory.createEntity<Resource>(
         cf({ dataset })
           .blankNode())
 
@@ -289,7 +291,7 @@ describe('property step', () => {
       const result = await execute.call(context)
 
       // then
-      expect(result.result!.status).toBe('failure')
+      expect(result.result!.status).to.eq('failure')
     })
 
     it('returns error when rdf:type statement is not strict', async () => {
@@ -299,7 +301,7 @@ describe('property step', () => {
         value: 'http://example.com/Class',
         strict: false,
       }, [], [])
-      const value = Hydra.resources.factory.createEntity<HydraResource>(
+      const value = Hydra.resources.factory.createEntity<Resource>(
         cf({ dataset })
           .blankNode())
 
@@ -308,7 +310,7 @@ describe('property step', () => {
       const result = await execute.call(context)
 
       // then
-      expect(result.result!.status).toBe('error')
+      expect(result.result!.status).to.eq('error')
     })
 
     it('runs check on array items and returns success if value is found', async () => {
@@ -318,17 +320,17 @@ describe('property step', () => {
         value: 'bar',
         strict: false,
       }, [], [])
-      const value = Hydra.resources.factory.createEntity<HydraResource>(
+      const value = Hydra.resources.factory.createEntity<Resource>(
         cf({ dataset })
           .blankNode()
-          .addOut(namedNode('http://example.com/title'), [ 'foo', 'bar', 'baz' ]))
+          .addOut(namedNode('http://example.com/title'), ['foo', 'bar', 'baz']))
 
       // when
       const arrayRunner = propertyStatement.getRunner(value)
       const { result } = await arrayRunner.call(context)
 
       // then
-      expect(result!.status).toBe('success')
+      expect(result!.status).to.eq('success')
     })
 
     it('runs check on array items and returns failure if matching value is not found', async () => {
@@ -338,7 +340,7 @@ describe('property step', () => {
         value: 'baz',
         strict: false,
       }, [], [])
-      const value = Hydra.resources.factory.createEntity<HydraResource>(
+      const value = Hydra.resources.factory.createEntity<Resource>(
         cf({ dataset })
           .blankNode()
           .addOut(namedNode('http://example.com/title'), ['foo', 'bar']))
@@ -348,7 +350,7 @@ describe('property step', () => {
       const { result } = await arrayRunner.call(context)
 
       // then
-      expect(result!.status).toBe('failure')
+      expect(result!.status).to.eq('failure')
     })
 
     it('returns success when expected value is not specified and property exists', async () => {
@@ -357,7 +359,7 @@ describe('property step', () => {
         propertyId: 'count',
         strict: false,
       }, [], [])
-      const value = Hydra.resources.factory.createEntity<HydraResource>(
+      const value = Hydra.resources.factory.createEntity<Resource>(
         cf({ dataset })
           .blankNode()
           .addOut(namedNode('count'), ''))
@@ -367,7 +369,7 @@ describe('property step', () => {
       const result = await execute.call(context)
 
       // then
-      expect(result.result!.status).toBe('success')
+      expect(result.result!.status).to.eq('success')
     })
   })
 
@@ -380,7 +382,7 @@ describe('property step', () => {
       }, [
         new StepStub('foo'),
       ], [])
-      const value = Hydra.resources.factory.createEntity<HydraResource>(
+      const value = Hydra.resources.factory.createEntity<Resource>(
         cf({ dataset })
           .blankNode())
 
@@ -389,7 +391,7 @@ describe('property step', () => {
       const result = await execute.call(context)
 
       // then
-      expect(result.result!.status).toBe('failure')
+      expect(result.result!.status).to.eq('failure')
     })
 
     it('returns informational when not strict and property is missing', async () => {
@@ -400,7 +402,7 @@ describe('property step', () => {
       }, [
         new StepStub('foo'),
       ], [])
-      const value = Hydra.resources.factory.createEntity<HydraResource>(
+      const value = Hydra.resources.factory.createEntity<Resource>(
         cf({ dataset })
           .blankNode())
 
@@ -409,7 +411,7 @@ describe('property step', () => {
       const result = await execute.call(context)
 
       // then
-      expect(result.result!.status).toBe('informational')
+      expect(result.result!.status).to.eq('informational')
     })
 
     it('enqueues child steps and top-level steps in that order', async () => {
@@ -425,7 +427,7 @@ describe('property step', () => {
         propertyId: 'http://example.com/title',
         strict: false,
       }, childSteps, [])
-      const value = Hydra.resources.factory.createEntity<HydraResource>(
+      const value = Hydra.resources.factory.createEntity<Resource>(
         cf({ dataset })
           .blankNode()
           .addOut(namedNode('http://example.com/title'), 'hello'))
@@ -435,15 +437,15 @@ describe('property step', () => {
       await runAll(execute, context)
 
       // then
-      expect(executions).toEqual(
-        expect.arrayContaining(['step1', 'step2', 'topLevel1', 'topLevel2']),
+      expect(executions).to.include.all.members(
+        ['step1', 'step2', 'topLevel1', 'topLevel2'],
       )
     })
 
     it('runs check on array items and returns success if any child step succeeds', async () => {
       // given
       const fooCheck = new StepSpy()
-      fooCheck.runner.mockReturnValue({ result: { status: 'success' } })
+      fooCheck.runner.returns({ result: { status: 'success' } })
       const children = [
         fooCheck,
         fooCheck,
@@ -453,7 +455,7 @@ describe('property step', () => {
         strict: false,
       }, children, [])
       const value: any = {
-        friend: [ 'foo', 'bar' ],
+        friend: ['foo', 'bar'],
       }
 
       // when
@@ -461,16 +463,16 @@ describe('property step', () => {
       const { result } = await arrayRunner.call(context)
 
       // then
-      expect(fooCheck.runner).toHaveBeenCalledTimes(2)
-      expect(result!.status).toEqual('success')
+      expect(fooCheck.runner).to.have.been.calledTwice
+      expect(result!.status).to.equal('success')
     })
 
     it('runs check on array items and returns failure is no child check succeeds', async () => {
       // given
       const failedCheck = new StepSpy()
-      failedCheck.runner.mockReturnValue({ result: { status: 'failure' } })
+      failedCheck.runner.returns({ result: { status: 'failure' } })
       const successCheck = new StepSpy()
-      successCheck.runner.mockReturnValue({ result: { status: 'success' } })
+      successCheck.runner.returns({ result: { status: 'success' } })
       const children = [
         failedCheck,
         successCheck,
@@ -480,7 +482,7 @@ describe('property step', () => {
         strict: false,
       }, children, [])
       const value: any = {
-        friend: [ 'foo', 'bar' ],
+        friend: ['foo', 'bar'],
       }
 
       // when
@@ -488,9 +490,9 @@ describe('property step', () => {
       const { result } = await arrayRunner.call(context)
 
       // then
-      expect(failedCheck.runner).toHaveBeenCalledTimes(2)
-      expect(successCheck.runner).toHaveBeenCalledTimes(2)
-      expect(result!.status).toEqual('failure')
+      expect(failedCheck.runner).to.have.been.calledTwice
+      expect(successCheck.runner).to.have.been.calledTwice
+      expect(result!.status).to.eq('failure')
     })
 
     describe('when constrained', () => {
@@ -506,7 +508,7 @@ describe('property step', () => {
           new ConstraintMock(true, 'Representation'),
           new ConstraintMock(false, 'Representation'),
         ])
-        const value = Hydra.resources.factory.createEntity<HydraResource>(
+        const value = Hydra.resources.factory.createEntity<Resource>(
           cf({ dataset })
             .blankNode()
             .addOut(namedNode('http://example.com/title'), ['Rocky IV', 'Rocky V']))
@@ -516,8 +518,8 @@ describe('property step', () => {
         const result = await execute.call(context)
 
         // then
-        expect(result.result!.status).toBe('informational')
-        expect(childStep.getRunner()).not.toHaveBeenCalled()
+        expect(result.result!.status).to.eq('informational')
+        expect(childStep.getRunner()).not.to.have.been.called
       })
 
       it('do run when all constraint succeed', async () => {
@@ -532,7 +534,7 @@ describe('property step', () => {
           new ConstraintMock(true),
           new ConstraintMock(true),
         ])
-        const value = Hydra.resources.factory.createEntity<HydraResource>(
+        const value = Hydra.resources.factory.createEntity<Resource>(
           cf({ dataset })
             .blankNode()
             .addOut(namedNode('http://example.com/title'), 'Rocky IV'))
@@ -542,7 +544,7 @@ describe('property step', () => {
         await runAll(execute)
 
         // then
-        expect(childStep.getRunner()).toHaveBeenCalled()
+        expect(childStep.getRunner()).to.have.been.called
       })
 
       it('do run for array when all constraint succeed', async () => {
@@ -557,7 +559,7 @@ describe('property step', () => {
           new ConstraintMock(true),
           new ConstraintMock(true),
         ])
-        const value = Hydra.resources.factory.createEntity<HydraResource>(
+        const value = Hydra.resources.factory.createEntity<Resource>(
           cf({ dataset })
             .blankNode()
             .addOut(namedNode('http://example.com/title'), ['Rocky IV', 'Rocky V']))
@@ -567,7 +569,7 @@ describe('property step', () => {
         await runAll(execute)
 
         // then
-        expect(childStep.getRunner()).toHaveBeenCalledTimes(2)
+        expect(childStep.getRunner()).to.have.been.calledTwice
       })
     })
   })

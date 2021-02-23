@@ -1,20 +1,26 @@
 import { E2eContext } from '../../../../types'
 import { InvocationStep } from './invocation'
 import { StepStub } from '../../stub'
-import { getResponseRunner } from '../../../checkRunner'
-import { readFileSync } from '../../fs'
+import * as checkRunner from '../../../checkRunner'
 import 'isomorphic-fetch'
-
-jest.mock('../../fs')
-jest.mock('../../../checkRunner')
+import { describe, it, beforeEach } from 'mocha'
+import { expect } from 'chai'
+import sinon from 'sinon'
 
 describe('Invoke block', () => {
   let context: E2eContext
+  let readFileSync: sinon.SinonStub
+  let getResponseRunner: sinon.SinonStub
+
   beforeEach(() => {
     context = {
       scenarios: [],
       basePath: '/some/path/with/tests',
     }
+
+    sinon.restore()
+    readFileSync = sinon.stub()
+    getResponseRunner = sinon.stub(checkRunner, 'getResponseRunner')
   })
 
   it('invokes operation with provided headers', async () => {
@@ -23,11 +29,11 @@ describe('Invoke block', () => {
       body: 'Test',
       headers: {
         'Content-Type': 'text/csv',
-        'accept': 'application/rdf+xml',
+        accept: 'application/rdf+xml',
       },
-    }, [ ])
+    }, [])
     const operation = {
-      invoke: jest.fn(),
+      invoke: sinon.stub(),
     }
 
     // when
@@ -35,10 +41,10 @@ describe('Invoke block', () => {
     await execute.call(context)
 
     // then
-    expect(operation.invoke).toHaveBeenCalledWith(
+    expect(operation.invoke).to.have.been.calledWith(
       'Test', new Headers({
         'content-type': 'text/csv',
-        'accept': 'application/rdf+xml',
+        accept: 'application/rdf+xml',
       }))
   })
 
@@ -46,13 +52,13 @@ describe('Invoke block', () => {
     // given
     const step = new InvocationStep({
       body: 'Test',
-    }, [ ])
+    }, [])
     const operation = {
-      invoke: jest.fn(),
+      invoke: sinon.stub(),
     }
     context.headers = new Headers({
       'Content-Type': 'text/csv',
-      'accept': 'application/rdf+xml',
+      accept: 'application/rdf+xml',
     })
 
     // when
@@ -60,10 +66,10 @@ describe('Invoke block', () => {
     await execute.call(context)
 
     // then
-    expect(operation.invoke).toHaveBeenCalledWith(
+    expect(operation.invoke).to.have.been.calledWith(
       'Test', new Headers({
         'content-type': 'text/csv',
-        'accept': 'application/rdf+xml',
+        accept: 'application/rdf+xml',
       }))
   })
 
@@ -75,13 +81,13 @@ describe('Invoke block', () => {
         'User-Agent': 'curl',
         'Content-Type': 'text/csv',
       },
-    }, [ ])
+    }, [])
     const operation = {
-      invoke: jest.fn(),
+      invoke: sinon.stub(),
     }
     context.headers = new Headers({
       'Content-Type': 'application/ld+json',
-      'accept': 'application/rdf+xml',
+      accept: 'application/rdf+xml',
     })
 
     // when
@@ -89,11 +95,11 @@ describe('Invoke block', () => {
     await execute.call(context)
 
     // then
-    expect(operation.invoke).toHaveBeenCalledWith(
+    expect(operation.invoke).to.have.been.calledWith(
       'Test', new Headers({
         'user-agent': 'curl',
         'content-type': 'text/csv',
-        'accept': 'application/rdf+xml',
+        accept: 'application/rdf+xml',
       }))
   })
 
@@ -106,9 +112,10 @@ describe('Invoke block', () => {
       headers: {
         'Content-Type': 'text/csv',
       },
-    }, [ ])
+      fs: { readFileSync },
+    }, [])
     const operation = {
-      invoke: jest.fn(),
+      invoke: sinon.stub(),
     }
 
     // when
@@ -116,7 +123,7 @@ describe('Invoke block', () => {
     await execute.call(context)
 
     // then
-    expect(readFileSync).toHaveBeenCalledWith('/some/path/body/data.csv')
+    expect(readFileSync).to.have.been.calledWith('/some/path/body/data.csv')
   })
 
   it('returns error when body file fails to load', async () => {
@@ -128,11 +135,11 @@ describe('Invoke block', () => {
       headers: {
         'Content-Type': 'text/csv',
       },
-    }, [ ])
+    }, [])
     const operation = {
-      invoke: jest.fn(),
+      invoke: sinon.stub(),
     }
-        ;(readFileSync as any).mockImplementationOnce(() => {
+    readFileSync.throws(() => {
       throw new Error('Fail to open file')
     })
 
@@ -141,7 +148,7 @@ describe('Invoke block', () => {
     const { result } = await execute.call(context)
 
     // then
-    expect(result!.status).toBe('error')
+    expect(result!.status).to.eq('error')
   })
 
   it('enqueues child steps and top level steps', async () => {
@@ -155,24 +162,24 @@ describe('Invoke block', () => {
       new StepStub('child'),
     ])
     const operation = {
-      invoke: jest.fn(),
+      invoke: sinon.stub(),
     }
     const response = {}
-    operation.invoke.mockReturnValue(response)
+    operation.invoke.returns(response)
 
     // when
     const execute = step.getRunner(operation as any)
     await execute.call(context)
 
     // then
-    expect(getResponseRunner).toHaveBeenCalledWith(response, step)
+    expect(getResponseRunner).to.have.been.calledWith(response, step)
   })
 
   it('invokes operation with empty body when not given', async () => {
     // given
-    const step = new InvocationStep({}, [ ])
+    const step = new InvocationStep({}, [])
     const operation = {
-      invoke: jest.fn(),
+      invoke: sinon.stub(),
     }
 
     // when
@@ -180,6 +187,6 @@ describe('Invoke block', () => {
     await execute.call(context)
 
     // then
-    expect(operation.invoke).toHaveBeenCalledWith('', new Headers({}))
+    expect(operation.invoke).to.have.been.calledWith('', new Headers({}))
   })
 })

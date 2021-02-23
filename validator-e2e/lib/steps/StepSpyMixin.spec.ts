@@ -1,5 +1,7 @@
 import { SpyMixin } from './StepSpyMixin'
 import { ScenarioStep } from './index'
+import { expect } from 'chai'
+import { describe, it } from 'mocha'
 
 class TestStep extends ScenarioStep {
   public constructor() {
@@ -27,7 +29,7 @@ describe('StepSpyMixin', () => {
     step.getRunner()
 
     // then
-    expect(step.visited).toBe(false)
+    expect(step.visited).to.eq(false)
   })
 
   it('marks as when runner is invoked', async () => {
@@ -39,6 +41,6 @@ describe('StepSpyMixin', () => {
     await runner.call({})
 
     // then
-    expect(step.visited).toBe(true)
+    expect(step.visited).to.eq(true)
   })
 })

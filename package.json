@@ -3,29 +3,47 @@
   "private": true,
   "scripts": {
     "test": "lerna run test",
+    "test:mocha": "c8 mocha --recursive validator-e2e/**/*.spec.ts",
     "example": "ts-node validator-cli/index.ts e2e --docs validator-e2e/example/hydracg-movies.hydra.json http://hydra-movies.herokuapp.com",
     "build": "lerna run prepack",
     "release": "lerna publish from-package -y"
   },
   "devDependencies": {
+    "@babel/plugin-proposal-class-properties": "^7.8.3",
+    "@babel/plugin-proposal-object-rest-spread": "^7.9.5",
+    "@babel/plugin-proposal-optional-chaining": "^7.9.0",
+    "@babel/preset-env": "^7.9.5",
+    "@babel/preset-typescript": "^7.9.0",
+    "@babel/register": "^7.12.13",
     "@commitlint/cli": "^8.0.0",
     "@commitlint/config-conventional": "^8.0.0",
+    "@hydrofoil/hypertest": "^0.7.2",
     "@tpluscode/eslint-config": "^0.1.1",
+    "@types/chai": "^4.2.15",
+    "@types/mocha": "^8.2.1",
     "@types/node": "^13.1.8",
-    "@typescript-eslint/eslint-plugin": "^2.34.0",
-    "@typescript-eslint/parser": "^2.34.0",
+    "@typescript-eslint/eslint-plugin": "^4.15.2",
+    "@typescript-eslint/parser": "^4.15.2",
+    "@types/sinon": "^9.0.10",
+    "@types/sinon-chai": "^3.2.5",
+    "chai": "^4.3.0",
+    "c8": "^7.6.0",
     "cz-lerna-changelog": "^2.0.2",
     "eslint": "^7.20.0",
     "eslint-config-standard": "^16.0.2",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-jest": "^24.1.5",
     "husky": "^2.4.1",
-    "@hydrofoil/hypertest": "^0.7.2",
     "lerna": "^3.20.2",
     "minimist": ">=1.2.2",
+    "mocha": "^8.3.0",
     "standard": "^16.0.3",
     "standard-changelog": "^2.0.11",
+    "sinon": "^9.2.4",
+    "sinon-chai": "^3.5.0",
     "ts-node": "^8.8.2",
-    "typescript": "^3.7.5"
+    "typescript": "^4.1.5"
   },
   "peerDependencies": {
     "hydra-validator-core": "*",
@@ -42,5 +60,22 @@
     "validator-core",
     "validator-e2e",
     "validator-ui"
-  ]
+  ],
+  "mocha": {
+    "extension": "ts",
+    "recursive": true,
+    "watch-files": [
+      "./**/*.ts"
+    ],
+    "require": [
+      "mocha-setup.js"
+    ]
+  },
+  "c8": {
+    "all": true,
+    "reporter": "lcov",
+    "exclude": [
+      "node_modules"
+    ]
+  }
 }

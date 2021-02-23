@@ -1,5 +1,5 @@
 import { ScenarioStep } from '../../index'
-import { HydraResource } from 'alcaeus/Resources'
+import { Resource } from 'alcaeus'
 import { E2eContext } from '../../../../types'
 import { checkChain, Result } from 'hydra-validator-core'
 import { NamedNode } from 'rdf-js'
@@ -9,7 +9,7 @@ interface IdentifierStepInit {
   value: string
 }
 
-export class IdentifierStep extends ScenarioStep<HydraResource> {
+export class IdentifierStep extends ScenarioStep<Resource> {
   private readonly __identifier: NamedNode
 
   public constructor(init: IdentifierStepInit) {
@@ -22,7 +22,7 @@ export class IdentifierStep extends ScenarioStep<HydraResource> {
     return true
   }
 
-  public getRunner(obj: HydraResource): checkChain<E2eContext> {
+  public getRunner(obj: Resource): checkChain<E2eContext> {
     const { __identifier } = this
     return function () {
       let result: Result

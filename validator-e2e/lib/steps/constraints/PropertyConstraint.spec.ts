@@ -1,3 +1,6 @@
+import { expect } from 'chai'
+import { describe, it, beforeEach } from 'mocha'
+import sinon from 'sinon'
 import cf, { AnyContext, AnyPointer } from 'clownface'
 import $rdf from 'rdf-ext'
 import { Hydra } from 'alcaeus/node'
@@ -15,7 +18,7 @@ describe('PropertyConstraint', () => {
 
   it('does not pass when property is undefined', () => {
     // given
-    const predicate = jest.fn()
+    const predicate = sinon.stub()
     const property = 'http://example.com/prop'
     const init = {
       ...emptyInit,
@@ -27,18 +30,18 @@ describe('PropertyConstraint', () => {
     const result = constraint.satisfiedBy(Hydra.resources.factory.createEntity(graph.blankNode()))
 
     // then
-    expect(result).toBeFalsy()
-    expect(predicate).not.toHaveBeenCalled()
+    expect(result).to.eq(false)
+    expect(predicate).not.to.have.been.called
   })
 
   it('throws when property name is missing', () => {
     // given
-    const predicate = jest.fn()
+    const predicate = sinon.stub()
     const init = {
       ...emptyInit,
     }
 
     // then
-    expect(() => new PropertyConstraint(init, predicate, false)).toThrow()
+    expect(() => new PropertyConstraint(init, predicate, false)).to.throw()
   })
 })

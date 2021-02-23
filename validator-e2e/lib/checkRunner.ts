@@ -1,4 +1,4 @@
-import { HydraResource, ResourceIndexer, HydraResponse } from 'alcaeus'
+import { Resource, ResourceIndexer, HydraResponse } from 'alcaeus'
 import { Hydra } from 'alcaeus/node'
 import { E2eContext } from '../types'
 import { checkChain, CheckResult, Result } from 'hydra-validator-core'
@@ -11,11 +11,11 @@ function processResource<T>(resource: T, steps: ScenarioStep[], constraints: Con
   const nextChecks: checkChain<E2eContext>[] = []
 
   const resourceConstraints: RepresentationConstraint[] = constraints.filter(c => c.type === 'Representation')
-  const allConstraintsSatisfied = resourceConstraints.every(c => c.satisfiedBy(resource as unknown as HydraResource & ResourceIndexer))
+  const allConstraintsSatisfied = resourceConstraints.every(c => c.satisfiedBy(resource as unknown as Resource & ResourceIndexer))
 
   if (!allConstraintsSatisfied) {
     return {
-      result: Result.Informational(`Skipping representation steps due to scenario constraints`),
+      result: Result.Informational('Skipping representation steps due to scenario constraints'),
     }
   }
 
@@ -125,7 +125,7 @@ export function getUrlRunner(id: string, currentStep?: ScenarioStep, failOnNegat
 }
 
 export function getResponseRunner(
-  resourceOrResponse: HydraResource | HydraResponse,
+  resourceOrResponse: Resource | HydraResponse,
   currentStep?: ScenarioStep,
   failOnNegativeResponse = false) {
   const childSteps = currentStep ? currentStep.children : []

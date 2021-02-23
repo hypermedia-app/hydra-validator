@@ -1,3 +1,5 @@
+import { describe, it, beforeEach } from 'mocha'
+import { expect } from 'chai'
 import { E2eContext } from '../types'
 import { verifyTopLevelBlocksExecuted } from './strictRunVerification'
 import { StepStub } from './steps/stub'
@@ -30,7 +32,7 @@ describe('strictRunVerification', () => {
       const { result } = await runner.call(context)
 
       // then
-      expect(result!.status).toBe('informational')
+      expect(result!.status).to.eq('informational')
     })
 
     it('returns failure when some steps are not visited', async () => {
@@ -45,7 +47,7 @@ describe('strictRunVerification', () => {
       const { result } = await runner.call(context)
 
       // then
-      expect(result!.status).toBe('failure')
+      expect(result!.status).to.eq('failure')
     })
 
     describe('not strict', () => {
@@ -61,7 +63,7 @@ describe('strictRunVerification', () => {
         const { result } = await runner.call(context)
 
         // then
-        expect(result!.status).toBe('informational')
+        expect(result!.status).to.eq('informational')
       })
 
       it('returns failure when no steps were visited', async () => {
@@ -76,7 +78,7 @@ describe('strictRunVerification', () => {
         const { result } = await runner.call(context)
 
         // then
-        expect(result!.status).toBe('failure')
+        expect(result!.status).to.eq('failure')
       })
 
       it('returns warning when some steps were not visited', async () => {
@@ -91,7 +93,7 @@ describe('strictRunVerification', () => {
         const { result } = await runner.call(context)
 
         // then
-        expect(result!.status).toBe('warning')
+        expect(result!.status).to.eq('warning')
       })
     })
   })

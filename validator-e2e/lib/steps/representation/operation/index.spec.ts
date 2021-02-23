@@ -1,3 +1,5 @@
+import { describe, it, beforeEach } from 'mocha'
+import { expect } from 'chai'
 import { blankNode, namedNode } from '@rdfjs/data-model'
 import { E2eContext } from '../../../../types'
 import { OperationStep } from './index'
@@ -27,7 +29,7 @@ describe('Operation block', () => {
     const result = await execute.call(context)
 
     // then
-    expect(result.result!.status).toBe('failure')
+    expect(result.result!.status).to.eq('failure')
   })
 
   it('when not strict and operation is not found returns no result', async () => {
@@ -45,7 +47,7 @@ describe('Operation block', () => {
     const result = await execute.call(context)
 
     // then
-    expect(result.result).toBeUndefined()
+    expect(result.result).to.be.undefined
   })
 
   it('returns informational when operation is found matching SupportedOperation id', async () => {
@@ -57,9 +59,7 @@ describe('Operation block', () => {
     const resource: any = {
       operations: [
         {
-          supportedOperation: {
-            id: namedNode('the-operation'),
-          },
+          id: namedNode('the-operation'),
         },
       ],
     }
@@ -69,7 +69,7 @@ describe('Operation block', () => {
     const result = await execute.call(context)
 
     // then
-    expect(result.result!.status).toBe('informational')
+    expect(result.result!.status).to.eq('informational')
   })
 
   it('returns informational when operation is found matching Operation type', async () => {
@@ -81,11 +81,9 @@ describe('Operation block', () => {
     const resource: any = {
       operations: [
         {
-          supportedOperation: {
-            id: blankNode(),
-            types: {
-              has: () => true,
-            },
+          id: blankNode(),
+          types: {
+            has: () => true,
           },
         },
       ],
@@ -96,7 +94,7 @@ describe('Operation block', () => {
     const result = await execute.call(context)
 
     // then
-    expect(result.result!.status).toBe('informational')
+    expect(result.result!.status).to.eq('informational')
   })
 
   it('enqueues top-level steps', async () => {
@@ -118,7 +116,7 @@ describe('Operation block', () => {
     const result = await runAll(execute, context)
 
     // then
-    expect(result.checkNames).toContain('topLevel')
+    expect(result.checkNames).to.include('topLevel')
   })
 
   it('enqueues child steps before top-level steps', async () => {
@@ -142,8 +140,8 @@ describe('Operation block', () => {
     const result = await runAll(execute, context)
 
     // then
-    expect(result.checkNames).toContain('child')
-    expect(result.checkNames).toContain('topLevel')
-    expect(result.checkNames.indexOf('child')).toBeLessThan(result.checkNames.indexOf('topLevel'))
+    expect(result.checkNames).to.include('child')
+    expect(result.checkNames).to.include('topLevel')
+    expect(result.checkNames.indexOf('child')).to.be.lessThan(result.checkNames.indexOf('topLevel'))
   })
 })

@@ -1,4 +1,0 @@
-linters:
-  "*.{js,ts}":
-    - eslint --fix --quiet
-    - git add

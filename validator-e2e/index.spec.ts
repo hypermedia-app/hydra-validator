@@ -1,12 +1,11 @@
-jest.mock('./lib/docsLoader')
-jest.mock('./lib/steps/factory')
-jest.mock('')
-
 import * as docsLoader from './lib/docsLoader'
-import createSteps from './lib/steps/factory'
+import * as createSteps from './lib/steps/factory'
 import { check } from './'
 import * as responseChecks from './lib/checkRunner'
 import { E2eContext } from './types'
+import { expect } from 'chai'
+import { describe, beforeEach, it } from 'mocha'
+import sinon from 'sinon'
 
 describe('validator-e2e', () => {
   let context: E2eContext
@@ -16,14 +15,15 @@ describe('validator-e2e', () => {
       scenarios: [],
       basePath: '',
     }
+
+    sinon.restore()
+    sinon.stub(responseChecks)
   })
 
   describe('factory method', () => {
     it('throws if the docs file fails to load', async () => {
       // given
-      (docsLoader.load as any).mockImplementationOnce(() => {
-        throw new Error('test')
-      })
+      sinon.stub(docsLoader, 'load').throws(new Error('test'))
 
       // when
       const { result } = await check('urn:irrelevant', {
@@ -33,13 +33,13 @@ describe('validator-e2e', () => {
       }).call(context)
 
       // then
-      expect(result!.status).toBe('failure')
+      expect(result!.status).to.eq('failure')
     })
 
     it('sets base path', async () => {
       // given
-      (docsLoader.load as any).mockImplementationOnce(() => ({}))
-      ;(createSteps as any).mockReturnValue({ steps: [{}, {}, {}] })
+      sinon.stub(docsLoader, 'load').callsFake(() => ({} as any))
+      sinon.stub(createSteps, 'default').returns({ steps: [{}, {}, {}] } as any)
 
       // when
       await check('urn:irrelevant', {
@@ -49,17 +49,17 @@ describe('validator-e2e', () => {
       }).call(context)
 
       // then
-      expect(context.basePath).toBe('/base/path')
+      expect(context.basePath).to.eq('/base/path')
     })
   })
 
   describe('check', () => {
     it('sets loaded scenarios to context', async () => {
       // given
-      (docsLoader.load as any).mockReturnValue({
+      sinon.stub(docsLoader, 'load').returns({
         steps: [],
       })
-      ;(createSteps as any).mockReturnValue([{}, {}, {}])
+      sinon.stub(createSteps, 'default').returns([{}, {}, {}] as any)
 
       // when
       await check('urn:irrelevant', {
@@ -69,15 +69,14 @@ describe('validator-e2e', () => {
       }).call(context)
 
       // then
-      expect(context.scenarios.length).toBe(3)
+      expect(context.scenarios.length).to.eq(3)
     })
 
     it('passes the loaded response to response checks', async () => {
       // given
-      (docsLoader.load as any).mockReturnValueOnce({
+      sinon.stub(docsLoader, 'load').returns({
         steps: [],
       })
-      jest.spyOn(responseChecks, 'getUrlRunner')
 
       // when
       await check('urn:irrelevant', {
@@ -87,17 +86,16 @@ describe('validator-e2e', () => {
       }).call(context)
 
       // then
-      expect(responseChecks.getUrlRunner).toHaveBeenCalledWith('urn:irrelevant')
+      expect(responseChecks.getUrlRunner).to.have.been.calledWith('urn:irrelevant')
     })
 
     it('appends entrypoint path to the base URL', async () => {
       // given
-      (docsLoader.load as any).mockReturnValueOnce({
+      sinon.stub(docsLoader, 'load').returns({
         entrypoint: 'some/resource',
         steps: [],
       })
-      ;(createSteps as any).mockReturnValue([{}, {}, {}])
-      jest.spyOn(responseChecks, 'getUrlRunner')
+      sinon.stub(createSteps, 'default').returns([{}, {}, {}] as any)
 
       // when
       await check('http://base.url/api/', {
@@ -107,19 +105,18 @@ describe('validator-e2e', () => {
       }).call(context)
 
       // then
-      expect(responseChecks.getUrlRunner).toHaveBeenCalledWith('http://base.url/api/some/resource')
+      expect(responseChecks.getUrlRunner).to.have.been.calledWith('http://base.url/api/some/resource')
     })
 
     it('sets default headers to context', async () => {
       // given
-      (docsLoader.load as any).mockReturnValueOnce({
+      sinon.stub(docsLoader, 'load').returns({
         defaultHeaders: {
-          'Authorization': ['Basic 12345=='],
+          Authorization: ['Basic 12345=='],
         },
         steps: [],
       })
-      ;(createSteps as any).mockReturnValue([{}, {}, {}])
-      jest.spyOn(responseChecks, 'getUrlRunner')
+      sinon.stub(createSteps, 'default').returns([{}, {}, {}] as any)
 
       // when
       await check('http://base.url/api/', {
@@ -129,9 +126,7 @@ describe('validator-e2e', () => {
       }).call(context)
 
       // then
-      expect(context.headers).toMatchObject(new Headers({
-        Authorization: 'Basic 12345==',
-      }))
+      expect(context.headers?.get('Authorization')).to.eq('Basic 12345==')
     })
   })
 })

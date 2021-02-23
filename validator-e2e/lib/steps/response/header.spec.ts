@@ -1,3 +1,5 @@
+import { describe, it, beforeEach } from 'mocha'
+import { expect } from 'chai'
 import { HeaderStep } from './header'
 import { E2eContext } from '../../../types'
 import 'isomorphic-fetch'
@@ -18,7 +20,7 @@ describe('header statement', () => {
     })
     const response = new Response(null, {
       headers: {
-        'Location': 'http://example.com',
+        Location: 'http://example.com',
       },
     })
 
@@ -27,7 +29,7 @@ describe('header statement', () => {
     const result = execute.call(context)
 
     // then
-    expect(result.result!.status).toBe('success')
+    expect(result.result!.status).to.eq('success')
   })
 
   it('returns failure when header is present but value does not match', async () => {
@@ -38,7 +40,7 @@ describe('header statement', () => {
     })
     const response = new Response(null, {
       headers: {
-        'Location': 'http://example.com',
+        Location: 'http://example.com',
       },
     })
 
@@ -47,7 +49,7 @@ describe('header statement', () => {
     const result = execute.call(context)
 
     // then
-    expect(result.result!.status).toBe('failure')
+    expect(result.result!.status).to.eq('failure')
   })
 
   it('returns success when header value matches expected', async () => {
@@ -58,7 +60,7 @@ describe('header statement', () => {
     })
     const response = new Response(null, {
       headers: {
-        'Location': 'http://example.org',
+        Location: 'http://example.org',
       },
     })
 
@@ -67,7 +69,7 @@ describe('header statement', () => {
     const result = execute.call(context)
 
     // then
-    expect(result.result!.status).toBe('success')
+    expect(result.result!.status).to.eq('success')
   })
 
   it('returns success when header value matches pattern', async () => {
@@ -78,7 +80,7 @@ describe('header statement', () => {
     })
     const response = new Response(null, {
       headers: {
-        'Location': 'http://example.org',
+        Location: 'http://example.org',
       },
     })
 
@@ -87,7 +89,7 @@ describe('header statement', () => {
     const result = execute.call(context)
 
     // then
-    expect(result.result!.status).toBe('success')
+    expect(result.result!.status).to.eq('success')
   })
 
   it('returns failure when header value does not matches pattern', async () => {
@@ -98,7 +100,7 @@ describe('header statement', () => {
     })
     const response = new Response(null, {
       headers: {
-        'Location': 'http://example.org',
+        Location: 'http://example.org',
       },
     })
 
@@ -107,7 +109,7 @@ describe('header statement', () => {
     const result = execute.call(context)
 
     // then
-    expect(result.result!.status).toBe('failure')
+    expect(result.result!.status).to.eq('failure')
   })
 
   it('returns error when pattern is not a well formed regex', async () => {
@@ -118,7 +120,7 @@ describe('header statement', () => {
     })
     const response = new Response(null, {
       headers: {
-        'Location': 'http://example.org',
+        Location: 'http://example.org',
       },
     })
 
@@ -127,7 +129,7 @@ describe('header statement', () => {
     const result = execute.call(context)
 
     // then
-    expect(result.result!.status).toBe('error')
+    expect(result.result!.status).to.eq('error')
   })
 
   it('returns failure when header is not found', async () => {
@@ -142,7 +144,7 @@ describe('header statement', () => {
     const result = execute.call(context)
 
     // then
-    expect(result.result!.status).toBe('failure')
+    expect(result.result!.status).to.eq('failure')
   })
 
   it('sets to context when `captureAs` is used', () => {
@@ -153,7 +155,7 @@ describe('header statement', () => {
     })
     const response = new Response(null, {
       headers: {
-        'Location': 'http://example.com',
+        Location: 'http://example.com',
       },
     })
 
@@ -162,6 +164,6 @@ describe('header statement', () => {
     execute.call(context)
 
     // then
-    expect(context['url']).toBe('http://example.com')
+    expect(context.url).to.eq('http://example.com')
   })
 })

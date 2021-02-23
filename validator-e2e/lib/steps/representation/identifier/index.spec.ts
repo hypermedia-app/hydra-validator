@@ -1,8 +1,10 @@
 import { namedNode } from '@rdfjs/data-model'
 import { IdentifierStep } from './'
 import { E2eContext } from '../../../../types'
+import { describe, it } from 'mocha'
+import { expect } from 'chai'
 
-jest.mock('../../../checkRunner')
+// jest.mock('../../../checkRunner')
 
 describe('Identifier', () => {
   let context: E2eContext
@@ -19,7 +21,7 @@ describe('Identifier', () => {
     } as any)
 
     // then
-    expect(applies).toBeTruthy()
+    expect(applies).to.be.ok
   })
 
   it('returns success when the resource identifier matches', async () => {
@@ -36,7 +38,7 @@ describe('Identifier', () => {
     const { result } = await execute.call(context)
 
     // then
-    expect(result!.status).toBe('success')
+    expect(result!.status).to.eq('success')
   })
 
   it('returns failure when the resource has different identifier', async () => {
@@ -53,7 +55,7 @@ describe('Identifier', () => {
     const { result } = await execute.call(context)
 
     // then
-    expect(result!.status).toBe('failure')
+    expect(result!.status).to.eq('failure')
   })
 
   it('returns failure when resource is not an object', async () => {
@@ -68,6 +70,6 @@ describe('Identifier', () => {
     const { result } = await execute.call(context)
 
     // then
-    expect(result!.status).toBe('failure')
+    expect(result!.status).to.eq('failure')
   })
 })
