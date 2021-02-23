@@ -11,7 +11,6 @@
     "declaration": false,
     "sourceMap": false,
     "esModuleInterop": true,
-    "noEmit": true,
     "skipLibCheck": true
   }
 }
