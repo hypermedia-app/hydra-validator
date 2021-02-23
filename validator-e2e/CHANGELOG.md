@@ -1,5 +1,13 @@
 # Change Log
 
+## 0.12.1
+
+### Patch Changes
+
+- 807feca: Update builds to output proper import paths
+- Updated dependencies [807feca]
+  - hydra-validator-core@0.5.1
+
 ## 0.12.0
 
 ### Minor Changes

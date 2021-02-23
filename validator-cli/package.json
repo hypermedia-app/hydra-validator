@@ -1,6 +1,6 @@
 {
   "name": "hydra-validator",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "CLI tool to run checks against a Hydra API",
   "main": "index.js",
   "type": "module",
@@ -43,7 +43,7 @@
     "@types/node": "^11.13.9",
     "@types/node-fetch": "^2.3.3",
     "hydra-validator-analyse": "^0.3.1",
-    "hydra-validator-e2e": "^0.12.0",
+    "hydra-validator-e2e": "^0.12.1",
     "isomorphic-fetch": "^2.2.1",
     "jest": "^24.7.1",
     "lint-staged": "^8.2.1",
@@ -53,7 +53,7 @@
   "dependencies": {
     "commander": "^2.20.0",
     "debug": "^4.1.1",
-    "hydra-validator-core": "^0.5.0",
+    "hydra-validator-core": "^0.5.1",
     "matchdep": "^2.0.0"
   },
   "publishConfig": {
