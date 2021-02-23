@@ -1,5 +1,5 @@
 import { IResult, Result, Context } from 'hydra-validator-core'
-import { ResponseStep } from '../'
+import { ResponseStep } from '../index'
 import escapeStringRegexp from 'escape-string-regexp'
 
 interface ExpectationStepInit {

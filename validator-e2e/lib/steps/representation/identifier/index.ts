@@ -3,7 +3,7 @@ import { Resource } from 'alcaeus'
 import { E2eContext } from '../../../../types'
 import { checkChain, Result } from 'hydra-validator-core'
 import { NamedNode } from 'rdf-js'
-import { namedNode } from '@rdfjs/data-model'
+import { namedNode } from '@rdf-esm/data-model'
 
 interface IdentifierStepInit {
   value: string

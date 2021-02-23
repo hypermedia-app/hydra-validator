@@ -1,5 +1,5 @@
 import areEqual from './comparison'
-import { literal } from '@rdfjs/data-model'
+import { literal } from '@rdf-esm/data-model'
 import namespace from '@rdfjs/namespace'
 import { prefixes } from '@zazuko/rdf-vocabularies'
 import { Literal } from 'rdf-js'

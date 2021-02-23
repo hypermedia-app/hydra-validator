@@ -1,6 +1,6 @@
-import { ScenarioStep } from './'
+import { ScenarioStep } from './index'
 import { ClassStep } from './representation'
-import { StepConstraintInit, factory as createConstraint } from './constraints/'
+import { StepConstraintInit, factory as createConstraint } from './constraints/index'
 import { Constraint } from './constraints/Constraint'
 import { PropertyStep } from './representation/property'
 import { StatusStep } from './response/status'

@@ -1,7 +1,7 @@
 import { E2eContext } from '../../../../types'
 import { Context, checkChain, IResult, Result } from 'hydra-validator-core'
 import { getUrlRunner } from '../../../checkRunner'
-import { ScenarioStep } from '../../'
+import { ScenarioStep } from '../../index'
 
 interface FollowStepInit {
   variable: string

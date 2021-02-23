@@ -1,4 +1,4 @@
-import { namedNode } from '@rdfjs/data-model'
+import { namedNode } from '@rdf-esm/data-model'
 import { IdentifierStep } from './'
 import { E2eContext } from '../../../../types'
 import { describe, it } from 'mocha'

@@ -1,5 +1,5 @@
 import { Result } from 'hydra-validator-core'
-import { ResponseStep } from '../'
+import { ResponseStep } from '../index'
 
 interface ExpectationStepInit {
   code: number

@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import program from 'commander'
-import runChecks from 'hydra-validator-core/run-checks'
+import { runChecks } from 'hydra-validator-core/run-checks.js'
 import deps from 'matchdep'
 import debug, { Debugger } from 'debug'
 import { ResultKind } from 'hydra-validator-core'
