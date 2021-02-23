@@ -17,7 +17,7 @@ describe('run-checks', () => {
     const check: checkChain = () => ({})
 
     // when
-    const [ first ] = await getResults(runChecks(check))
+    const [first] = await getResults(runChecks(check))
 
     // expect
     expect(first.level).toBe(0)
@@ -45,7 +45,7 @@ describe('run-checks', () => {
       nextChecks: [
         ...[1, 2, 3, 4, 5].map(() => spy),
         jest.fn().mockResolvedValue({
-          nextChecks: [ spy ],
+          nextChecks: [spy],
         }),
       ],
     })
@@ -189,7 +189,7 @@ describe('run-checks', () => {
     })
     const firstCheck = jest.fn().mockResolvedValue({
       result: Result.Success('test'),
-      nextChecks: [ spy ],
+      nextChecks: [spy],
     })
 
     // when
@@ -206,7 +206,7 @@ describe('run-checks', () => {
     })
     const firstCheck = jest.fn().mockResolvedValue({
       result: Result.Success('test'),
-      nextChecks: [ spy ],
+      nextChecks: [spy],
       sameLevel: true,
     })
 

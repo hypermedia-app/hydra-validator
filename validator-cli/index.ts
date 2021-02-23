@@ -33,7 +33,7 @@ debug.formatters.l = (logger: ResultKind) => {
   return ''
 }
 
-const plugins = deps.filterAll([ 'hydra-validator-*', 'hydra-validator-core' ], `${process.cwd()}/package.json`)
+const plugins = deps.filterAll(['hydra-validator-*', 'hydra-validator-core'], `${process.cwd()}/package.json`)
 
 for (const plugin of plugins) {
   const match = plugin.match(/^hydra-validator-([\d\w]+)$/)
@@ -54,7 +54,7 @@ for (const plugin of plugins) {
     }
   }
 
-  command.action(function (this: object, url: string) {
+  command.action(function (this: any, url: string) {
     Promise.resolve()
       .then(async () => {
         let unsucessfulCount = 0

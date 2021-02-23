@@ -4,7 +4,7 @@
     "module": "ESNext",
     "moduleResolution": "Node",
     "lib": [
-      "es2015",
+      "es2018",
       "dom"
     ],
     "strict": true,

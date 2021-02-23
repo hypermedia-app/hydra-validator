@@ -31,7 +31,7 @@ async function * runChecks(firstCheck: checkChain) {
   const context = {
     visitedUrls: [],
   }
-  const checkQueue = [ wrapCheck(firstCheck, 0) ]
+  const checkQueue = [wrapCheck(firstCheck, 0)]
 
   yield {
     level: 0,
@@ -43,14 +43,14 @@ async function * runChecks(firstCheck: checkChain) {
     const currentCheck = checkQueue.splice(0, 1)[0]
     const { results, nextChecks, level, bumpLevel } = await currentCheck(context)
       .catch(reason => ({
-        results: [ Result.Error('Unhandled error occurred in check', reason) ],
+        results: [Result.Error('Unhandled error occurred in check', reason)],
         nextChecks: [] as checkChain<Context>[],
         level: previousLevel,
         bumpLevel: false,
       }))
     previousLevel = level
 
-    for (let result of results) {
+    for (const result of results) {
       switch (result.status) {
         case 'success':
           summary.successes++

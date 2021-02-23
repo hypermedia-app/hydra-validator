@@ -19,7 +19,7 @@ describe('analyse-representation', () => {
 
     test('queues api doc tests if flag is true', async () => {
       // given
-      ;(apiDocsChecks as any).mockReturnValue([])
+      (apiDocsChecks as any).mockReturnValue([])
 
       // when
       const { nextChecks } = await check(response, true).call({})
@@ -31,7 +31,7 @@ describe('analyse-representation', () => {
 
     test('should keep the current level', async () => {
       // given
-      ;(apiDocsChecks as any).mockReturnValue([])
+      (apiDocsChecks as any).mockReturnValue([])
 
       // when
       const { sameLevel } = await check(response, false).call({})

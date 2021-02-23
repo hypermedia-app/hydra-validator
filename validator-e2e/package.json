@@ -4,8 +4,6 @@
   "description": "A set of tools to execute E2E tests on a Hydra API",
   "main": "index.js",
   "scripts": {
-    "pretest": "eslint --ext ts . --quiet",
-    "eslint:fix": "eslint --ext ts . --quiet --fix",
     "prepack": "tsc",
     "example:compile": "hypertest-compiler example"
   },
