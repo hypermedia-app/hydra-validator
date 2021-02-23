@@ -1,3 +1,5 @@
 ignore:
   - validator-e2e/lib/steps/stub.ts
   - validator-e2e/lib/testHelpers.ts
+  - "**/*.spec.ts"
+  - "**/*.js"
