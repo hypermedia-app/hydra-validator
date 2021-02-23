@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.12.0
+
+### Minor Changes
+
+- 43da1a5: Publish as modules
+
 ## 0.11.2
 
 ### Patch Changes
