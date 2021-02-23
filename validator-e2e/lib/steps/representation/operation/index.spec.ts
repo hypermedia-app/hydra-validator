@@ -1,6 +1,6 @@
 import { describe, it, beforeEach } from 'mocha'
 import { expect } from 'chai'
-import { blankNode, namedNode } from '@rdfjs/data-model'
+import { blankNode, namedNode } from '@rdf-esm/data-model'
 import { E2eContext } from '../../../../types'
 import { OperationStep } from './index'
 import { StepStub } from '../../stub'

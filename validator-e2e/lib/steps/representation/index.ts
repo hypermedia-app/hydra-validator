@@ -1,7 +1,7 @@
 import { Resource } from 'alcaeus'
 import { E2eContext } from '../../../types'
 import { checkChain } from 'hydra-validator-core'
-import { ScenarioStep } from '../'
+import { ScenarioStep } from '../index'
 import { getResourceRunner } from '../../checkRunner'
 import { Constraint } from '../constraints/Constraint'
 

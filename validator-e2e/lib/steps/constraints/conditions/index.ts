@@ -1,5 +1,5 @@
 /* eslint-disable no-new-func */
-import { StepConstraintInit } from '../'
+import { StepConstraintInit } from '../index'
 
 function equality(expected: unknown) {
   return function equalityPredicate(value: unknown) {

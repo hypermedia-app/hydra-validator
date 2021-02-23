@@ -1,4 +1,4 @@
-import { namedNode } from '@rdfjs/data-model'
+import { namedNode } from '@rdf-esm/data-model'
 import { IriTemplate, Resource } from 'alcaeus'
 import * as checkRunner from '../../../checkRunner'
 import { LinkStep } from './'

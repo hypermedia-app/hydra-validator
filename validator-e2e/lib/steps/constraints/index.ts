@@ -1,5 +1,5 @@
 import { Constraint, ConstraintOperator } from './Constraint'
-import { factory as createPredicate } from './conditions/'
+import { factory as createPredicate } from './conditions/index'
 import { StatusConstraint } from './StatusConstraint'
 import { PropertyConstraint } from './PropertyConstraint'
 

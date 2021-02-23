@@ -3,7 +3,7 @@ import { checkChain, Result } from 'hydra-validator-core'
 import { ScenarioStep } from '../../index'
 import { getResourceRunner } from '../../../checkRunner'
 import { Resource, ResourceIdentifier } from 'alcaeus'
-import { namedNode } from '@rdfjs/data-model'
+import { namedNode } from '@rdf-esm/data-model'
 
 interface OperationStepInit {
   operationId: string

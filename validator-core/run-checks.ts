@@ -21,7 +21,7 @@ function wrapCheck(check: checkChain, level: number) {
   }
 }
 
-async function * runChecks(firstCheck: checkChain) {
+export async function * runChecks(firstCheck: checkChain) {
   const summary = {
     successes: 0,
     warnings: 0,
@@ -107,5 +107,3 @@ async function * runChecks(firstCheck: checkChain) {
     result: summaryResult,
   }
 }
-
-export default runChecks

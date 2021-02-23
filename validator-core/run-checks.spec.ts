@@ -1,4 +1,4 @@
-import runChecks from './run-checks'
+import { runChecks } from './run-checks'
 import { checkChain, Result } from '.'
 
 async function getResults<T>(iter: AsyncIterableIterator<T>) {

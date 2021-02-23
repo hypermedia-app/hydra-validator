@@ -1,6 +1,6 @@
 import { RepresentationConstraint } from './Constraint'
 import { Resource, ResourceIndexer } from 'alcaeus'
-import { StepConstraintInit } from './'
+import { StepConstraintInit } from './index'
 
 export class PropertyConstraint extends RepresentationConstraint {
   private readonly __propertyName: string
