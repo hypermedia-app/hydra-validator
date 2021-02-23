@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.11.2
+
+### Patch Changes
+
+- 5ef2133: Set package type as ES Modules
+
 ## 0.11.1
 
 ### Patch Changes
