@@ -67,12 +67,12 @@ ${super.renderMain()}`
   }
 
   async loadResourceInternal(url) {
-    const [runChecks, firstCheck] = await Promise.all([
+    const [{ runChecks }, firstCheck] = await Promise.all([
       import('hydra-validator-core/run-checks'),
       import('hydra-validator-analyse/checks/url-resolvable'),
     ])
 
-    return runChecks.default(firstCheck.default(url))
+    return runChecks(firstCheck.default(url))
   }
 }
 
