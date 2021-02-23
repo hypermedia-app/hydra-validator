@@ -5,6 +5,7 @@
       "es2015",
       "dom"
     ],
+    "module": "ES2020",
     "strict": true,
     "declaration": true,
     "sourceMap": false,
