@@ -3,11 +3,10 @@
   "compilerOptions": {
     "module": "esnext",
     "target": "esnext",
-    "allowJs": true,
     "moduleResolution": "node",
     "esModuleInterop": true,
     "skipLibCheck": true,
     "noImplicitAny": false,
-    "noEmit": false
+    "rootDir": "../"
   }
 }

@@ -32,7 +32,7 @@
     "minimist": ">=1.2.2",
     "owc-dev-server": "^0.3.0",
     "serialize-javascript": ">=2.1.1",
-    "ts-loader": "^6.0.4",
+    "ts-loader": "^8.0.17",
     "webpack-cli": "^3.2.3",
     "webpack-dev-server": "^3.1.14",
     "webpack-merge": "^4.2.1"

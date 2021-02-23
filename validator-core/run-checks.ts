@@ -1,10 +1,10 @@
-import { checkChain, Context, Result } from '.'
+import { checkChain, Context, IResult, Result } from '.'
 
 function wrapCheck(check: checkChain, level: number) {
   return async function (ctx: Context) {
     const { result, results, nextChecks, sameLevel } = await check.call(ctx)
 
-    const outResults = []
+    const outResults: IResult[] = []
     if (result) {
       outResults.push(result)
     }

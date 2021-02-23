@@ -12,7 +12,7 @@ export type RecursivePartial<T> = {
 };
 
 export async function runAll(chain: checkChain<E2eContext>, context: E2eContext = { scenarios: [], basePath: '' }): Promise<IResult[] & Summary> {
-  const checkNames = []
+  const checkNames: string[] = []
 
   let results: IResult[] = []
   let queue = [chain]

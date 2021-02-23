@@ -9,7 +9,7 @@ export default function (response: Response & any, isApiDoc: boolean): checkChai
       .then((dataset: DatasetExt) => {
         const graph = clownface({ dataset })
 
-        const nextChecks = []
+        const nextChecks: checkChain<any>[] = []
 
         if (isApiDoc) {
           nextChecks.push(...apiDocsChecks(graph))

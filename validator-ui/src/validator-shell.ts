@@ -12,7 +12,7 @@ import fireNavigation from 'ld-navigation/fireNavigation'
 import './views'
 import { css } from 'lit-element'
 
-function navigate(e) {
+function navigate(this: any, e) {
   fireNavigation(this, e.target.url)
 }
 
