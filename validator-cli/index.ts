@@ -35,44 +35,46 @@ debug.formatters.l = (logger: ResultKind) => {
 
 const plugins = deps.filterAll(['hydra-validator-*', 'hydra-validator-core'], `${process.cwd()}/package.json`)
 
-for (const plugin of plugins) {
-  const match = plugin.match(/^hydra-validator-([\d\w]+)$/)
-  if (!match) {
-    continue
-  }
-
-  const commandName = match[1]
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  const { check, options } = require(plugin)
-
-  const command = program
-    .command(`${commandName} <url>`)
-
-  if (options && Array.isArray(options)) {
-    for (const option of options) {
-      command.option(option.flags, option.description, option.defaultValue)
+async function main() {
+  for (const plugin of plugins) {
+    const match = plugin.match(/^hydra-validator-([\d\w]+)$/)
+    if (!match) {
+      continue
     }
-  }
 
-  command.action(function (this: any, url: string) {
-    Promise.resolve()
-      .then(async () => {
-        let unsucessfulCount = 0
-        const firstCheck = check(url, { ...this, cwd: process.cwd(), log: loggers })
+    const commandName = match[1]
+    const { check, options } = await import(plugin)
 
-        const checkGenerator = runChecks(firstCheck)
+    const command = program
+      .command(`${commandName} <url>`)
 
-        for await (const check of checkGenerator) {
-          loggers[check.result.status]('%l %p %s %s', check.result.status, check.level, check.result.description, (check.result as any).details || '')
+    if (options && Array.isArray(options)) {
+      for (const option of options) {
+        command.option(option.flags, option.description, option.defaultValue)
+      }
+    }
 
-          if (check.result.status === 'failure' || check.result.status === 'error') {
-            unsucessfulCount++
+    command.action(function (this: any, url: string) {
+      Promise.resolve()
+        .then(async () => {
+          let unsucessfulCount = 0
+          const firstCheck = check(url, { ...this, cwd: process.cwd(), log: loggers })
+
+          const checkGenerator = runChecks(firstCheck)
+
+          for await (const check of checkGenerator) {
+            loggers[check.result.status]('%l %p %s %s', check.result.status, check.level, check.result.description, (check.result as any).details || '')
+
+            if (check.result.status === 'failure' || check.result.status === 'error') {
+              unsucessfulCount++
+            }
           }
-        }
 
-        process.exit(unsucessfulCount)
-      })
-  })
+          process.exit(unsucessfulCount)
+        })
+    })
+  }
 }
 
-program.parse(process.argv)
+// eslint-disable-next-line no-console
+main().then(() => program.parse(process.argv)).catch(console.error)
