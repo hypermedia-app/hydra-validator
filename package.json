@@ -67,7 +67,9 @@
     "all": true,
     "reporter": "lcov",
     "exclude": [
-      "node_modules"
+      "node_modules",
+      "validator-analyse",
+      "validator-core"
     ]
   }
 }
