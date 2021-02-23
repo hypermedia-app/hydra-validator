@@ -42,7 +42,7 @@
     "@types/node": "^11.13.9",
     "@types/node-fetch": "^2.3.3",
     "hydra-validator-analyse": "^0.3.1",
-    "hydra-validator-e2e": "^0.10.7",
+    "hydra-validator-e2e": "^0.11.0",
     "isomorphic-fetch": "^2.2.1",
     "jest": "^24.7.1",
     "lint-staged": "^8.2.1",
